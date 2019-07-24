@@ -2,7 +2,7 @@ package Rakudobrew::ShellHook;
 use strict;
 use warnings;
 use 5.010;
-use File::Spec::Functions qw(catdir updir);
+use File::Spec::Functions qw(catdir updir splitpath);
 use Cwd qw(cwd);
 use Rakudobrew::Variables;
 use Rakudobrew::Tools;
@@ -16,12 +16,63 @@ sub initialize {
 
     if (!grep(/^\Q$shell\E$/, available_hooks("Dummy self"))) {
         # No valid shell given. Do autodetection.
-        $shell = 'Bash'; # Not implemented yet.
+        $shell = detect_shell();
     }
 
     eval "require Rakudobrew::ShellHook::$shell";
     $shell_hook = bless {}, "Rakudobrew::ShellHook::$shell";
     return $shell_hook;
+}
+
+sub detect_shell {
+    if ($^O =~ /win32/i) {
+        # https://stackoverflow.com/a/8547234
+        my $psmodpath = $ENV{PSMODULEPATH};
+        my $userprofile = $ENV{USERPROFILE};
+        if (index($psmodpath, $userprofile) == 0) {
+            return 'Powershell';
+        }
+        else {
+            return 'Cmd';
+        }
+    }
+    else {
+        my $shell = $ENV{'SHELL'} || '/bin/bash';
+        $shell = (splitpath( $shell))[2];
+        $shell =~ s/[^a-z]+$//; # remove version numbers
+        $shell = ucfirst $shell;
+
+        if (!grep(/^\Q$shell\E$/, available_hooks("Dummy self"))) {
+            $shell = 'Bash';
+        }
+
+        return $shell;
+    }
+}
+
+# Provides the guessed configuration file
+# for the user's shell or undef if none is found.
+sub guess_user_shell_configuration_file {
+    my $shell = detect_shell();
+    my %profiles = ( 'Bash' => [ '.bash_profile', '.profile' ],
+                     'Csh'  => [ '.cshrc' ],
+                     'Sh'   => [ '.profile' ],
+                     'Zsh'  => [ '.zshenv', '.zshrc', '.zlogin' ],
+                     'Fish' => [ 'TODOOOOOOOOOOOOOOOOOOOOOOO' ],
+        );
+
+    # add zsh files in custom paths
+    # it should be true that if ZDOTDIR has been set the user
+    # wants to use the zsh, but another shell could be
+    # in place now
+    if ( exists $ENV{ 'ZDOTDIR' } ) {
+    push @{ $profiles{ 'zsh'} },
+        map { catfile( $ENV{ 'ZDOTDIR' }, $_ ) } @{ $profiles{ 'zsh' } };
+    }
+
+    for ( @{ $profiles{ $shell } } ) {
+        return $_ if ( -f catfile( $ENV{'HOME'} ,$_ ) );
+    }
 }
 
 sub get {
@@ -46,7 +97,7 @@ sub print_shellmod_code {
     my $self = shift;
     my @params = @_;
     my $shell = shift(@params);
-	my $command = shift(@params) // '';
+    my $command = shift(@params) // '';
     my $mode = get_brew_mode(1);
 
     if ($mode eq 'shim') {
