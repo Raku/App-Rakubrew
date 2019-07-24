@@ -5,3 +5,4 @@ shims/*
 git_reference/
 
 *.swp
+.directory
