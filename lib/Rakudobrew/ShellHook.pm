@@ -96,7 +96,6 @@ sub available_hooks {
 sub print_shellmod_code {
     my $self = shift;
     my @params = @_;
-    my $shell = shift(@params);
     my $command = shift(@params) // '';
     my $mode = get_brew_mode(1);
 

@@ -43,7 +43,7 @@ EOT
 
 sub post_call_eval {
     my $self = shift;
-    $self->print_shellmod_code('Sh', @_);
+    $self->print_shellmod_code(@_);
 }
 
 sub get_path_setter_code {
