@@ -505,56 +505,13 @@ sub nuke {
 
 sub init {
     my $brew_exec = catfile($RealBin, $brew_name);
-    if ($^O =~ /win32/i) {
-        say <<EOT;
-# CMD:
-# To install $brew_name permanently type the following into your terminal:
-#   SETX PATH "$RealBin;$shim_dir;%PATH%"
-# To make use of $brew_name in this session only use
-#   SET PATH=$RealBin;$shim_dir;%PATH%
-#
-# PowerShell:
-# To install $brew_name permanently type the following into your terminal
-# (only works with an administrative console window):
-#   [Environment]::SetEnvironmentVariable("PATH", "$RealBin;$shim_dir;\$Env:PATH", "User")
-# To make use of $brew_name in this session only use
-#   \$Env:PATH = "$RealBin;$shim_dir;\$Env:PATH"
-#
-# Using the GUI:
-# Start -> right click on "Computer" -> Properties -> (Advanced system settings)
-# -> Advanced -> Environment Variables... ->  System variables
-# -> select PATH -> Edit... -> prepend "$RealBin;$shim_dir;"
-#
-# WARNING:
-# Setting PATH to a string longer than 2048 chars (4096 on newer systems) can cause the
-# PATH to be truncated, your PATH being set to the empty string and only become available
-# again upon reboot and in the worst case cause your system to not boot anymore.
-# See https://web.archive.org/web/20190519191717/https://software.intel.com/en-us/articles/limitation-to-the-length-of-the-system-path-variable
-EOT
+    if (@_) {
+        # We have an argument. That has to be the shell.
+        # We already retrieved the shell above, so no need to look at the passed argument here again.
+        say $hook->get_init_code;
     }
     else {
-        if (@_) {
-            # We already retrieved the shell above, so no need to look at the passed argument here again.
-            say $hook->get_init_code;
-        }
-        else {
-            my $available_shell_hooks_text = join('|', $hook->available_hooks());
-
-            say <<EOT;
-# Load $brew_name automatically by adding
-#   eval "\$($brew_exec init <$available_shell_hooks_text>)"
-# to your local profile file.
-# (often ~/.bash_profile, ~/.zsh_profile or ~/.profile)
-# This can be easily done using:
-
-echo 'eval "\$($brew_exec init <$available_shell_hooks_text>)"' >> ~/.profile
-
-# On Fish:
-
-echo '$brew_exec init Fish | source' >> ~/.config/fish/config.fish
-
-EOT
-        }
+        say $hook->install_note;
     }
 }
 

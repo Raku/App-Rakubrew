@@ -17,6 +17,20 @@ sub supports_hooking {
     1;
 }
 
+sub install_note {
+    my $brew_exec = catfile($RealBin, $brew_name);
+    return <<EOT;
+Load $brew_name automatically by adding
+
+  $brew_exec init Fish | source
+
+to ~/.config/fish/config.fish
+This can be easily done using:
+
+echo '$brew_exec init Fish | source' >> ~/.config/fish/config.fish
+EOT
+}
+
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};

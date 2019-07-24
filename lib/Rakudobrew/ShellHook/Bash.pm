@@ -17,6 +17,25 @@ sub supports_hooking {
     1;
 }
 
+sub install_note {
+    my @profiles = qw( .bash_profile .profile );
+    my @existing_profiles = grep { -f catfile( $ENV{'HOME'}, $_ ) } @profiles;
+    my $profile = @existing_profiles ? $existing_profiles[0] : $profiles[0];
+
+    my $brew_exec = catfile($RealBin, $brew_name);
+
+    return <<EOT;
+Load $brew_name automatically by adding
+
+  eval "\$($brew_exec init Bash)"
+
+to ~/$profile.
+This can be easily done using:
+
+  echo 'eval "\$($brew_exec init Bash)"' >> ~/$profile
+EOT
+}
+
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
@@ -43,7 +62,6 @@ _${brew_name}_completions() {
 }
 complete -F _${brew_name}_completions $brew_name
 EOT
-
 }
 
 sub post_call_eval {
