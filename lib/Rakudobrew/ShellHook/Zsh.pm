@@ -1,4 +1,6 @@
 package Rakudobrew::ShellHook::Zsh;
+use Rakudobrew::ShellHook;
+our @ISA = "Rakudobrew::ShellHook";
 use strict;
 use warnings;
 use 5.010;
@@ -8,12 +10,12 @@ use FindBin qw($RealBin $RealScript);
 use Rakudobrew::Variables;
 use Rakudobrew::Tools;
 use Rakudobrew::VersionHandling;
-use Rakudobrew::ShellHook;
 use Rakudobrew::Build;
 
 sub get_init_code {
+    my $self = shift;
     my $path = $ENV{PATH};
-    $path = Rakudobrew::ShellHook::clean_path($path, $RealBin);
+    $path = $self->clean_path($path, $RealBin);
     $path = "$RealBin:$path";
     if (get_brew_mode() eq 'env') {
         if (get_global_version() && get_global_version() ne 'system') {
@@ -44,24 +46,29 @@ EOT
 }
 
 sub post_call_eval {
-    Rakudobrew::ShellHook::print_shellmod_code('Zsh', @_);
+    my $self = shift;
+    $self->print_shellmod_code('Zsh', @_);
 }
 
 sub get_path_setter_code {
+    my $self = shift;
     my $path = shift;
     return "export PATH=\"$path\"";
 }
 
 sub get_shell_setter_code {
+    my $self = shift;
     my $version = shift;
     return "export $env_var=\"$version\"";
 }
 
 sub get_shell_unsetter_code {
+    my $self = shift;
     return "unset $env_var";
 }
 
 sub completions {
+    my $self = shift;
     my $index = shift;
     $index--;
     my @words = @_;

@@ -1,8 +1,4 @@
 package Rakudobrew::ShellHook;
-require Exporter;
-our @ISA = qw( Exporter );
-our @EXPORT = qw();
-
 use strict;
 use warnings;
 use 5.010;
@@ -12,48 +8,78 @@ use Rakudobrew::Variables;
 use Rakudobrew::Tools;
 use Rakudobrew::VersionHandling;
 
+my $shell_hook;
+
+sub initialize {
+    my $class = shift;
+    my $shell = shift;
+
+    if (!grep(/^\Q$shell\E$/, available_hooks("Dummy self"))) {
+        # No valid shell given. Do autodetection.
+        $shell = 'Bash'; # Not implemented yet.
+    }
+
+    eval "require Rakudobrew::ShellHook::$shell";
+    $shell_hook = bless {}, "Rakudobrew::ShellHook::$shell";
+    return $shell_hook;
+}
+
+sub get {
+    my $self = shift;
+    return $shell_hook;
+}
+
+sub available_hooks {
+    my $self = shift;
+    my @available_shell_hooks;
+    opendir(my $dh, catdir($prefix, 'lib', 'Rakudobrew', 'ShellHook')) or die "$brew_name: lib dir not found";
+    while (my $entry = readdir $dh) {
+        if ($entry =~ /(.*)\.pm$/) {
+            push @available_shell_hooks, $1;
+        }
+    }
+    closedir $dh;
+    return @available_shell_hooks;
+}
+
 sub print_shellmod_code {
-    no strict 'refs';
+    my $self = shift;
     my @params = @_;
     my $shell = shift(@params);
 	my $command = shift(@params) // '';
     my $mode = get_brew_mode(1);
 
-    eval "require Rakudobrew::ShellHook::$shell";
-    if ($@) {
-        die "Shell hook '$shell' not found.";
-    }
-
     if ($mode eq 'shim') {
         if ($command eq 'shell' && @params) {
             if ($params[0] eq '--unset') {
-                say "Rakudobrew::ShellHook::${shell}::get_shell_unsetter_code"->();
+                say $self->get_shell_unsetter_code();
             }
             else {
-                say "Rakudobrew::ShellHook::${shell}::get_shell_setter_code"->($params[0]);
+                say $self->get_shell_setter_code($params[0]);
             }
         }
         elsif ($command eq 'mode') { # just switched to shim mode
             my $path = $ENV{PATH};
-            $path = clean_path($path);
+            $path = $self->clean_path($path);
             $path = $shim_dir . ':' . $path;
-            say "Rakudobrew::ShellHook::${shell}::get_path_setter_code"->($path);
+            say $self->get_path_setter_code($path);
         }
     }
     else { # get_brew_mode() eq 'env'
         my $version = get_version();
         my $path = $ENV{PATH};
-        $path = clean_path($path);
+        $path = $self->clean_path($path);
         if ($version ne 'system') {
             $path = join(':', get_bin_paths($version), $path);
         }
         if ($path ne $ENV{PATH}) {
-            say "Rakudobrew::ShellHook::${shell}::get_path_setter_code"->($path);
+            say $self->get_path_setter_code($path);
         }
     }
 }
 
 sub clean_path {
+    my $self = shift;
     my $path = shift;
     my $also_clean_path = shift;
 

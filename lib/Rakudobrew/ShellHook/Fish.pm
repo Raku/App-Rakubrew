@@ -1,4 +1,6 @@
 package Rakudobrew::ShellHook::Fish;
+use Rakudobrew::ShellHook;
+our @ISA = "Rakudobrew::ShellHook";
 use strict;
 use warnings;
 use 5.010;
@@ -8,12 +10,12 @@ use FindBin qw($RealBin $RealScript);
 use Rakudobrew::Variables;
 use Rakudobrew::Tools;
 use Rakudobrew::VersionHandling;
-use Rakudobrew::ShellHook;
 use Rakudobrew::Build;
 
 sub get_init_code {
+    my $self = shift;
     my $path = $ENV{PATH};
-    $path = Rakudobrew::ShellHook::clean_path($path, $RealBin);
+    $path = $self->clean_path($path, $RealBin);
 
     my @path_components = split /:/, $path;
     @path_components = map { "'$_'" } @path_components;
@@ -55,10 +57,12 @@ EOT
 }
 
 sub post_call_eval {
-    Rakudobrew::ShellHook::print_shellmod_code('Bash', @_);
+    my $self = shift;
+    $self->print_shellmod_code('Bash', @_);
 }
 
 sub get_path_setter_code {
+    my $self = shift;
     my $path = shift;
     my @path_components = split /:/, $path;
     @path_components = map { "'$_'" } @path_components;
@@ -66,15 +70,18 @@ sub get_path_setter_code {
 }
 
 sub get_shell_setter_code {
+    my $self = shift;
     my $version = shift;
     return "set -gx $env_var $version";
 }
 
 sub get_shell_unsetter_code {
+    my $self = shift;
     return "set -ex $env_var";
 }
 
 sub completions {
+    my $self = shift;
     my @words = @_;
 
     if (@words == 1) {
