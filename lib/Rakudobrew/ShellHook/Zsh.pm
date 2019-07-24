@@ -12,6 +12,11 @@ use Rakudobrew::Tools;
 use Rakudobrew::VersionHandling;
 use Rakudobrew::Build;
 
+sub supports_hooking {
+    my $self = shift;
+    1;
+}
+
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
