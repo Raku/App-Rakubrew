@@ -65,7 +65,8 @@ sub get_init_code {
     return <<EOT;
 \$Env:PATH = "$path"
 Function $brew_name {
-    # TODO: abort if first command fails.
+    # TODO: In PowerShell functions do not have return codes. Thus we can not forward the underlying return code.
+    # For now we just throw if the actual rakudobrew has a returncode != 0. Maybe come up with a better way?
     perl $brew_exec internal_hooked PowerShell \$args
     if (\$LASTEXITCODE -ne 0) {
         Throw "Rakudobrew failed with exitcode \$LASTEXITCODE"
