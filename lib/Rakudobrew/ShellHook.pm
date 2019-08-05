@@ -78,6 +78,8 @@ sub print_shellmod_code {
     my $command = shift(@params) // '';
     my $mode = get_brew_mode(1);
 
+    my $sep = $^O =~ /win32/i ? ';' : ':';
+
     if ($mode eq 'shim') {
         if ($command eq 'shell' && @params) {
             if ($params[0] eq '--unset') {
@@ -90,7 +92,7 @@ sub print_shellmod_code {
         elsif ($command eq 'mode') { # just switched to shim mode
             my $path = $ENV{PATH};
             $path = $self->clean_path($path);
-            $path = $shim_dir . ':' . $path;
+            $path = $shim_dir . $sep . $path;
             say $self->get_path_setter_code($path);
         }
     }
@@ -99,7 +101,7 @@ sub print_shellmod_code {
         my $path = $ENV{PATH};
         $path = $self->clean_path($path);
         if ($version ne 'system') {
-            $path = join(':', get_bin_paths($version), $path);
+            $path = join($sep, get_bin_paths($version), $path);
         }
         if ($path ne $ENV{PATH}) {
             say $self->get_path_setter_code($path);
