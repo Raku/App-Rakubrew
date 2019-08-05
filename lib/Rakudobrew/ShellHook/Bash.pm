@@ -4,7 +4,7 @@ our @ISA = "Rakudobrew::ShellHook";
 use strict;
 use warnings;
 use 5.010;
-use File::Spec::Functions qw(catdir splitpath);
+use File::Spec::Functions qw(catfile catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
 use Rakudobrew::Variables;
