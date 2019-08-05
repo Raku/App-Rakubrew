@@ -48,7 +48,7 @@ sub get_init_code {
     return <<EOT;
 export PATH="$path"
 $brew_name() {
-    command $brew_name internal_hooked "\$@" &&
+    command $brew_name internal_hooked Sh "\$@" &&
     eval "`command $brew_name internal_shell_hook Sh post_call_eval "\$@"`"
 }
 EOT

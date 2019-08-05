@@ -57,7 +57,7 @@ sub get_init_code {
 set -x PATH $path
 
 function $brew_name
-    command $brew_name internal_hooked \$argv
+    command $brew_name internal_hooked Fish \$argv
     and eval (command $brew_name internal_shell_hook Fish post_call_eval \$argv)
 end
 
