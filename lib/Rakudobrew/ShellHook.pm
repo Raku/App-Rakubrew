@@ -121,6 +121,7 @@ sub clean_path {
     push @paths, $versions_dir;
     push @paths, $shim_dir;
     push @paths, $also_clean_path if $also_clean_path;
+    @paths = map { "\Q$_\E" } @paths;
     my $paths_regex = join "|", @paths;
 
     my $old_path;
