@@ -67,6 +67,7 @@ unless (-d $git_reference) {
 my $hook;
 { # Detect shell environment and initialize the shell object.
     my $shell = '';
+    $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'internal_shell_hook';
     $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'internal_hooked';
     $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'init';
     $hook = Rakudobrew::ShellHook->initialize($shell);
