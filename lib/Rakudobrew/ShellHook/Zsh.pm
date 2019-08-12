@@ -100,37 +100,17 @@ sub get_shell_unsetter_code {
 sub completions {
     my $self = shift;
     my $index = shift;
-    $index--;
+    $index--; # We want 0 based
     my @words = @_;
 
-    if ($index == 1) {
-        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef exec which whence mode self-upgrade triple test);
-        my $candidate = @words < 2 ? '' : $words[1];
-        say join(' ', grep({ substr($_, 0, length($candidate)) eq $candidate } @commands));
+    # Strip command name.
+    while (@words > 0 && !(@words[0] =~ /(^|\W)$brew_name$/) {
+        shift @words;
+        $index--;
     }
-    elsif($index == 2 && ($words[1] eq 'global' || $words[1] eq 'switch' || $words[1] eq 'shell' || $words[1] eq 'local' || $words[1] eq 'nuke' || $words[1] eq 'test')) {
-        my @versions = get_versions();
-        push @versions, 'all'     if $words[1] eq 'test';
-        push @versions, '--unset' if $words[1] eq 'shell';
-        my $candidate = @words < 3 ? '' : $words[2];
-        say join(' ', grep({ substr($_, 0, length($candidate)) eq $candidate } @versions));
-    }
-    elsif($index == 2 && $words[1] eq 'build') {
-        my $candidate = @words < 3 ? '' : $words[2];
-        say join(' ', grep({ substr($_, 0, length($candidate)) eq $candidate } (Rakudobrew::Build::available_backends(), 'all')));
-    }
-    elsif($index == 3 && $words[1] eq 'build') {
-        my @installed = get_versions();
-        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } Rakudobrew::Build::available_rakudos());
 
-        my $candidate = @words < 4 ? '' : $words[3];
-        say join(' ', grep({ substr($_, 0, length($candidate)) eq $candidate } @installables));
-    }
-    elsif($index == 2 && $words[1] eq 'mode') {
-        my @modes = qw(env shim);
-        my $candidate = @words < 3 ? '' : $words[2];
-        say join(' ', grep({ substr($_, 0, length($candidate)) eq $candidate } @modes));
-    }
+    my @completions = $self->get_completions($index, @words);
+    say join(' ', @completions);
 }
 
 1;
