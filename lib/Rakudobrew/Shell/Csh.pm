@@ -1,6 +1,6 @@
-package Rakudobrew::ShellHook::Csh;
-use Rakudobrew::ShellHook;
-our @ISA = "Rakudobrew::ShellHook";
+package Rakudobrew::Shell::Csh;
+use Rakudobrew::Shell;
+our @ISA = "Rakudobrew::Shell";
 use strict;
 use warnings;
 use 5.010;
@@ -43,7 +43,7 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = Rakudobrew::ShellHook::clean_path($path, $RealBin);
+    $path = Rakudobrew::Shell::clean_path($path, $RealBin);
     $path = "$RealBin:$path";
     $path = join(':', $shim_dir, $path);
     return <<EOT;

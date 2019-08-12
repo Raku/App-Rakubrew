@@ -1,6 +1,6 @@
-package Rakudobrew::ShellHook::Sh;
-use Rakudobrew::ShellHook;
-our @ISA = "Rakudobrew::ShellHook";
+package Rakudobrew::Shell::Sh;
+use Rakudobrew::Shell;
+our @ISA = "Rakudobrew::Shell";
 use strict;
 use warnings;
 use 5.010;

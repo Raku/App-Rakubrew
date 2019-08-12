@@ -1,10 +1,10 @@
-package Rakudobrew::ShellHook::Bash;
-use Rakudobrew::ShellHook;
-our @ISA = "Rakudobrew::ShellHook";
+package Rakudobrew::Shell::Zsh;
+use Rakudobrew::Shell;
+our @ISA = "Rakudobrew::Shell";
 use strict;
 use warnings;
 use 5.010;
-use File::Spec::Functions qw(catfile catdir splitpath);
+use File::Spec::Functions qw(catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
 use Rakudobrew::Variables;
@@ -18,21 +18,27 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my @profiles = qw( .bash_profile .profile );
+    my $brew_exec = catfile($RealBin, $brew_name);
+    # add zsh files in custom paths
+    # it should be true that if ZDOTDIR has been set the user
+    # wants to use the zsh, but another shell could be
+    # in place now
+    my @profiles = qw( .zshenv .zshrc .zlogin );
+    if ( exists $ENV{ZDOTDIR} ) {
+        unshift @profiles, map { catfile( $ENV{ZDOTDIR}, $_ ) } @profiles;
+    }
     my @existing_profiles = grep { -f catfile( $ENV{'HOME'}, $_ ) } @profiles;
     my $profile = @existing_profiles ? $existing_profiles[0] : $profiles[0];
-
-    my $brew_exec = catfile($RealBin, $brew_name);
 
     return <<EOT;
 Load $brew_name automatically by adding
 
-  eval "\$($brew_exec init Bash)"
+  eval "\$($brew_exec init Zsh)"
 
 to ~/$profile.
 This can be easily done using:
 
-  echo 'eval "\$($brew_exec init Bash)"' >> ~/$profile
+  echo 'eval "\$($brew_exec init Zsh)"' >> ~/$profile
 EOT
 }
 
@@ -53,15 +59,20 @@ sub get_init_code {
     return <<EOT;
 export PATH="$path"
 $brew_name() {
-    command $brew_name internal_hooked Bash "\$@" &&
-    eval "`command $brew_name internal_shell_hook Bash post_call_eval "\$@"`"
+    command $brew_name internal_hooked Zsh "\$@" &&
+    eval "`command $brew_name internal_shell_hook Zsh post_call_eval "\$@"`"
 }
+
+compctl -K _${brew_name}_completions -x 'p[2] w[1,register]' -/ -- $brew_name
+
 _${brew_name}_completions() {
-    COMPREPLY=(\$(command $brew_name internal_shell_hook Bash completions \$COMP_CWORD \$COMP_LINE))
-    \$(command $brew_name internal_shell_hook Bash completion_options \$COMP_CWORD \$COMP_LINE)
+    local WORDS POS RESULT
+    read -cA WORDS
+    read -cn POS
+    reply=(\$(command $brew_name internal_shell_hook Zsh completions \$POS \$WORDS))
 }
-complete -F _${brew_name}_completions $brew_name
 EOT
+
 }
 
 sub post_call_eval {
@@ -89,23 +100,17 @@ sub get_shell_unsetter_code {
 sub completions {
     my $self = shift;
     my $index = shift;
+    $index--; # We want 0 based
     my @words = @_;
 
-    my @completions = $self->get_completions($index - 1, @words);
+    # Strip command name.
+    while (@words > 0 && !(@words[0] =~ /(^|\W)$brew_name$/) {
+        shift @words;
+        $index--;
+    }
+
+    my @completions = $self->get_completions($index, @words);
     say join(' ', @completions);
-}
-
-sub completion_options {
-    my $self = shift;
-    my $index = shift;
-    my @words = @_;
-
-    if($index == 3 && $words[1] eq 'register') {
-        say 'compopt -o nospace';
-    }
-    else {
-        say '';
-    }
 }
 
 1;

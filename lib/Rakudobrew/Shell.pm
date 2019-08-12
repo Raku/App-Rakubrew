@@ -1,4 +1,4 @@
-package Rakudobrew::ShellHook;
+package Rakudobrew::Shell;
 use strict;
 use warnings;
 use 5.010;
@@ -19,11 +19,11 @@ sub initialize {
         $shell = detect_shell();
     }
 
-    eval "require Rakudobrew::ShellHook::$shell";
+    eval "require Rakudobrew::Shell::$shell";
     if ($@) {
         die "Loading shell hook failed: " . $@;
     }
-    $shell_hook = bless {}, "Rakudobrew::ShellHook::$shell";
+    $shell_hook = bless {}, "Rakudobrew::Shell::$shell";
     return $shell_hook;
 }
 
@@ -62,7 +62,7 @@ sub get {
 sub available_hooks {
     my $self = shift;
     my @available_shell_hooks;
-    opendir(my $dh, catdir($prefix, 'lib', 'Rakudobrew', 'ShellHook')) or die "$brew_name: lib dir not found";
+    opendir(my $dh, catdir($prefix, 'lib', 'Rakudobrew', 'Shell')) or die "$brew_name: lib dir not found";
     while (my $entry = readdir $dh) {
         if ($entry =~ /(.*)\.pm$/) {
             push @available_shell_hooks, $1;

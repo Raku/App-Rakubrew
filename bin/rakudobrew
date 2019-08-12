@@ -12,7 +12,7 @@ use Rakudobrew::Variables;
 use Rakudobrew::Tools;
 use Rakudobrew::VersionHandling;
 use Rakudobrew::Build;
-use Rakudobrew::ShellHook;
+use Rakudobrew::Shell;
 
 # Detect incompatible version upgrade and notify user of the breakage.
 {
@@ -70,7 +70,7 @@ my $hook;
     $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'internal_shell_hook';
     $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'internal_hooked';
     $shell = $ARGV[1] if @ARGV >= 2 && $ARGV[0] eq 'init';
-    $hook = Rakudobrew::ShellHook->initialize($shell);
+    $hook = Rakudobrew::Shell->initialize($shell);
 }
 
 if (@ARGV >= 2 && $ARGV[0] eq 'internal_hooked') { # The hook is there, all good!
