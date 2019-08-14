@@ -14,7 +14,7 @@ sub initialize {
     my $class = shift;
     my $shell = shift;
 
-    if (!grep(/^\Q$shell\E$/, available_hooks("Dummy self"))) {
+    if (!shell_exists('Dummy self', $shell)) {
         # No valid shell given. Do autodetection.
         $shell = detect_shell();
     }
@@ -45,7 +45,7 @@ sub detect_shell {
         $shell =~ s/[^a-z]+$//; # remove version numbers
         $shell = ucfirst $shell;
 
-        if (!grep(/^\Q$shell\E$/, available_hooks("Dummy self"))) {
+        if (!shell_exists('Dummy self', $shell)) {
             $shell = 'Bash';
         }
 
@@ -58,18 +58,12 @@ sub get {
     return $shell_hook;
 }
 
-
-sub available_hooks {
+sub shell_exists {
     my $self = shift;
-    my @available_shell_hooks;
-    opendir(my $dh, catdir($prefix, 'lib', 'Rakudobrew', 'Shell')) or die "$brew_name: lib dir not found";
-    while (my $entry = readdir $dh) {
-        if ($entry =~ /(.*)\.pm$/) {
-            push @available_shell_hooks, $1;
-        }
-    }
-    closedir $dh;
-    return @available_shell_hooks;
+    my $shell = shift;
+
+    eval "require Rakudobrew::Shell::$shell";
+    return $@ ? 0 : 1;
 }
 
 sub print_shellmod_code {
