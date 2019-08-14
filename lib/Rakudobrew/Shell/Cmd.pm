@@ -20,6 +20,9 @@ sub supports_hooking {
 }
 
 sub install_note {
+    # The autorun guard to prevent endless loops is based on this StackOverflow
+    # answer: https://stackoverflow.com/a/57451662/1975049
+
     my $brew_exec = catfile($RealBin, $brew_name);
     return <<EOT;
 To load $brew_name in CMD automatically you have to do two things:
