@@ -1,4 +1,4 @@
-package Rakudobrew::VersionHandling;
+package App::Rakudobrew::VersionHandling;
 require Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw(
@@ -22,8 +22,8 @@ use 5.010;
 use File::Spec::Functions qw(catfile catdir splitdir splitpath catpath canonpath);
 use Cwd qw(realpath);
 use File::Which qw();
-use Rakudobrew::Variables;
-use Rakudobrew::Tools;
+use App::Rakudobrew::Variables;
+use App::Rakudobrew::Tools;
 
 sub get_versions {
     opendir(my $dh, $versions_dir);

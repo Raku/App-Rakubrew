@@ -1,12 +1,12 @@
-package Rakudobrew::Shell;
+package App::Rakudobrew::Shell;
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir catfile updir splitpath);
 use Cwd qw(cwd);
-use Rakudobrew::Variables;
-use Rakudobrew::Tools;
-use Rakudobrew::VersionHandling;
+use App::Rakudobrew::Variables;
+use App::Rakudobrew::Tools;
+use App::Rakudobrew::VersionHandling;
 
 my $shell_hook;
 
@@ -19,11 +19,11 @@ sub initialize {
         $shell = detect_shell();
     }
 
-    eval "require Rakudobrew::Shell::$shell";
+    eval "require App::Rakudobrew::Shell::$shell";
     if ($@) {
         die "Loading shell hook failed: " . $@;
     }
-    $shell_hook = bless {}, "Rakudobrew::Shell::$shell";
+    $shell_hook = bless {}, "App::Rakudobrew::Shell::$shell";
     return $shell_hook;
 }
 
@@ -62,7 +62,7 @@ sub shell_exists {
     my $self = shift;
     my $shell = shift;
 
-    eval "require Rakudobrew::Shell::$shell";
+    eval "require App::Rakudobrew::Shell::$shell";
     return $@ ? 0 : 1;
 }
 
@@ -156,11 +156,11 @@ sub get_completions {
     }
     elsif($index == 1 && $words[0] eq 'build') {
         my $candidate = $words[1] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } (Rakudobrew::Build::available_backends(), 'all'));
+        return grep({ substr($_, 0, length($candidate)) eq $candidate } (App::Rakudobrew::Build::available_backends(), 'all'));
     }
     elsif($index == 2 && $words[0] eq 'build') {
         my @installed = get_versions();
-        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } Rakudobrew::Build::available_rakudos());
+        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakudobrew::Build::available_rakudos());
 
         my $candidate = $words[3] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);

@@ -1,4 +1,4 @@
-package Rakudobrew::Tools;
+package App::Rakudobrew::Tools;
 require Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw(run slurp spurt trim check_prog_name_match uniq slurp_dir my_fileparse);

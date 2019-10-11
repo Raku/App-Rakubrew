@@ -1,4 +1,4 @@
-package Rakudobrew::Variables;
+package App::Rakudobrew::Variables;
 require Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( $brew_name $env_var $local_filename $prefix $versions_dir $shim_dir $git_reference $GIT $GIT_PROTO $PERL5 %git_repos %impls );

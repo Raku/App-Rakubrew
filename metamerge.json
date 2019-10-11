@@ -1,0 +1,10 @@
+{
+    "x_static_install": true,
+    "resources": {
+        "repository": {
+            "web": "https://github.com/tadzik/rakudobrew",
+            "url": "https://github.com/tadzik/rakudobrew.git",
+            "type": "git"
+        }
+    }
+}

@@ -1,8 +1,20 @@
+Build
+_build_params
 CURRENT
 MODE
+blib/
 versions/*
 shims/*
 git_reference/
 
+MANIFEST
+META.yml
+META.json
+MYMETA.yml
+MYMETA.json
+Makefile
+
+*~
 *.swp
 .directory
+
