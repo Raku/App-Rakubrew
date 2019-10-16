@@ -90,6 +90,7 @@ sub completions {
     my $self = shift;
     my $index = shift;
     my @words = @_;
+    shift @words; # remove command name
 
     my @completions = $self->get_completions($index - 1, @words);
     say join(' ', @completions);
