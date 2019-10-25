@@ -17,7 +17,7 @@ our $home_env_var = 'RAKUDOBREW_HOME';
 our $env_var = 'PL6ENV_VERSION';
 our $local_filename = '.perl6-version';
 
-our $prefix = $ENV{$home_env_var} // abs_path(catdir(File::Homedir->my_data, $^O ~~ /win32/i ? 'rakudobrew' : '.rakudobrew'));
+our $prefix = $ENV{$home_env_var} // abs_path(catdir(File::HomeDir->my_data, $^O =~ /win32/i ? 'rakudobrew' : '.rakudobrew'));
 $prefix .= '/' if $prefix =~ /\/\z/;
 
 our $versions_dir = catdir($prefix, 'versions');

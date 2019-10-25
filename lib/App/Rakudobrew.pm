@@ -27,6 +27,8 @@ sub run_script {
     my ($self) = @_;
     my @args = @{$self->{args}};
 
+    mkdir $prefix unless (-d $prefix);
+
     # Detect incompatible version upgrade and notify user of the breakage.
     {
         my $backends = join '|', App::Rakudobrew::Build::available_backends();
@@ -57,15 +59,9 @@ EOS
         }
     }
 
-    unless (-d $shim_dir) {
-        mkdir $shim_dir;
-    }
-    unless (-d $versions_dir) {
-        mkdir $versions_dir;
-    }
-    unless (-d $git_reference) {
-        mkdir $git_reference;
-    }
+    mkdir $shim_dir      unless (-d $shim_dir);
+    mkdir $versions_dir  unless (-d $versions_dir);
+    mkdir $git_reference unless (-d $git_reference);
 
     { # Check whether we are called as a shim and forward if yes.
         my (undef, undef, $prog_name) = splitpath($0);
