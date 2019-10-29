@@ -4,6 +4,12 @@ use warnings;
 use 5.010;
 our $VERSION = '0.01';
 
+use Encode::Locale qw(env);
+if (-t) {
+    binmode(STDIN, ":encoding(console_in)");
+    binmode(STDOUT, ":encoding(console_out)");
+    binmode(STDERR, ":encoding(console_out)");
+}
 use FindBin qw($RealBin);
 use File::Path qw(remove_tree);
 use File::Spec::Functions qw(catfile catdir splitpath updir);
