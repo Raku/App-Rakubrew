@@ -1,5 +1,38 @@
+Release Guide
+=============
+
+- Bump version and create a respective commit
+- Tag that commit with the version number
+- Create a GitHub release
+- Upload the release to CPAN
+- Create `rakudobrew-win.exe` on Windows via the below instructions
+- Create `rakudobrew-macos` on MacOS via the below instructions
+- Create `rakudobrew-linux` on Linux via the below instructions
+- Upload the the executables to the webserver in `$webroot/releases/{win,mac,linux}/{version}/rakudobrew(.exe)?`
+- Bump the version number on the webserver in `$webroot/latest`
+
+
+Linux
+-----
+
+    cpanm --installdeps -n .
+    cpanm App::FatPacker
+    fatpack trace script/rakudobrew
+    for X in `ls -1 lib/App/Rakudobrew/Shell`; do echo App/Rakudobrew/Shell/$X >> fatpacker.trace; done
+    fatpack packlists-for `cat fatpacker.trace` > packlists
+    fatpack tree `cat packlists`
+    fatpack file script/rakudobrew > rakudobrew.packed.pl
+
+
+
+MacOS
+-----
+
+TBD
+
+
 Windows
-=======
+-------
 
 - download Docker desktop and install in Windows mode
 - In a PowerShell
@@ -27,10 +60,7 @@ Windows
     
     git clone https://github.com/patzim/rakudobrew.git App-Rakudobrew
     
-    # cpanm --installdeps -n App-Rakudobrew
+    cpanm --installdeps -n App-Rakudobrew
     
     pp -I App-Rakudobrew/lib -M App::Rakudobrew::Shell::* -o rakudobrew.exe App-Rakudobrew/script/rakudobrew
-    
-    
-    # Probably already part of strawberry
-    # curl -L https://cpanmin.us | perl - App::cpanminus
+
