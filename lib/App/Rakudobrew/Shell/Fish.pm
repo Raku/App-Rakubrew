@@ -34,12 +34,10 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = $self->clean_path($path, $RealBin);
+    $path = $self->clean_path($path);
 
     my @path_components = split /:/, $path;
     @path_components = map { "'$_'" } @path_components;
-
-    unshift @path_components, "'$RealBin'";
 
     $path =~ s/:/ /g;
     if (get_brew_mode() eq 'env') {
@@ -53,12 +51,14 @@ sub get_init_code {
 
     $path = join(' ', @path_components);
 
+    my $brew_exec = catfile($RealBin, $brew_name);
+
     return <<EOT;
 set -x PATH $path
 
 function $brew_name
-    command $brew_name internal_hooked Fish \$argv
-    and eval (command $brew_name internal_shell_hook Fish post_call_eval \$argv)
+    command $brew_exec internal_hooked Fish \$argv
+    and eval (command $brew_exec internal_shell_hook Fish post_call_eval \$argv)
 end
 
 function _${brew_name}_is_not_register
@@ -70,7 +70,7 @@ function _${brew_name}_is_not_register
     end
 end
 
-complete -c $brew_name -f -n _${brew_name}_is_not_register -a '(command $brew_name internal_shell_hook Fish completions (commandline -poc) | string split " ")'
+complete -c $brew_name -f -n _${brew_name}_is_not_register -a '(command $brew_exec internal_shell_hook Fish completions (commandline -poc) | string split " ")'
 EOT
 
 }

@@ -64,8 +64,7 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = $self->clean_path($path, $RealBin);
-    $path = "$RealBin;$path";
+    $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         if (get_global_version() && get_global_version() ne 'system') {
             $path = join(';', get_bin_paths(get_global_version()), $path);
@@ -82,7 +81,7 @@ sub get_init_code {
     # The second for is there to not error on empty lines: https://stackoverflow.com/a/31316333
     return <<EOT;
 SET PATH=$path
-doskey rakudobrew=perl $brew_exec internal_hooked Cmd \$* && FOR /f "delims=" \%i in ('perl $brew_exec internal_shell_hook Cmd post_call_eval \$*') do \@\%i
+doskey rakudobrew=$brew_exec internal_hooked Cmd \$* && FOR /f "delims=" \%i in ('$brew_exec internal_shell_hook Cmd post_call_eval \$*') do \@\%i
 EOT
 }
 

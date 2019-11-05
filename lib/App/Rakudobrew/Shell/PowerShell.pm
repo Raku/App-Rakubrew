@@ -49,8 +49,7 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = $self->clean_path($path, $RealBin);
-    $path = "$RealBin;$path";
+    $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         if (get_global_version() && get_global_version() ne 'system') {
             $path = join(';', get_bin_paths(get_global_version()), $path);
@@ -67,11 +66,11 @@ sub get_init_code {
 Function $brew_name {
     # TODO: In PowerShell functions do not have return codes. Thus we can not forward the underlying return code.
     # For now we just throw if the actual rakudobrew has a returncode != 0. Maybe come up with a better way?
-    perl $brew_exec internal_hooked PowerShell \$args
+    $brew_exec internal_hooked PowerShell \$args
     if (\$LASTEXITCODE -ne 0) {
         Throw "Rakudobrew failed with exitcode \$LASTEXITCODE"
     }
-    \$cmd = perl $brew_exec internal_shell_hook PowerShell post_call_eval \$args | Out-String
+    \$cmd = $brew_exec internal_shell_hook PowerShell post_call_eval \$args | Out-String
     if (\$cmd) {
         Invoke-Expression -Command \$cmd
     }
@@ -80,7 +79,7 @@ Function $brew_name {
 if (\$PSVersionTable.PSVersion -ge "5.0.0.0") {
     Register-ArgumentCompleter -Native -CommandName $brew_name -ScriptBlock {
         param(\$commandName, \$argumentString, \$position)
-        \$completions = perl $brew_exec internal_shell_hook PowerShell completions "\$position" "\$argumentString" | Out-String
+        \$completions = $brew_exec internal_shell_hook PowerShell completions "\$position" "\$argumentString" | Out-String
         \$completions = \$completions.trim('\n').Split(' ')
         \$completions | ForEach-Object {
             [System.Management.Automation.CompletionResult]::new(\$_, \$_, 'ParameterValue', \$_)

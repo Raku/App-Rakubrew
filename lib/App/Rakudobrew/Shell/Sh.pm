@@ -34,8 +34,7 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = $self->clean_path($path, $RealBin);
-    $path = "$RealBin:$path";
+    $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         if (get_global_version() && get_global_version() ne 'system') {
             $path = join(':', get_bin_paths(get_global_version()), $path);
@@ -45,11 +44,13 @@ sub get_init_code {
         $path = join(':', $shim_dir, $path);
     }
 
+    my $brew_exec = catfile($RealBin, $brew_name);
+
     return <<EOT;
 export PATH="$path"
 $brew_name() {
-    command $brew_name internal_hooked Sh "\$@" &&
-    eval "`command $brew_name internal_shell_hook Sh post_call_eval "\$@"`"
+    command $brew_exec internal_hooked Sh "\$@" &&
+    eval "`command $brew_exec internal_shell_hook Sh post_call_eval "\$@"`"
 }
 EOT
 
