@@ -103,7 +103,7 @@ sub completions {
     my $self = shift;
     my @words = @_;
 
-    my @completions(@words - 1, @words);
+    my @completions = $self->get_completions(@words - 1, @words);
     say join(' ', @completions);
 }
 

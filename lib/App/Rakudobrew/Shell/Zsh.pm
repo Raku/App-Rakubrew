@@ -104,9 +104,10 @@ sub completions {
     my @words = @_;
 
     # Strip command name.
-    while (@words > 0 && !(@words[0] =~ /(^|\W)$brew_name$/) {
-        shift @words;
+    while (@words > 0) {
+        my $word = shift @words;
         $index--;
+        last if $word =~ /(^|\W)$brew_name$/;
     }
 
     my @completions = $self->get_completions($index, @words);
