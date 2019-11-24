@@ -17,7 +17,15 @@ our $home_env_var = 'RAKUDOBREW_HOME';
 our $env_var = 'PL6ENV_VERSION';
 our $local_filename = '.perl6-version';
 
-our $prefix = $home_env_var // catdir(File::HomeDir->my_data, $^O =~ /win32/i ? 'rakudobrew' : '.rakudobrew');
+our $prefix = $ENV{$home_env_var}
+    // catdir(File::HomeDir->my_data,
+        $^O =~ /win32/i ? 'rakudobrew' :
+        # heuristic to determine whether the folder should be hidden:
+        # If it's located in a hidden folder already, don't hide.
+        # The typical case would be an XDG environment where
+        # File::HomeDir->my_data is ~/.local/share
+        File::HomeDir->my_data =~ /\/\./ ? 'rakudobrew' :
+        '.rakudobrew');
 
 $prefix = abs_path($prefix) if (-d $prefix);
 
