@@ -29,6 +29,7 @@ __END__
  <%brew_name%> triple [<rakudo-version> [<nqp-version> [<moar-version>]]]
  <%brew_name%> register <name> <path>
  <%brew_name%> build-zef
+ <%brew_name%> download [<release>]
 
  <%brew_name%> exec <executable> [<executable-args>]
  <%brew_name%> which <executable>
@@ -120,7 +121,9 @@ called. This is only necessary in C<shim> mode.
 Usage: <%brew_name%> list-available
 
 List all Rakudo versions that can be installed.
-Installed Perls will be marked with an asterisk at the beginning of the line.
+Installed versions will be marked with an asterisk at the beginning of the line.
+Releases marked with a 'P' have a precompiled archive available and can be
+downloaded and installed without compilation with the C<download> subcommand.
 
 =head1 COMMAND: build
 
@@ -179,6 +182,12 @@ Register an externaly built / installed Rakudo version with <%brew_name%>.
 Usage: <%brew_name%> build-zef
 
 Install Zef into the current Rakudo version.
+
+=head1 COMMAND: download
+
+Usage: <%brew_name%> download [<rakudo-version>]
+
+Download and install a precompiled release archive.
 
 =head1 COMMAND: exec
 

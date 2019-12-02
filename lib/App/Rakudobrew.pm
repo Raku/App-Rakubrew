@@ -18,6 +18,7 @@ use App::Rakudobrew::Variables;
 use App::Rakudobrew::Tools;
 use App::Rakudobrew::VersionHandling;
 use App::Rakudobrew::Build;
+use App::Rakudobrew::Download;
 use App::Rakudobrew::Shell;
 
 sub new {
@@ -271,6 +272,29 @@ EOS
         }
         say "Done, $name built";
 
+    } elsif ($arg eq 'download') {
+        my $impl = shift(@args) // 'moar';
+        my $ver = shift @args if @args;
+
+        if (!exists $impls{$impl}) {
+            say STDERR "Cannot download Rakudo on '$impl': this backend does not exist.";
+            exit 1;
+        }
+
+        if (!defined $ver) {
+            # TODO: Check if that version is downloadable. If not abort!
+            my @versions = App::Rakudobrew::Build::available_rakudos();
+            @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
+            $ver = $versions[-1];
+        }
+        App::Rakudobrew::Download::download_precomp_archive($impl, $ver);
+
+        # Might have new executables now -> rehash
+        rehash();
+        unless (get_version()) {
+            set_global_version("$impl-$ver");
+        }
+        say "Done, $impl-$ver installed";
     } elsif ($arg eq 'register') {
         my ($name, $path) = @args[0 .. 1];
         if (!$name || !$path) {

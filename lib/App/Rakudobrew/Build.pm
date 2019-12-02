@@ -1,6 +1,6 @@
 package App::Rakudobrew::Build;
 require Exporter;
-our @ISA = qw( Exporter );
+our @ISA = qw(Exporter);
 our @EXPORT = qw();
 
 use strict;
