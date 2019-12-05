@@ -10,13 +10,12 @@ use Furl;
 use JSON;
 use Config;
 use IO::Uncompress::Unzip qw( $UnzipError );
-use File::Path qw( make_path );
+use File::Path qw( make_path remove_tree );
+use File::Copy::Recursive qw( dirmove );
 use File::Spec::Functions qw( updir splitpath catfile catdir );
 use App::Rakudobrew::Variables;
 use App::Rakudobrew::Tools;
 use App::Rakudobrew::VersionHandling;
-
-use Data::Printer;
 
 my $release_index_url   = 'https://rakudo.org/dl/rakudo';
 my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
@@ -33,18 +32,10 @@ sub download_precomp_archive {
     }
 
     my $furl = Furl->new();
-    my $release_index = _download_release_index($furl);
-    my @matching_releases =
-        sort { $b->{build_rev} cmp $a->{build_rev} }
-        grep {
-               $_->{name}     eq 'rakudo'
-            && $_->{type}     eq 'archive'
-            && $_->{platform} eq _my_platform()
-            && $_->{arch}     eq _my_arch()
-            && $_->{format}   eq (_my_platform() eq 'win' ? 'zip' : 'tar.gz')
-            && ($ver ? $_->{ver} eq $ver : $_->{latest})
-        } @$release_index;
-    @matching_releases = grep { $_->{build_rev} eq $matching_releases[0]->{build_rev} } @matching_releases;
+
+    my @matching_releases = grep {
+            $ver ? $_->{ver} eq $ver : $_->{latest}
+        } _retrieve_releases($furl);
 
     if (!@matching_releases) {
         say STDERR 'Couldn\'t find a precomp release for OS: "' . _my_platform() . '", architecture: "' . _my_arch() . '"';
@@ -65,6 +56,26 @@ sub download_precomp_archive {
     else {
         _untar($res->body, $name);
     }
+}
+
+sub available_precomp_archives {
+    return _retrieve_releases(Furl->new());
+}
+
+sub _retrieve_releases {
+    my $furl = shift;
+    my $release_index = _download_release_index($furl);
+    my @matching_releases =
+        sort { $b->{build_rev} cmp $a->{build_rev} }
+        grep {
+               $_->{name}     eq 'rakudo'
+            && $_->{type}     eq 'archive'
+            && $_->{platform} eq _my_platform()
+            && $_->{arch}     eq _my_arch()
+            && $_->{format}   eq (_my_platform() eq 'win' ? 'zip' : 'tar.gz')
+        } @$release_index;
+    # Filter out older build revisions
+    @matching_releases = grep { my $r1 = +($_->{build_rev}); not grep { +($_->{build_rev}) > $r1 } @matching_releases } @matching_releases;
 }
 
 sub _my_platform {
@@ -104,9 +115,28 @@ sub _untar {
     my ($data, $target) = @_;
     mkdir $target if !-d $target;
     chdir $target;
-    open (TAR, '| tar -xz --strip-components=1');
+    open (TAR, '| tar -xz');
     print TAR $data;
     close TAR;
+
+    my $rakudo_dir;
+    opendir(DIR, '.') || die "Can't open directory: $!\n";
+    while (my $file = readdir(DIR)) {
+        if (-d $file && $file =~ /^rakudo-/) {
+            $rakudo_dir = $file;
+            last;
+        }
+    }
+    closedir(DIR);
+
+    unless ($rakudo_dir) {
+        say STDERR "Archive didn't look as expected, aborting. Extracted to: $target";
+        exit 1;
+    }
+
+    dirmove($rakudo_dir, '.');
+
+    rmdir($rakudo_dir);
 }
 
 sub _unzip {
