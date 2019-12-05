@@ -551,6 +551,10 @@ sub nuke {
             say 'I refuse to nuke system Perl 6!';
             exit 1;
         }
+        elsif ($matched eq get_version()) {
+            say "$matched is currently active. I refuse to nuke.";
+            exit 1;
+        }
         else {
             say "Nuking $matched";
             remove_tree(catdir($versions_dir, $matched));
