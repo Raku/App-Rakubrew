@@ -143,7 +143,7 @@ sub get_completions {
     my @words = @_;
 
     if ($index == 0) {
-        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef exec which whence mode self-upgrade triple test);
+        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test);
         my $candidate = $words[0] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @commands);
     }
@@ -161,6 +161,18 @@ sub get_completions {
     elsif($index == 2 && $words[0] eq 'build') {
         my @installed = get_versions();
         my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakudobrew::Build::available_rakudos());
+
+        my $candidate = $words[3] // '';
+        return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
+    }
+    elsif($index == 1 && $words[0] eq 'download') {
+        my $candidate = $words[1] // '';
+        return grep({ substr($_, 0, length($candidate)) eq $candidate } ('moar'));
+    }
+    elsif($index == 2 && $words[0] eq 'download') {
+        my @installed = get_versions();
+        my @installables = map { $_->{ver} } App::Rakudobrew::Download::available_precomp_archives();
+        @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } @installables);
 
         my $candidate = $words[3] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
