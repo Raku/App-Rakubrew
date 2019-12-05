@@ -29,7 +29,7 @@ __END__
  <%brew_name%> triple [<rakudo-version> [<nqp-version> [<moar-version>]]]
  <%brew_name%> register <name> <path>
  <%brew_name%> build-zef
- <%brew_name%> download [<release>]
+ <%brew_name%> download [<%backends%>] [<rakudo-version>]
 
  <%brew_name%> exec <executable> [<executable-args>]
  <%brew_name%> which <executable>
@@ -131,7 +131,7 @@ Usage: <%brew_name%> available|list-available
 
 List all Rakudo versions that can be installed.
 Installed versions will be marked with an asterisk at the beginning of the line.
-Releases marked with a 'P' have a precompiled archive available and can be
+Releases marked with a 'D' have a precompiled archive available and can be
 downloaded and installed without compilation with the C<download> subcommand.
 
 =head1 COMMAND: build
@@ -194,7 +194,7 @@ Install Zef into the current Rakudo version.
 
 =head1 COMMAND: download
 
-Usage: <%brew_name%> download [<rakudo-version>]
+Usage: <%brew_name%> download [<%backends%>] [<rakudo-version>]
 
 Download and install a precompiled release archive.
 

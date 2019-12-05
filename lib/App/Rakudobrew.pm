@@ -187,9 +187,16 @@ EOS
         my ($cur_backend, $cur_rakudo) = split '-', (get_version() // ''), 2;
         $cur_backend //= '';
         $cur_rakudo  //= '';
+
+        my @downloadables = App::Rakudobrew::Download::available_precomp_archives();
         say "Available Rakudo versions:";
-        map { say $cur_rakudo eq $_ ? "* $_" : "  $_" } App::Rakudobrew::Build::available_rakudos();
-        say "";
+        map {
+            my $ver = $_;
+            my $d = (grep {$_->{ver} eq $ver} @downloadables) ? 'D' : ' ';
+            my $s = $cur_rakudo eq $ver                       ? '*' : ' ';
+            say "$s$d $ver";
+        } App::Rakudobrew::Build::available_rakudos();
+        say '';
         $cur_backend |= '';
         $cur_rakudo |= '';
         say "Available backends:";
