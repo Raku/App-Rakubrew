@@ -24,7 +24,7 @@ __END__
  <%brew_name%> nuke [<version>] # or <%brew_name%> unregister [<version>]
  <%brew_name%> rehash
 
- <%brew_name%> list-available
+ <%brew_name%> available        # or <%brew_name%> list-available
  <%brew_name%> build [<%backends%>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
  <%brew_name%> triple [<rakudo-version> [<nqp-version> [<moar-version>]]]
  <%brew_name%> register <name> <path>
@@ -116,9 +116,18 @@ Usage: <%brew_name%> rehash
 Regenerate all shims. Newly installed scripts will not work unless this is
 called. This is only necessary in C<shim> mode.
 
+=head1 COMMAND: available
+
+Usage: <%brew_name%> available|list-available
+
+List all Rakudo versions that can be installed.
+Installed versions will be marked with an asterisk at the beginning of the line.
+Releases marked with a 'D' have a precompiled archive available and can be
+downloaded and installed without compilation with the C<download> subcommand.
+
 =head1 COMMAND: list-available
 
-Usage: <%brew_name%> list-available
+Usage: <%brew_name%> available|list-available
 
 List all Rakudo versions that can be installed.
 Installed versions will be marked with an asterisk at the beginning of the line.
@@ -154,7 +163,7 @@ C<all> will build all backends.
 
 =item *
 
-The version to build. Call C<list-available> to see a list of available
+The version to build. Call C<available> to see a list of available
 versions. When left empty the latest release is built.
 It is also possible to specify a tag, branch name or commit sha to build.
 

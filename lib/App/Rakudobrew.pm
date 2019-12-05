@@ -183,7 +183,7 @@ EOS
         validate_brew_mode();
         rehash();
 
-    } elsif ($arg eq 'list-available') {
+    } elsif ($arg eq 'list-available' || $arg eq 'available') {
         my ($cur_backend, $cur_rakudo) = split '-', (get_version() // ''), 2;
         $cur_backend //= '';
         $cur_rakudo  //= '';
