@@ -42,7 +42,7 @@ To load $brew_name in CMD automatically you have to do two things:
     set "cmd=!cmdcmdline!"
     if "!cmd!" == "!cmd:/=!" (
         endlocal
-        FOR /f "delims=" \%\%i in ('perl C:\\data\\rakudobrew\\bin\\rakudobrew init Cmd') do \@\%\%i
+        FOR /f "delims=" \%\%i in ('$brew_exec init Cmd') do \@\%\%i
     )
 
   You can easily do that from a CMD prompt using the following command:
@@ -53,7 +53,7 @@ To load $brew_name in CMD automatically you have to do two things:
     echo set "cmd=!cmdcmdline!"
     echo if "!cmd!" == "!cmd:/=!" ^(
     echo     endlocal
-    echo     FOR /f "delims=" \%\%i in ^('perl C:\\data\\rakudobrew\\bin\\rakudobrew init Cmd'^) do \@\%\%i
+    echo     FOR /f "delims=" \%\%i in ^('$brew_exec init Cmd'^) do \@\%\%i
     echo ^)
     ) >> "\%USERPROFILE\%\\Documents\\CMD_profile.cmd"
 
