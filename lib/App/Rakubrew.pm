@@ -1,4 +1,4 @@
-package App::Rakudobrew;
+package App::Rakubrew;
 use strict;
 use warnings;
 use 5.010;
@@ -14,12 +14,12 @@ use FindBin qw($RealBin);
 use File::Path qw(remove_tree);
 use File::Spec::Functions qw(catfile catdir splitpath updir);
 
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
-use App::Rakudobrew::Build;
-use App::Rakudobrew::Download;
-use App::Rakudobrew::Shell;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
+use App::Rakubrew::Build;
+use App::Rakubrew::Download;
+use App::Rakubrew::Shell;
 
 sub new {
     my ($class, @argv) = @_;
@@ -38,23 +38,23 @@ sub run_script {
 
     # Detect incompatible version upgrade and notify user of the breakage.
     {
-        my $backends = join '|', App::Rakudobrew::Build::available_backends();
+        my $backends = join '|', App::Rakubrew::Build::available_backends();
         opendir(my $dh, $prefix);
         my $old_version_found = grep { /^($backends)/ } readdir($dh);
         closedir $dh;
 
         if ($old_version_found) {
             say STDERR <<"EOS";
-You seem to have upgraded rakudobrew to a newer version not compatible with
+You seem to have upgraded rakubrew to a newer version not compatible with
 your current directory layout.
 
-To use the new version you need to completely remove rakudobrew by deleting
+To use the new version you need to completely remove rakubrew by deleting
 $prefix and installing again. See
 
-https://github.com/tadzik/rakudobrew
+https://rakubrew.org/
 
-for installation instructions. You will also need to change the rakudobrew
-entry in your shell startup file (~/.profile) a bit. Run `rakudobrew init`
+for installation instructions. You will also need to change the rakubrew
+entry in your shell startup file (~/.profile) a bit. Run `rakubrew init`
 again to see how.
 
 If you don't want to upgrade, but just continue using the old version,
@@ -85,7 +85,7 @@ EOS
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_shell_hook';
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_hooked';
         $shell = $args[1] if @args >= 2 && $args[0] eq 'init';
-        $self->{hook} = App::Rakudobrew::Shell->initialize($shell);
+        $self->{hook} = App::Rakubrew::Shell->initialize($shell);
     }
 
     if (@args >= 2 && $args[0] eq 'internal_hooked') { # The hook is there, all good!
@@ -99,7 +99,7 @@ EOS
     || !$self->{hook}->supports_hooking )   # If the shell doesn't support hooks there is no point in whining about it.
     {}
     elsif (get_brew_mode() eq 'env' || @args && $args[0] eq 'shell' || @args >= 2 && $args[0] eq 'mode' && $args[1] eq 'env') {
-        say STDERR "The shell hook required to use rakudobrew in 'env' mode or use the 'shell' command seems not to be installed.";
+        say STDERR "The shell hook required to use rakubrew in 'env' mode or use the 'shell' command seems not to be installed.";
         say STDERR "Run '$brew_name init' for installation instructions.";
         exit 1;
     }
@@ -170,9 +170,15 @@ EOS
             }
         }
         else {
-            $self->match_and_run($args[0], sub {
-                set_local_version(shift @args);
-            });
+            my $version = shift @args;
+            if ($version eq '--unset') {
+                set_local_version(undef);
+            }
+            else {
+                $self->match_and_run($version, sub {
+                    set_local_version(shift @args);
+                });
+            }
         }
 
     } elsif ($arg eq 'nuke' || $arg eq 'unregister') {
@@ -188,19 +194,19 @@ EOS
         $cur_backend //= '';
         $cur_rakudo  //= '';
 
-        my @downloadables = App::Rakudobrew::Download::available_precomp_archives();
+        my @downloadables = App::Rakubrew::Download::available_precomp_archives();
         say "Available Rakudo versions:";
         map {
             my $ver = $_;
             my $d = (grep {$_->{ver} eq $ver} @downloadables) ? 'D' : ' ';
             my $s = $cur_rakudo eq $ver                       ? '*' : ' ';
             say "$s$d $ver";
-        } App::Rakudobrew::Build::available_rakudos();
+        } App::Rakubrew::Build::available_rakudos();
         say '';
         $cur_backend |= '';
         $cur_rakudo |= '';
         say "Available backends:";
-        map { say $cur_backend eq $_ ? "* $_" : "  $_" } App::Rakudobrew::Build::available_backends();
+        map { say $cur_backend eq $_ ? "* $_" : "  $_" } App::Rakubrew::Build::available_backends();
 
     } elsif ($arg eq 'build') {
         my $impl = shift(@args) // 'moar';
@@ -212,21 +218,21 @@ EOS
                 $ver = 'master';
             }
             else {
-                my @versions = App::Rakudobrew::Build::available_rakudos();
+                my @versions = App::Rakubrew::Build::available_rakudos();
                 @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
                 $ver = $versions[-1];
             }
         }
 
         if ($impl eq "panda") {
-            say "panda is discontinued; please use zef (rakudobrew build-zef) instead";
+            say "panda is discontinued; please use zef (rakubrew build-zef) instead";
         } elsif ($impl eq "zef") {
             my $version = get_version();
             if (!$version) {
                 say STDERR "$brew_name: No version set.";
                 exit 1;
             }
-            App::Rakudobrew::Build::build_zef($version);
+            App::Rakubrew::Build::build_zef($version);
             # Might have new executables now -> rehash.
             rehash();
             say "Done, built zef for $version";
@@ -253,11 +259,11 @@ EOS
             $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
             if ($impl && $impl eq 'all') {
-                for (App::Rakudobrew::Build::available_backends()) {
-                    App::Rakudobrew::Build::build_impl($_, $ver, $configure_opts);
+                for (App::Rakubrew::Build::available_backends()) {
+                    App::Rakubrew::Build::build_impl($_, $ver, $configure_opts);
                 }
             } else {
-                App::Rakudobrew::Build::build_impl($impl, $ver, $configure_opts);
+                App::Rakubrew::Build::build_impl($impl, $ver, $configure_opts);
             }
 
             # Might have new executables now -> rehash.
@@ -270,7 +276,7 @@ EOS
 
     } elsif ($arg eq 'triple') {
         my ($rakudo_ver, $nqp_ver, $moar_ver) = @args[0 .. 2];
-        my $name = App::Rakudobrew::Build::build_triple($rakudo_ver, $nqp_ver, $moar_ver);
+        my $name = App::Rakubrew::Build::build_triple($rakudo_ver, $nqp_ver, $moar_ver);
 
         # Might have new executables now -> rehash
         rehash();
@@ -290,11 +296,11 @@ EOS
 
         if (!defined $ver) {
             # TODO: Check if that version is downloadable. If not abort!
-            my @versions = App::Rakudobrew::Build::available_rakudos();
+            my @versions = App::Rakubrew::Build::available_rakudos();
             @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
             $ver = $versions[-1];
         }
-        App::Rakudobrew::Download::download_precomp_archive($impl, $ver);
+        App::Rakubrew::Download::download_precomp_archive($impl, $ver);
 
         # Might have new executables now -> rehash
         rehash();
@@ -330,13 +336,13 @@ EOS
             say STDERR "$brew_name: No version set.";
             exit 1;
         }
-        App::Rakudobrew::Build::build_zef($version);
+        App::Rakubrew::Build::build_zef($version);
         # Might have new executables now -> rehash
         rehash();
         say "Done, built zef for $version";
 
     } elsif ($arg eq 'build-panda') {
-        say "panda is discontinued; please use zef (rakudobrew build-zef) instead";
+        say "panda is discontinued; please use zef (rakubrew build-zef) instead";
 
     } elsif ($arg eq 'exec') {
         my $prog_name = shift @args;
@@ -446,7 +452,7 @@ EOS
 
         if ($arg eq 'help' && @args) {
             # the user wants help for a specific command
-            # e.g., rakudobrew help list
+            # e.g., rakubrew help list
             my $command = $args[ 0 ];
 
             Pod::Usage::pod2usage(
@@ -475,7 +481,7 @@ EOS
 
         close $pod_fh;
 
-        my $backends = join '|', App::Rakudobrew::Build::available_backends(), 'all';
+        my $backends = join '|', App::Rakubrew::Build::available_backends(), 'all';
         $help_text =~ s/<%backends%>/$backends/g;
         $help_text =~ s/<%brew_name%>/$brew_name/g;
 
@@ -529,7 +535,7 @@ sub test {
     if ($matched and not $ambiguous) {
         say "Spectesting $matched";
         chdir catdir($versions_dir, $matched);
-        App::Rakudobrew::Build::make('spectest');
+        App::Rakubrew::Build::make('spectest');
     } elsif (@match) {
         say "Sorry, I'm not sure if you mean:";
         say $_ for @match;
@@ -548,7 +554,7 @@ sub nuke {
             unlink(catfile($versions_dir, $matched));
         }
         elsif ($matched eq 'system') {
-            say 'I refuse to nuke system Perl 6!';
+            say 'I refuse to nuke system Raku!';
             exit 1;
         }
         elsif ($matched eq get_version()) {
@@ -597,7 +603,7 @@ __END__
 
 =head1 NAME
 
-App::rakudobrew - Perl 6 environment manager
+App::Rakubrew - Raku environment manager
 
 =head1 DESCRIPTION
 
@@ -605,12 +611,12 @@ A tool to manage multiple Rakudo installations.
 
 =head1 AUTHOR
 
-Patrick Böker C<< <patrickz@cpan.org> >>
+Patrick Böker C<< <patrickb@cpan.org> >>
 Tadeusz Sośnierz C<< <tadzik@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2019 by Tadeusz Sośnierz.
+This software is Copyright (c) 2020 by Patrick Böker.
 
 This is free software, licensed under:
 

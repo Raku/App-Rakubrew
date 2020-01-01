@@ -1,38 +1,38 @@
-# rakudobrew
+# rakubrew
 
-Rakudobrew helps to build one or more versions of Rakudo and quickly switch between them.
+Rakubrew helps to build one or more versions of Rakudo and quickly switch between them.
 It's a perlbrew and plenv look alike and supports both flavours of commands.
 
-Rakudobrew can work by modifying $PATH in place (which is a more down to the metal) as well
+Rakubrew can work by modifying $PATH in place (which is a more down to the metal) as well
 as with shims (which enables advanced features, such as local versions).
 
 ## Installation
 
 - On \*nix do:
 ```
-git clone https://github.com/tadzik/rakudobrew ~/.rakudobrew
-export PATH=~/.rakudobrew/bin:$PATH
-# or fish shell: set -U fish_user_paths ~/.rakudobrew/bin/ $fish_user_paths
-rakudobrew init # Instructions for permanent installation.
+git clone https://github.com/Raku/App-Rakubrew.git ~/.rakubrew
+export PATH=~/.rakubrew/bin:$PATH
+# or fish shell: set -U fish_user_paths ~/.rakubrew/bin/ $fish_user_paths
+rakubrew init # Instructions for permanent installation.
 ```
 
 - On Windows CMD do:
 ```
-git clone https://github.com/tadzik/rakudobrew %USERPROFILE%\rakudobrew
-SET PATH=%USERPROFILE%\rakudobrew\bin;%PATH%
-rakudobrew init # Instructions for permanent installation.
+git clone https://github.com/Raku/App-Rakubrew.git %USERPROFILE%\rakubrew
+SET PATH=%USERPROFILE%\rakubrew\bin;%PATH%
+rakubrew init # Instructions for permanent installation.
 ```
 
 - On Windows PowerShell do:
 ```
-git clone https://github.com/tadzik/rakudobrew $Env:USERPROFILE\rakudobrew
-$Env:PATH = "$Env:USERPROFILE\rakudobrew\bin;$Env:PATH"
-rakudobrew init # Instructions for permanent installation.
+git clone https://github.com/Raku/App-Rakubrew.git $Env:USERPROFILE\rakubrew
+$Env:PATH = "$Env:USERPROFILE\rakubrew\bin;$Env:PATH"
+rakubrew init # Instructions for permanent installation.
 ```
 
 ## Windows notes
 
-Rakudobrew requires Perl 5 and Git to be installed. You can download and install these from
+Rakubrew requires Perl 5 and Git to be installed. You can download and install these from
 * http://strawberryperl.com/
 * https://www.git-scm.com/downloads
 
@@ -48,28 +48,28 @@ some additional trickery as described on StackOverflow: <http://stackoverflow.co
 It might be necessary to use an Administrative console to work
 around a problem with permissions that go wrong during the build process.
 
-## Bootstrapping a Perl 6 implementation
+## Bootstrapping a Raku implementation
 
 - Run something like:
 
 ```
-$ rakudobrew build moar
+$ rakubrew build moar
 ```
 
 to build the latest [Rakudo](https://github.com/rakudo/rakudo) release
 (in this case, on the [MoarVM](https://github.com/MoarVM/MoarVM) backend).
 
-- Once that's build switch to it (substitute the version rakudobrew just built):
+- Once that's build switch to it (substitute the version rakubrew just built):
 
 ```
-$ rakudobrew switch moar-2019.03.1
+$ rakubrew switch moar-2019.03.1
 ```
 
-- To install [zef](https://github.com/ugexe/zef) (the Perl 6 module manager), do:
+- To install [zef](https://github.com/ugexe/zef) (the Raku module manager), do:
 
 
 ```
-$ rakudobrew build-zef
+$ rakubrew build-zef
 ```
 
 ## global vs shell vs local
@@ -88,47 +88,47 @@ one must delete the `.PL6ENV_VERSION` file in the respective folder.
 
 Rakudo brew has two modes of operation: `env` and `shim`.
 
-In `env` mode rakudobrew modifies the `$PATH` variable as needed when switching between
+In `env` mode rakubrew modifies the `$PATH` variable as needed when switching between
 versions. This is neat because one then runs the executables directly. This is the default mode
 on \*nix.
 
-In `shim` mode rakudobrew generates wrapper scripts called shims for all
+In `shim` mode rakubrew generates wrapper scripts called shims for all
 executables it can find in all the different Rakudo installations. These
 shims forward to the actual executable when called. This mechanism allows for
 some advanced features, such as local versions. When installing a module that
-adds scripts one must make rakudobrew aware of these new scripts. This is done
+adds scripts one must make rakubrew aware of these new scripts. This is done
 with
 
 ```
-$ rakudobrew rehash
+$ rakubrew rehash
 ```
 In `env` mode this is not necessary.
 
 ## Registering external versions
 
-To add a Rakudo installation to rakudobrew that was created without rakudobrew
+To add a Rakudo installation to rakubrew that was created without rakubrew
 one should do:
 
 ```
-$ rakudobrew register name-of-version /path/to/rakudo/install/directory
+$ rakubrew register name-of-version /path/to/rakudo/install/directory
 ```
 
-## Upgrading your Perl 6 implementation
+## Upgrading your Raku implementation
 
 ```
-$ rakudobrew build moar
+$ rakubrew build moar
 ```
 
-## Upgrading rakudobrew itself
+## Upgrading rakubrew itself
 
 ```
-$ rakudobrew self-upgrade
+$ rakubrew self-upgrade
 ```
 
-## Uninstall rakudobrew and its Perl 6(s)
+## Uninstall rakubrew and its Raku(s)
 
-To remove rakudobrew and any Perl 6 implementations it's installed on your system,
-just remove or rename the `~/.rakudobrew` directory.
+To remove rakubrew and any Raku implementations it's installed on your system,
+just remove or rename the `~/.rakubrew` directory.
 
 ## Specifying custom git path
 
@@ -136,19 +136,19 @@ In case git is not in any standard `PATH` on your system, you can specify a cust
 to the git binary using a `GIT_BINARY` environment variable:
 
 ```
-$ GIT_BINARY="%USERPROFILE%\Local Settings\Application Data\GitHub\PORTAB~1\bin\git.exe" rakudobrew build all
+$ GIT_BINARY="%USERPROFILE%\Local Settings\Application Data\GitHub\PORTAB~1\bin\git.exe" rakubrew build all
 ```
 
 ## Specifying a git protocol
 
-By default, rakudobrew will use the git protocol when it clones repositories.
+By default, rakubrew will use the git protocol when it clones repositories.
 To override this setting, use the `GIT_PROTOCOL` environment variable.
 
 ```
-$ GIT_PROTOCOL=ssh rakudobrew list-available
+$ GIT_PROTOCOL=ssh rakubrew list-available
 # uses git@github.com:/rakudo/rakudo.git
 
-$ GIT_PROTOCOL=https rakudobrew list-available
+$ GIT_PROTOCOL=https rakubrew list-available
 # uses https://github.com/rakudo/rakudo.git
 ```
 
@@ -170,7 +170,7 @@ Show, set or unset the shell version.
 Show or set the local version.
 
 ### `nuke [version]` or `unregister [version]`
-Removes an installed or registered version. Versions built by rakudobrew are
+Removes an installed or registered version. Versions built by rakubrew are
 actually deleted, registered versions are only unregistered but not deleted.
 
 ### `rehash`
@@ -194,7 +194,7 @@ Build a Rakudo version. The arguments are:
 Build a specific set of Rakudo, NQP and MoarVM commits.
 
 ### `register <name> <path>`
-Register an externaly built / installed Rakudo version with Rakudobrew.
+Register an externaly built / installed Rakudo version with Rakubrew.
 
 ### `build-zef`
 Install Zef into the current Rakudo version.
@@ -202,7 +202,7 @@ Install Zef into the current Rakudo version.
 ### `exec <command> [command-args]`
 Explicitly call an executable. You normally shouldn't need to do this.
 
-### `rakudobrew which <command>`
+### `rakubrew which <command>`
 Show the full path to the executable.
 
 ### `whence [--path] <command>`
@@ -213,7 +213,7 @@ path of the executables is given instead.
 Show or set the mode of operation.
 
 ### `self-upgrade`
-Upgrade Rakudobrew itself.
+Upgrade Rakubrew itself.
 
 ### `init`
 Show installation instructions.

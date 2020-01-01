@@ -1,4 +1,4 @@
-package App::Rakudobrew::Build;
+package App::Rakubrew::Build;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw();
@@ -8,9 +8,9 @@ use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir updir);
 use Cwd qw(cwd);
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
 
 sub available_rakudos {
     my @output = qx|$GIT ls-remote --tags $git_repos{rakudo}|;

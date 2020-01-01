@@ -1,16 +1,16 @@
-package App::Rakudobrew::Shell::Csh;
-use App::Rakudobrew::Shell;
-our @ISA = "App::Rakudobrew::Shell";
+package App::Rakubrew::Shell::Csh;
+use App::Rakubrew::Shell;
+our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
-use App::Rakudobrew::Build;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
+use App::Rakubrew::Build;
 
 sub supports_hooking {
     my $self = shift;
@@ -43,7 +43,7 @@ EOT
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = App::Rakudobrew::Shell::clean_path($path, $RealBin);
+    $path = App::Rakubrew::Shell::clean_path($path, $RealBin);
     $path = "$RealBin:$path";
     $path = join(':', $shim_dir, $path);
     return <<EOT;

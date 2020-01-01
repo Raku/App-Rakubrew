@@ -1,4 +1,4 @@
-package App::Rakudobrew::VersionHandling;
+package App::Rakubrew::VersionHandling;
 require Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw(
@@ -22,8 +22,8 @@ use 5.010;
 use File::Spec::Functions qw(catfile catdir splitdir splitpath catpath canonpath);
 use Cwd qw(realpath);
 use File::Which qw();
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
 
 sub get_versions {
     opendir(my $dh, $versions_dir);
@@ -37,14 +37,14 @@ sub get_versions {
 }
 
 sub get_shell_version {
-    # Check for shell version by looking for $PL6ENV_VERSION the environment.
-    if (defined $ENV{$env_var}) {
-        my $version = $ENV{$env_var};
+    # Check for shell version by looking for $RAKU_VERSION or $PL6ENV_VERSION the environment.
+    if (defined $ENV{$env_var} || defined $ENV{PL6ENV_VERSION}) {
+        my $version = $ENV{$env_var} // $ENV{PL6ENV_VERSION};
         if (version_exists($version)) {
             return $version;
         }
         else {
-            say STDERR "Version '$version' is set via the PL6ENV_VERSION environment variable.";
+            say STDERR "Version '$version' is set via the RAKU_VERSION environment variable.";
             say STDERR "This version is not installed. Ignoring.";
             say STDERR '';
             return undef;
@@ -59,17 +59,19 @@ sub get_local_version {
     my ($vol, $path, undef) = splitpath(realpath(), 1);
     my @fragments = splitdir($path);
     while (@fragments) {
-        my $filepath = catpath($vol, catdir(@fragments), $local_filename);
-        if (-f $filepath) {
-            my $version = trim(slurp($filepath));
-            if(version_exists($version)) {
-                return $version;
-            }
-            else {
-                say STDERR "Version '$version' is given in the";
-                say STDERR "$filepath";
-                say STDERR "file. This version is not installed. Ignoring.";
-                say STDERR '';
+        for ($local_filename, '.perl6-version') {
+            my $filepath = catpath($vol, catdir(@fragments), $_);
+            if (-f $filepath) {
+                my $version = trim(slurp($filepath));
+                if(version_exists($version)) {
+                    return $version;
+                }
+                else {
+                    say STDERR "Version '$version' is given in the";
+                    say STDERR "$filepath";
+                    say STDERR "file. This version is not installed. Ignoring.";
+                    say STDERR '';
+                }
             }
         }
         pop @fragments;
@@ -78,7 +80,14 @@ sub get_local_version {
 }
 
 sub set_local_version {
-    spurt($local_filename, shift);
+    my $version = shift;
+    if ($version) {
+        spurt($local_filename, shift);
+    }
+    else {
+        unlink $local_filename;
+        unlink '.perl6-version';
+    }
 }
 
 sub get_global_version {
@@ -103,7 +112,7 @@ sub get_version {
     
     if (get_brew_mode() eq 'shim') {
         # Local version is only supported in shim mode.
-        # Check for local version by looking for a `.perl6-version` file in the current and parent folders.
+        # Check for local version by looking for a `.raku-version` file in the current and parent folders.
         $version = get_local_version();
         return $version if defined $version;
     }
@@ -260,7 +269,7 @@ sub which {
         if(whence($prog)) {
             say STDERR <<EOT;
 
-The '$prog' command exists in these Perl 6 versions:
+The '$prog' command exists in these Raku versions:
 EOT
             map {say STDERR $_} whence($prog);
         }
@@ -328,9 +337,9 @@ sub rehash {
 
     if ($^O =~ /win32/i) {
         # This wrapper is needed because:
-        # - We want rakudobrew to work even when the .pl ending is not associated with the perl program and we do not want to put `perl` before every call to a shim.
+        # - We want rakubrew to work even when the .pl ending is not associated with the perl program and we do not want to put `perl` before every call to a shim.
         # - exec() in perl on Windows behaves differently from running the target program directly (output ends up on the console differently).
-        # It retrieves the target executable (only consuming STDOUT of rakudobrew) and calls it with the given arguments. STDERR still ends up on the console. The return value is checked and if an error occurs that error values is returned.
+        # It retrieves the target executable (only consuming STDOUT of rakubrew) and calls it with the given arguments. STDERR still ends up on the console. The return value is checked and if an error occurs that error values is returned.
         @bins = map { my ($basename, undef, undef) = my_fileparse($_); $basename } @bins;
         @bins = uniq(@bins);
         for (@bins) {

@@ -1,16 +1,16 @@
-package App::Rakudobrew::Shell::PowerShell;
-use App::Rakudobrew::Shell;
-our @ISA = "App::Rakudobrew::Shell";
+package App::Rakubrew::Shell::PowerShell;
+use App::Rakubrew::Shell;
+our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catfile catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
-use App::Rakudobrew::Build;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
+use App::Rakubrew::Build;
 
 # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6
 # https://stackoverflow.com/questions/6766722/how-to-modify-parent-scope-variable-using-powershell
@@ -65,10 +65,10 @@ sub get_init_code {
 \$Env:PATH = "$path"
 Function $brew_name {
     # TODO: In PowerShell functions do not have return codes. Thus we can not forward the underlying return code.
-    # For now we just throw if the actual rakudobrew has a returncode != 0. Maybe come up with a better way?
+    # For now we just throw if the actual rakubrew has a returncode != 0. Maybe come up with a better way?
     $brew_exec internal_hooked PowerShell \$args
     if (\$LASTEXITCODE -ne 0) {
-        Throw "Rakudobrew failed with exitcode \$LASTEXITCODE"
+        Throw "Rakubrew failed with exitcode \$LASTEXITCODE"
     }
     \$cmd = $brew_exec internal_shell_hook PowerShell post_call_eval \$args | Out-String
     if (\$cmd) {

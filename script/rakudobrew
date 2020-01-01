@@ -1,10 +1,10 @@
 #!/usr/bin/env perl
-# I AM RAKUDOBREW. ALSO POSSIBLY SPARTACUS. OUTLOOK CLOUDY, ASK AGAIN LATER.
+# I AM RAKUBREW. ALSO POSSIBLY SPARTACUS. OUTLOOK CLOUDY, ASK AGAIN LATER.
 use strict;
-use App::Rakudobrew;
+use App::Rakubrew;
 
 
-my $app = App::Rakudobrew->new(@ARGV);
+my $app = App::Rakubrew->new(@ARGV);
 $app->run_script();
 
 
@@ -12,7 +12,7 @@ __END__
 
 =head1 NAME
 
-<%brew_name%> - Perl 6 environment manager
+<%brew_name%> - Raku environment manager
 
 =head1 SYNOPSIS
 
@@ -91,9 +91,9 @@ Show, set or unset the shell version.
 
 =head1 COMMAND: local
 
-Usage: <%brew_name%> local [<version>]
+Usage: <%brew_name%> local [--unset|<version>]
 
-Show or set the local version.
+Show, set or unset the local version.
 
 =head1 COMMAND: nuke
 

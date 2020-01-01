@@ -1,4 +1,4 @@
-package App::Rakudobrew::Download;
+package App::Rakubrew::Download;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw();
@@ -13,12 +13,14 @@ use IO::Uncompress::Unzip qw( $UnzipError );
 use File::Path qw( make_path remove_tree );
 use File::Copy::Recursive qw( dirmove );
 use File::Spec::Functions qw( updir splitpath catfile catdir );
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
 
-my $release_index_url   = 'https://rakudo.org/dl/rakudo';
-my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
+#my $release_index_url   = 'https://rakudo.org/dl/rakudo';
+#my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
+my $release_index_url   = 'http://localhost:4242/dl/rakudo';
+my $download_url_prefix = 'http://localhost:4242/dl/rakudo/';
 
 sub download_precomp_archive {
     my ($impl, $ver) = @_;

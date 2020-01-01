@@ -1,6 +1,6 @@
 NAME
 
-    App::rakudobrew - Perl 6 environment manager
+    App::Rakubrew - Raku environment manager
 
 DESCRIPTION
 
@@ -8,11 +8,11 @@ DESCRIPTION
 
 AUTHOR
 
-    Patrick Böker <patrickz@cpan.org> Tadeusz Sośnierz <tadzik@cpan.org>
+    Patrick Böker <patrickb@cpan.org> Tadeusz Sośnierz <tadzik@cpan.org>
 
 COPYRIGHT AND LICENSE
 
-    This software is Copyright (c) 2019 by Tadeusz Sośnierz.
+    This software is Copyright (c) 2020 by Patrick Böker.
 
     This is free software, licensed under:
 

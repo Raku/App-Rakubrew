@@ -1,16 +1,16 @@
-package App::Rakudobrew::Shell::Sh;
-use App::Rakudobrew::Shell;
-our @ISA = "App::Rakudobrew::Shell";
+package App::Rakubrew::Shell::Sh;
+use App::Rakubrew::Shell;
+our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
-use App::Rakudobrew::Build;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
+use App::Rakubrew::Build;
 
 sub supports_hooking {
     my $self = shift;

@@ -1,16 +1,16 @@
-package App::Rakudobrew::Shell::Cmd;
-use App::Rakudobrew::Shell;
-our @ISA = "App::Rakudobrew::Shell";
+package App::Rakubrew::Shell::Cmd;
+use App::Rakubrew::Shell;
+our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catfile catdir splitpath);
 use FindBin qw($RealBin $RealScript);
 
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
-use App::Rakudobrew::Build;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
+use App::Rakubrew::Build;
 
 # https://superuser.com/a/302553
 
@@ -81,7 +81,7 @@ sub get_init_code {
     # The second for is there to not error on empty lines: https://stackoverflow.com/a/31316333
     return <<EOT;
 SET PATH=$path
-doskey rakudobrew=$brew_exec internal_hooked Cmd \$* && FOR /f "delims=" \%i in ('$brew_exec internal_shell_hook Cmd post_call_eval \$*') do \@\%i
+doskey rakubrew=$brew_exec internal_hooked Cmd \$* && FOR /f "delims=" \%i in ('$brew_exec internal_shell_hook Cmd post_call_eval \$*') do \@\%i
 EOT
 }
 

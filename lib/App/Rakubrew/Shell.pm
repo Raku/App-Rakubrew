@@ -1,12 +1,12 @@
-package App::Rakudobrew::Shell;
+package App::Rakubrew::Shell;
 use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir catfile updir splitpath);
 use Cwd qw(cwd);
-use App::Rakudobrew::Variables;
-use App::Rakudobrew::Tools;
-use App::Rakudobrew::VersionHandling;
+use App::Rakubrew::Variables;
+use App::Rakubrew::Tools;
+use App::Rakubrew::VersionHandling;
 
 my $shell_hook;
 
@@ -19,11 +19,11 @@ sub initialize {
         $shell = detect_shell();
     }
 
-    eval "require App::Rakudobrew::Shell::$shell";
+    eval "require App::Rakubrew::Shell::$shell";
     if ($@) {
         die "Loading shell hook failed: " . $@;
     }
-    $shell_hook = bless {}, "App::Rakudobrew::Shell::$shell";
+    $shell_hook = bless {}, "App::Rakubrew::Shell::$shell";
     return $shell_hook;
 }
 
@@ -62,7 +62,7 @@ sub shell_exists {
     my $self = shift;
     my $shell = shift;
 
-    eval "require App::Rakudobrew::Shell::$shell";
+    eval "require App::Rakubrew::Shell::$shell";
     return $@ ? 0 : 1;
 }
 
@@ -156,11 +156,11 @@ sub get_completions {
     }
     elsif($index == 1 && $words[0] eq 'build') {
         my $candidate = $words[1] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } (App::Rakudobrew::Build::available_backends(), 'all'));
+        return grep({ substr($_, 0, length($candidate)) eq $candidate } (App::Rakubrew::Build::available_backends(), 'all'));
     }
     elsif($index == 2 && $words[0] eq 'build') {
         my @installed = get_versions();
-        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakudobrew::Build::available_rakudos());
+        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakubrew::Build::available_rakudos());
 
         my $candidate = $words[3] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
@@ -171,7 +171,7 @@ sub get_completions {
     }
     elsif($index == 2 && $words[0] eq 'download') {
         my @installed = get_versions();
-        my @installables = map { $_->{ver} } App::Rakudobrew::Download::available_precomp_archives();
+        my @installables = map { $_->{ver} } App::Rakubrew::Download::available_precomp_archives();
         @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } @installables);
 
         my $candidate = $words[3] // '';
