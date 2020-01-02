@@ -325,8 +325,12 @@ EOS
             exit 1;
         }
         invalid($path) if !-d $path;
-        $path = catdir($path, 'install') if !-f catfile($path, 'bin', 'perl6');
-        invalid($path) if !-f catdir($path, 'bin', 'perl6');
+        if (!-f catfile($path, 'bin', 'perl6') && !-f catfile($path, 'bin', 'raku')) {
+            $path = catdir($path, 'install');
+            if (!-f catfile($path, 'bin', 'perl6') && !-f catfile($path, 'bin', 'raku')) {
+                invalid($path);
+            }
+        }
 
         spurt(catfile($versions_dir, $name), $path);
 
@@ -408,12 +412,12 @@ EOS
         # Do some filetype detection:
         # - .exe/.bat/.cmd              -> return "filename"
         # - .nqp                        -> return "nqp filename"
-        # - shebang line contains perl6 -> return "perl6 filename"
-        # - shebang line contains perl  -> return "perl filename"
+        # - shebang contains raku|perl6 -> return "raku|perl6 filename"
+        # - shebang contains perl       -> return "perl filename"
         # - nothing of the above        -> return "filename" # if we can't
         #                                  figure out what to do with this
         #                                  filename, let Windows have a try.
-        # The first line is potentially the shebang. Thus the search for "perl" and/or perl6.
+        # The first line is potentially the shebang. Thus the search for "perl" and/or perl6/raku.
         my ($basename, undef, $suffix) = my_fileparse($prog_name);
         if($suffix =~ /^\Q\.(exe|bat|cmd)\E\z/i) {
             say $path;
@@ -425,8 +429,8 @@ EOS
             open(my $fh, '<', $path);
             my $first_line = <$fh>;
             close($fh);
-            if($first_line =~ /#!.*perl6/) {
-                say which('perl6', get_version()).' '.$path;
+            if($first_line =~ /#!.*(perl6|raku)/) {
+                say get_raku(get_version()) . ' ' . $path;
             }
             elsif($first_line =~ /#!.*perl/) {
                 say 'perl '.$path;

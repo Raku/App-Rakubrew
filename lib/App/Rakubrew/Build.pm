@@ -118,8 +118,8 @@ sub build_zef {
     chdir 'zef';
     run "$GIT pull -q";
     run "$GIT checkout";
-    run which('perl6', $version) . " -Ilib bin/zef test .";
-    run which('perl6', $version) . " -Ilib bin/zef --/test --force install .";
+    run get_raku($version) . " -Ilib bin/zef test .";
+    run get_raku($version) . " -Ilib bin/zef --/test --force install .";
 }
 
 sub update_git_reference {

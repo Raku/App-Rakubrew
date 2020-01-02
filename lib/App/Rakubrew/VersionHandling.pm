@@ -11,6 +11,7 @@ our @EXPORT = qw(
     get_local_version set_local_version
     get_global_version set_global_version
     set_brew_mode get_brew_mode get_brew_mode_shell validate_brew_mode
+    get_raku
     which whence
     get_bin_paths
     rehash
@@ -188,7 +189,35 @@ sub get_version_path {
 }
 
 
+sub get_raku {
+    my $version = shift;
+
+    return _which('raku', $version) // which('perl6', $version);
+}
+
+
 sub which {
+    my $prog = shift;
+    my $version = shift;
+
+    my $target = _which($prog, $version);
+
+    if (!$target) {
+        say STDERR "$brew_name: $prog: command not found";
+        if(whence($prog)) {
+            say STDERR <<EOT;
+
+The '$prog' command exists in these Raku versions:
+EOT
+            map {say STDERR $_} whence($prog);
+        }
+        exit 1;
+    }
+
+    return $target;
+}
+
+sub _which {
     my $prog = shift;
     my $version = shift;
 
@@ -262,18 +291,6 @@ sub which {
                 }
             }
         }
-    }
-
-    if (!$target) {
-        say STDERR "$brew_name: $prog: command not found";
-        if(whence($prog)) {
-            say STDERR <<EOT;
-
-The '$prog' command exists in these Raku versions:
-EOT
-            map {say STDERR $_} whence($prog);
-        }
-        exit 1;
     }
 
     return $target;
