@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-# I AM RAKUBREW. ALSO POSSIBLY SPARTACUS. OUTLOOK CLOUDY, ASK AGAIN LATER.
 use strict;
 use App::Rakubrew;
 
