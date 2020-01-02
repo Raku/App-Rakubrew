@@ -36,36 +36,6 @@ sub run_script {
 
     mkdir $prefix unless (-d $prefix);
 
-    # Detect incompatible version upgrade and notify user of the breakage.
-    {
-        my $backends = join '|', App::Rakubrew::Build::available_backends();
-        opendir(my $dh, $prefix);
-        my $old_version_found = grep { /^($backends)/ } readdir($dh);
-        closedir $dh;
-
-        if ($old_version_found) {
-            say STDERR <<"EOS";
-You seem to have upgraded rakubrew to a newer version not compatible with
-your current directory layout.
-
-To use the new version you need to completely remove rakubrew by deleting
-$prefix and installing again. See
-
-https://rakubrew.org/
-
-for installation instructions. You will also need to change the rakubrew
-entry in your shell startup file (~/.profile) a bit. Run `rakubrew init`
-again to see how.
-
-If you don't want to upgrade, but just continue using the old version,
-do the following:
-
-cd $prefix && git checkout v1
-EOS
-            exit 1;
-        }
-    }
-
     mkdir $shim_dir      unless (-d $shim_dir);
     mkdir $versions_dir  unless (-d $versions_dir);
     mkdir $git_reference unless (-d $git_reference);
