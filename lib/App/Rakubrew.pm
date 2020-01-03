@@ -175,7 +175,7 @@ sub run_script {
         say "Available backends:";
         map { say $cur_backend eq $_ ? "* $_" : "  $_" } App::Rakubrew::Build::available_backends();
 
-    } elsif ($arg eq 'build') {
+    } elsif ($arg eq 'build-rakudo' || $arg eq 'build') {
         my $impl = shift(@args) // 'moar';
         my $ver = shift @args
             if @args && $args[0] !~ /^--/;
@@ -252,7 +252,7 @@ sub run_script {
         }
         say "Done, $name built";
 
-    } elsif ($arg eq 'download') {
+    } elsif ($arg eq 'download-rakudo' || $arg eq 'download') {
         my $impl = shift(@args) // 'moar';
         my $ver = shift @args if @args;
 
@@ -425,6 +425,8 @@ sub run_script {
             # the user wants help for a specific command
             # e.g., rakubrew help list
             my $command = $args[ 0 ];
+            $command = 'download-rakudo' if $command eq 'download';
+            $command = 'build-rakudo'    if $command eq 'build';
 
             Pod::Usage::pod2usage(
                 -exitval   => "NOEXIT",  # do not terminate this script!

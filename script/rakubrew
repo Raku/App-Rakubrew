@@ -133,9 +133,9 @@ Installed versions will be marked with an asterisk at the beginning of the line.
 Releases marked with a 'D' have a precompiled archive available and can be
 downloaded and installed without compilation with the C<download> subcommand.
 
-=head1 COMMAND: build
+=head1 COMMAND: build-rakudo
 
-Usage: <%brew_name%> build [<%backends%>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
+Usage: <%brew_name%> build[-rakudo] [<%backends%>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
 
 Download, compile and install a rakudo version.
 Please note that this can take a while, be patient.
@@ -191,9 +191,9 @@ Usage: <%brew_name%> build-zef
 
 Install Zef into the current Rakudo version.
 
-=head1 COMMAND: download
+=head1 COMMAND: download-rakudo
 
-Usage: <%brew_name%> download [<%backends%>] [<rakudo-version>]
+Usage: <%brew_name%> download[-rakudo] [<%backends%>] [<rakudo-version>]
 
 Download and install a precompiled release archive.
 
