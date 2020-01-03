@@ -62,15 +62,12 @@ sub run_script {
         shift @args; # Remove the hook so processing code below doesn't need to care about it.
         shift @args; # Remove the shell parameter for the same reason.
     }
-    elsif (@args && $args[0] =~ /^internal_/  # It's an internal_ method, all good!
-    || !@args || $args[0] eq 'init' # We don't want to annoy the user with missing
-                                    # hook messages if she might not have even completed
-                                    # the installation process.
-    || !$self->{hook}->supports_hooking )   # If the shell doesn't support hooks there is no point in whining about it.
-    {}
-    elsif (get_brew_mode() eq 'env' || @args && $args[0] eq 'shell' || @args >= 2 && $args[0] eq 'mode' && $args[1] eq 'env') {
+    elsif (
+    get_brew_mode() eq 'env' && !(@args && $args[0] eq 'mode' && $args[1] eq 'shim')
+    || @args && $args[0] eq 'shell'
+    || @args >= 2 && $args[0] eq 'mode' && $args[1] eq 'env') {
         say STDERR "The shell hook required to use rakubrew in 'env' mode or use the 'shell' command seems not to be installed.";
-        say STDERR "Run '$brew_name init' for installation instructions.";
+        say STDERR "Run '$brew_name init' for installation instructions if you want to use those features.";
         exit 1;
     }
 
