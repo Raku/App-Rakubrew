@@ -50,6 +50,10 @@ sub download_precomp_archive {
 
     say 'Downloading ' . $matching_releases[0]->{url};
     my $res = $furl->get($matching_releases[0]->{url});
+    unless ($res->is_success) {
+        say STDERR "Couldn\'t download release. Error: $res->status_line";
+        exit 1;
+    }
 
     say 'Extracting';
     if (_my_platform() eq 'win') {
