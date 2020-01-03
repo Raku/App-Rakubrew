@@ -352,7 +352,7 @@ sub run_script {
         }
 
     } elsif ($arg eq 'self-upgrade') {
-        $self->self_upgrade();
+        App::Rakubrew::Update::update();
 
     } elsif ($arg eq 'init') {
         $self->init(@args);
@@ -406,6 +406,9 @@ sub run_script {
                 say $path;
             }
         }
+
+    } elsif ($arg eq 'internal_update') {
+        App::Rakubrew::Update::internal_update(@args);
 
     } else {
         require Pod::Usage;
@@ -482,12 +485,6 @@ sub match_and_run {
             say $_ for @match;
         }
     }
-}
-
-sub self_upgrade {
-    my $self = shift;
-    chdir $prefix;
-    run "$GIT pull";
 }
 
 sub test {
