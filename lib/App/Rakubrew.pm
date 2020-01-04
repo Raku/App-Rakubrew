@@ -37,9 +37,10 @@ sub run_script {
 
     mkdir $prefix unless (-d $prefix);
 
-    mkdir $shim_dir      unless (-d $shim_dir);
-    mkdir $versions_dir  unless (-d $versions_dir);
-    mkdir $git_reference unless (-d $git_reference);
+    mkdir catdir($prefix, 'bin') unless (-d catdir($prefix, 'bin'));
+    mkdir $shim_dir              unless (-d $shim_dir);
+    mkdir $versions_dir          unless (-d $versions_dir);
+    mkdir $git_reference         unless (-d $git_reference);
 
     { # Check whether we are called as a shim and forward if yes.
         my (undef, undef, $prog_name) = splitpath($0);
