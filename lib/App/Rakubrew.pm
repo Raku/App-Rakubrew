@@ -65,7 +65,11 @@ sub run_script {
         shift @args; # Remove the shell parameter for the same reason.
     }
     elsif (
-    get_brew_mode() eq 'env' && !(@args && $args[0] eq 'mode' && $args[1] eq 'shim')
+    get_brew_mode() eq 'env'
+        && !(@args && $args[0] eq 'mode' && $args[1] eq 'shim')
+        && !(@args && $args[0] eq 'init')
+        && !(@args && $args[0] eq 'home')
+        && !(@args && $args[0] =~ /^internal_/)
     || @args && $args[0] eq 'shell'
     || @args >= 2 && $args[0] eq 'mode' && $args[1] eq 'env') {
         say STDERR "The shell hook required to use rakubrew in 'env' mode or use the 'shell' command seems not to be installed.";
@@ -358,6 +362,9 @@ sub run_script {
 
     } elsif ($arg eq 'init') {
         $self->init(@args);
+
+    } elsif ($arg eq 'home') {
+        say $prefix;
 
     } elsif ($arg eq 'test') {
         my $version = shift @args;
