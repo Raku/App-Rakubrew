@@ -38,6 +38,7 @@ sub run_script {
     mkdir $prefix unless (-d $prefix);
 
     mkdir catdir($prefix, 'bin') unless (-d catdir($prefix, 'bin'));
+    mkdir catdir($prefix, 'update') unless (-d catdir($prefix, 'update'));
     mkdir $shim_dir              unless (-d $shim_dir);
     mkdir $versions_dir          unless (-d $versions_dir);
     mkdir $git_reference         unless (-d $git_reference);
