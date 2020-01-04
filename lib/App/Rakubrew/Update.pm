@@ -10,15 +10,19 @@ use Furl;
 use JSON;
 use FindBin qw($RealBin);
 use File::Copy;
+use Fcntl;
+
+use App::Rakubrew;
+use App::Rakubrew::Variables;
 
 my $release_index_url   = 'https://rakubrew.org/releases';
 my $download_url_prefix = 'https://rakubrew.org';
 
-my %dl_urls =
+my %dl_urls = (
     pp    => "$download_url_prefix/pp",
     win   => "$download_url_prefix/win",
     macos => "$download_url_prefix/macos",
-;
+);
 
 sub update {
     my $quiet = shift;
@@ -38,7 +42,7 @@ sub update {
 	my $release_index = _download_release_index($furl);
 
     # check version
-    if (!($release_index->{latest} > $VERSION)) {
+    if (!($release_index->{latest} > $App::Rakubrew::VERSION)) {
         say 'Rakubrew is up-to-date!';
         exit 0;
     }
@@ -68,7 +72,8 @@ sub update {
         say STDERR "Couldn\'t download update. Error: $res->status_line";
         exit 1;
     }
-    if (!sysopen(my $fh, $update_file, O_WRONLY|O_CREAT|O_EXCL, 0777)) {
+    my $fh;
+    if (!sysopen($fh, $update_file, O_WRONLY|O_CREAT|O_EXCL, 0777)) {
         say STDERR "Couldn't write update file to $update_file. Aborting update.";
         exit 1;
     }
@@ -77,7 +82,7 @@ sub update {
     close $fh;
 
     # exec() RAKUBREW_HOME/rakubrew_new internal_update 'path/to/rakubrew'
-    { exec($update_file, 'internal_update', $VERSION, $current_rakubrew_file) };
+    { exec($update_file, 'internal_update', $App::Rakubrew::VERSION, $current_rakubrew_file) };
     say STDERR 'Failed to call the downloaded rakubrew executable! Aborting update.';
     exit 1;
 }
@@ -87,7 +92,7 @@ sub internal_update {
 
     my $update_file = catfile($prefix, 'rakubrew_new');
     if ($update_file ne $RealBin) {
-        say STDERR "'internal_update' was called on a rakubrew that's not $udate_file. That's probably wrong and dangerous. Aborting update.";
+        say STDERR "'internal_update' was called on a rakubrew that's not $update_file. That's probably wrong and dangerous. Aborting update.";
         exit 1;
     }
 
@@ -98,7 +103,8 @@ sub internal_update {
 
     # copy RAKUBREW_HOME/rakubrew_new to 'path/to/rakubrew'
     unlink $old_rakubrew_file;
-    if (!sysopen(my $fh, $old_rakubrew_file, O_WRONLY|O_CREAT|O_EXCL, 0777)) {
+    my $fh;
+    if (!sysopen($fh, $old_rakubrew_file, O_WRONLY|O_CREAT|O_EXCL, 0777)) {
         say STDERR "Couldn't copy update file to $old_rakubrew_file. Rakubrew is broken now. Try manually copying '$update_file' to '$old_rakubrew_file' to get it fixed again.";
         exit 1;
     }

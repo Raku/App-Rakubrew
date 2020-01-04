@@ -4,8 +4,8 @@ use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir catfile updir splitpath);
 use Cwd qw(cwd);
-use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
+use App::Rakubrew::Variables;
 use App::Rakubrew::VersionHandling;
 
 my $shell_hook;

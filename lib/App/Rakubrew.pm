@@ -14,12 +14,13 @@ use FindBin qw($RealBin);
 use File::Path qw(remove_tree);
 use File::Spec::Functions qw(catfile catdir splitpath updir);
 
-use App::Rakubrew::Variables;
-use App::Rakubrew::Tools;
-use App::Rakubrew::VersionHandling;
 use App::Rakubrew::Build;
 use App::Rakubrew::Download;
 use App::Rakubrew::Shell;
+use App::Rakubrew::Tools;
+use App::Rakubrew::Update;
+use App::Rakubrew::Variables;
+use App::Rakubrew::VersionHandling;
 
 sub new {
     my ($class, @argv) = @_;
