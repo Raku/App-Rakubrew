@@ -1,0 +1,2 @@
+requires 'Win32::Process'        => '0.16';
+requires 'Win32::ShellQuote'     => '0.003001';

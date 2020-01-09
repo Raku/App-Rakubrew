@@ -15,14 +15,19 @@ Release Guide
 Linux
 -----
 
-    cpanm --installdeps -n .
-    cpanm App::FatPacker
-    fatpack trace script/rakubrew
-    for X in `ls -1 lib/App/Rakubrew/Shell`; do echo App/Rakubrew/Shell/$X >> fatpacker.trace; done
-    fatpack packlists-for `cat fatpacker.trace` > packlists
-    fatpack tree `cat packlists`
-    fatpack file script/rakubrew > rakubrew.packed.pl
+You need to have `podman` installed for a containerized build to work.
 
+    podman run --rm -it --name=rakubrew-build perl:5.10.1 /bin/bash
+
+In the container do
+
+    git clone https://github.com/Raku/App-Rakubrew.git
+    cd App-Rakubrew/build-stuff
+    ./build-linux.sh
+    
+In a separate terminal do
+
+    podman cp rakubrew-build:/App-Rakubrew/rakubrew .
 
 
 MacOS
@@ -61,6 +66,7 @@ Windows
     git clone https://github.com/Raku/App-Rakubrew.git App-Rakubrew
     
     cpanm --installdeps -n App-Rakubrew
+    cpanm --installdeps -n --cpanfile cpanfile.win App-Rakubrew
     
     pp -I App-rakubrew/lib -M App::Rakubrew::Shell::* -o rakubrew.exe App-Rakubrew/script/rakubrew
     pp -I App-rakubrew/lib -M App::Rakubrew::Shell::* -M IO::Socket::SSL -o rakubrew.exe App-Rakubrew/script/rakubrew

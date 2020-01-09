@@ -12,12 +12,13 @@ use FindBin qw( $RealBin $RealScript );
 use File::Copy;
 use File::Spec::Functions qw( catfile catdir );
 use Fcntl;
-use Win32::ShellQuote;
-use Win32::Process;
-use Win32;
+use if scalar ($^O =~ /win32/i), 'Win32';
+use if scalar ($^O =~ /win32/i), 'Win32::Process';
+use if scalar ($^O =~ /win32/i), 'Win32::ShellQuote';
 
 use App::Rakubrew;
 use App::Rakubrew::Variables;
+use App::Rakubrew::Config;
 
 #my $release_index_url   = 'https://rakubrew.org/releases';
 #my $download_url_prefix = 'https://rakubrew.org';
@@ -25,9 +26,9 @@ my $release_index_url   = 'http://localhost:20000/releases';
 my $download_url_prefix = 'http://localhost:20000';
 
 my %dl_urls = (
-    pp    => "$download_url_prefix/pp",
-    win   => "$download_url_prefix/win",
-    macos => "$download_url_prefix/macos",
+    fatpack => "$download_url_prefix/perl",
+    win     => "$download_url_prefix/win",
+    macos   => "$download_url_prefix/macos",
 );
 
 sub update {
@@ -36,12 +37,9 @@ sub update {
     # For par packaged executables the following returns the path and name of
     # the par packaged file.
     my $current_rakubrew_file = catfile($RealBin, $RealScript);
-    my $own_format = 'pp';
-    # TODO Detect our own packaging format, one of: pp, macos, win, cpan
-    # Maybe look at $RealScript and see what that outputs on FatPack and PP.
 
     # check whether this is a CPAN installation. Abort if yes.
-    if ($own_format eq 'cpan') {
+    if ($distro_format eq 'cpan') {
         say STDERR 'Rakubrew was installed via CPAN, use your CPAN client to update.';
         exit 1;
     }
@@ -79,7 +77,7 @@ sub update {
     unlink $update_file;
 
     # download latest to RAKUBREW_HOME/update/rakubrew
-    my $res = $furl->get($dl_urls{$own_format});
+    my $res = $furl->get($dl_urls{$distro_format});
     unless ($res->is_success) {
         say STDERR 'Couldn\'t download update. Error: ' . $res->status_line;
         exit 1;
@@ -116,7 +114,7 @@ sub update {
                 $App::Rakubrew::VERSION,
                 $current_rakubrew_file),
             0,
-            NORMAL_PRIORITY_CLASS,
+            Win32::Process::NORMAL_PRIORITY_CLASS(),
             "."
         )) {
             say STDERR 'Failed to call the downloaded rakubrew executable! Aborting update.';
