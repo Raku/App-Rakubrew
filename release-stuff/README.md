@@ -3,8 +3,8 @@ Release Guide
 
 - Bump version and create a respective commit
 - Tag that commit with the version number
-- Create a GitHub release
-- Upload the release to CPAN
+- `mbtiny dist` - Generate a release tarball
+- `mbtiny upload` - Upload the release to CPAN
 - Create `rakubrew-win.exe` on Windows via the below instructions
 - Create `rakubrew-macos` on MacOS via the below instructions
 - Create `rakubrew-linux` on Linux via the below instructions
@@ -22,12 +22,12 @@ You need to have `podman` installed for a containerized build to work.
 In the container do
 
     git clone https://github.com/Raku/App-Rakubrew.git
-    cd App-Rakubrew/build-stuff
+    cd App-Rakubrew/release-stuff
     ./build-linux.sh
     
 In a separate terminal do
 
-    podman cp rakubrew-build:/App-Rakubrew/rakubrew .
+    podman cp rakubrew-build:/root/App-Rakubrew/rakubrew .
 
 
 MacOS
