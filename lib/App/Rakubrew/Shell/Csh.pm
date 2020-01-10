@@ -20,7 +20,7 @@ sub supports_hooking {
 sub install_note {
     my $brew_exec = catfile($RealBin, $brew_name);
     return <<EOT;
-Load $brew_name automatically by adding
+Load $brew_name automatically in `csh` by adding
 
   eval "\$($brew_exec init Csh)"
 

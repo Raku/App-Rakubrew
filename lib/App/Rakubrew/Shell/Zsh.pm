@@ -19,26 +19,20 @@ sub supports_hooking {
 
 sub install_note {
     my $brew_exec = catfile($RealBin, $brew_name);
-    # add zsh files in custom paths
-    # it should be true that if ZDOTDIR has been set the user
-    # wants to use the zsh, but another shell could be
-    # in place now
-    my @profiles = qw( .zshenv .zshrc .zlogin );
+    my $rc_file = qw( .zshrc );
     if ( exists $ENV{ZDOTDIR} ) {
-        unshift @profiles, map { catfile( $ENV{ZDOTDIR}, $_ ) } @profiles;
+        $rc_file = catfile( $ENV{ZDOTDIR}, $rc_file );
     }
-    my @existing_profiles = grep { -f catfile( $ENV{'HOME'}, $_ ) } @profiles;
-    my $profile = @existing_profiles ? $existing_profiles[0] : $profiles[0];
 
     return <<EOT;
-Load $brew_name automatically by adding
+Load $brew_name automatically in `zsh` by adding
 
   eval "\$($brew_exec init Zsh)"
 
-to ~/$profile.
+to ~/$rc_file.
 This can be easily done using:
 
-  echo 'eval "\$($brew_exec init Zsh)"' >> ~/$profile
+  echo 'eval "\$($brew_exec init Zsh)"' >> ~/$rc_file
 EOT
 }
 

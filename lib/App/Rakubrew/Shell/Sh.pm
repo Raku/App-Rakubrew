@@ -20,14 +20,22 @@ sub supports_hooking {
 sub install_note {
     my $brew_exec = catfile($RealBin, $brew_name);
     return <<EOT;
-Load $brew_name automatically by adding
+Load $brew_name automatically in the `sh` shell by adding
 
   eval "\$($brew_exec init Sh)"
 
 to ~/.profile.
 This can be easily done using:
 
-  echo 'eval "\$($brew_exec init Sh)"' >> ~/.profile
+  echo 'eval "\$($brew_exec init auto)"' >> ~/.profile
+
+Note that this enables rakubrew *only* in login shells.
+To get rakubrew working in all shells, you need the following:
+
+  echo 'export ENV=~/.shrc' >> ~/.profile
+  echo 'eval "\$($brew_exec init Sh)"' >> ~/.shrc
+
+Make sure the `ENV` is not already set to point to some other file.
 EOT
 }
 
