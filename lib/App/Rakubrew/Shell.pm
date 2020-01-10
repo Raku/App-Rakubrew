@@ -14,8 +14,7 @@ sub initialize {
     my $class = shift;
     my $shell = shift;
 
-    if (!shell_exists('Dummy self', $shell)) {
-        # No valid shell given. Do autodetection.
+    if (!shell_exists('Dummy self', $shell) || $shell eq 'auto') {
         $shell = detect_shell();
     }
 
@@ -46,7 +45,7 @@ sub detect_shell {
         $shell = ucfirst $shell;
 
         if (!shell_exists('Dummy self', $shell)) {
-            $shell = 'Bash';
+            $shell = 'Sh';
         }
 
         return $shell;
