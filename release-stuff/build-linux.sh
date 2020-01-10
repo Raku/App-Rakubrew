@@ -48,6 +48,18 @@ fatpack trace script/rakubrew
 for X in `ls -1 lib/App/Rakubrew/Shell`; do echo App/Rakubrew/Shell/$X >> fatpacker.trace; done
 fatpack packlists-for `cat fatpacker.trace` > packlists
 fatpack tree `cat packlists`
+
+# ============================================
+# The following is a workaround for a bug in HTTP::Parser::XS.
+# That module puts its platform independent files (the module is promoted
+# to work without it's XS files) in the `archname` folder. So when running
+# the fatpacked file on a different arch those modules are not found anymore.
+# Work around that by moving that module out of the arch folder
+ARCH=$(perl -MConfig -E 'say $Config{archname}')
+mv fatlib/$ARCH/HTTP fatlib/HTTP
+# End of workaround
+# ============================================
+
 fatpack file script/rakubrew > rakubrew
 chmod +x rakubrew
 
