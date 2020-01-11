@@ -6,7 +6,7 @@ our @EXPORT = qw();
 use strict;
 use warnings;
 use 5.010;
-use Furl;
+use HTTP::Tinyish;
 use JSON;
 use Config;
 use IO::Uncompress::Unzip qw( $UnzipError );
@@ -33,11 +33,11 @@ sub download_precomp_archive {
         exit 1;
     }
 
-    my $furl = Furl->new();
+    my $ht = HTTP::Tiny->new();
 
     my @matching_releases = grep {
             $ver ? $_->{ver} eq $ver : $_->{latest}
-        } _retrieve_releases($furl);
+        } _retrieve_releases($ht);
 
     if (!@matching_releases) {
         say STDERR 'Couldn\'t find a precomp release for OS: "' . _my_platform() . '", architecture: "' . _my_arch() . '"';
@@ -49,28 +49,28 @@ sub download_precomp_archive {
     }
 
     say 'Downloading ' . $matching_releases[0]->{url};
-    my $res = $furl->get($matching_releases[0]->{url});
-    unless ($res->is_success) {
-        say STDERR "Couldn\'t download release. Error: $res->status_line";
+    my $res = $ht->get($matching_releases[0]->{url});
+    unless ($res->{success}) {
+        say STDERR "Couldn\'t download release. Error: $res->{status} $res->{reason}";
         exit 1;
     }
 
     say 'Extracting';
     if (_my_platform() eq 'win') {
-        _unzip(\($res->body), $name);
+        _unzip(\($res->{content}), $name);
     }
     else {
-        _untar($res->body, $name);
+        _untar($res->{content}, $name);
     }
 }
 
 sub available_precomp_archives {
-    return _retrieve_releases(Furl->new());
+    return _retrieve_releases(HTTP::Tiny->new());
 }
 
 sub _retrieve_releases {
-    my $furl = shift;
-    my $release_index = _download_release_index($furl);
+    my $ht = shift;
+    my $release_index = _download_release_index($ht);
     my @matching_releases =
         sort { $b->{build_rev} cmp $a->{build_rev} }
         grep {
@@ -108,13 +108,13 @@ sub _my_arch {
 }
 
 sub _download_release_index {
-    my $furl = shift;
-    my $res = $furl->get($release_index_url);
-    unless ($res->is_success) {
-        say STDERR "Couldn\'t fetch release index at $release_index_url. Error: $res->status_line";
+    my $ht = shift;
+    my $res = $ht->get($release_index_url);
+    unless ($res->{success}) {
+        say STDERR "Couldn\'t fetch release index at $release_index_url. Error: $res->{status} $res->{reason}";
         exit 1;
     }
-    return decode_json($res->content);
+    return decode_json($res->{content});
 }
 
 sub _untar {

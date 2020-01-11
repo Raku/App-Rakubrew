@@ -6,7 +6,7 @@ our @EXPORT = qw();
 use strict;
 use warnings;
 use 5.010;
-use Furl;
+use HTTP::Tinyish;
 use JSON;
 use FindBin qw( $RealBin $RealScript );
 use File::Copy;
@@ -44,8 +44,8 @@ sub update {
         exit 1;
     }
 
-    my $furl = Furl->new();
-	my $release_index = _download_release_index($furl);
+    my $ht = HTTP::Tiny->new();
+	my $release_index = _download_release_index($ht);
 
     # check version
     if ($App::Rakubrew::VERSION >= $release_index->{latest}) {
@@ -77,9 +77,9 @@ sub update {
     unlink $update_file;
 
     # download latest to RAKUBREW_HOME/update/rakubrew
-    my $res = $furl->get($dl_urls{$distro_format});
-    unless ($res->is_success) {
-        say STDERR 'Couldn\'t download update. Error: ' . $res->status_line;
+    my $res = $ht->get($dl_urls{$distro_format});
+    unless ($res->{success}) {
+        say STDERR "Couldn\'t download update. Error: $res->{status} $res->{reason}";
         exit 1;
     }
     my $fh;
@@ -88,7 +88,7 @@ sub update {
         exit 1;
     }
     binmode $fh;
-    print $fh $res->body;
+    print $fh $res->{content};
     close $fh;
 
     if ($^O =~ /win32/i) {
@@ -165,10 +165,11 @@ sub internal_update {
 }
 
 sub _download_release_index {
-    my $furl = shift;
-    my $res = $furl->get($release_index_url);
-    unless ($res->is_success) {
-        say STDERR "Couldn\'t fetch release index at $release_index_url. Error: " . $res->status_line;
+    my $ht = shift;
+    my $res = $ht->get($release_index_url);
+    unless ($res->{success}) {
+        say STDERR "Couldn\'t fetch release index at $release_index_url. Error: $res->{status} $res->{reason}";
+;
         exit 1;
     }
     return decode_json($res->content);
