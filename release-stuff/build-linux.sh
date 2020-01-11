@@ -39,7 +39,7 @@ DIR=$(dirname -- "$EXEC")
 cd $DIR/..
 
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
-perl -pi -E 's/<\%distro_format\%>/perl/' lib/App/Rakubrew/Config.pm
+perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
 
 cpanm App::ModuleBuildTiny App::FatPacker
 mbtiny regenerate
