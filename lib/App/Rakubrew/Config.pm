@@ -1,7 +1,7 @@
 package App::Rakubrew::Config;
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw( $distribution_format );
+our @EXPORT = qw( $distro_format );
 
 use strict;
 use warnings;
