@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+set -o nounset
+set -o errexit
+set -o pipefail
 
 # Sourced from https://stackoverflow.com/a/29835459/1975049
 rreadlink() (
