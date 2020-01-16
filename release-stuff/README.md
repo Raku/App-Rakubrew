@@ -68,6 +68,5 @@ Windows
     cpanm --installdeps -n App-Rakubrew
     cpanm --installdeps -n --cpanfile cpanfile.win App-Rakubrew
     
-    pp -I App-rakubrew/lib -M App::Rakubrew::Shell::* -o rakubrew.exe App-Rakubrew/script/rakubrew
     pp -I App-rakubrew/lib -M App::Rakubrew::Shell::* -M IO::Socket::SSL -o rakubrew.exe App-Rakubrew/script/rakubrew
 
