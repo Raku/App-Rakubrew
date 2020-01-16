@@ -3,7 +3,7 @@ jobs:
     build-linux:
         docker:
             - image: perl:5.10.1
-        working_directory: /work
+        working_directory: /App-Rakubrew
         steps:
             - checkout
             - run: release-stuff/build-linux.sh
