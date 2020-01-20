@@ -10,16 +10,35 @@ jobs:
         working_directory: /App-Rakubrew
         steps:
             - checkout
-            - run: release-stuff/build-linux.sh
+            - run:
+                name: Run build script
+                command: release-stuff/build-linux.sh
             - store_artifacts:
                 path: rakubrew
                 destination: rakubrew-perl
+    build-macos:
+        macos:
+            xcode: 11.3.1
+        working_directory: /App-Rakubrew
+        steps:
+            - run:
+                name: Install Perl
+                command: brew install perl
+            - checkout
+            - run:
+                name: Run build script
+                command: release-stuff/build-macos.sh
+            - store_artifacts:
+                path: rakubrew
+                destination: rakubrew-macos
     build-windows:
         executor: win/default
         working_directory: C:\App-Rakubrew
         steps:
             - checkout
-            - run: release-stuff/build-windows.ps1
+            - run:
+                name: Run build script
+                command: release-stuff/build-windows.ps1
             - store_artifacts:
                 path: rakubrew.exe
                 destination: rakubrew-windows.exe
@@ -29,6 +48,10 @@ workflows:
     build-release:
         jobs:
             - build-linux:
+                filters:
+                    tags:
+                        only: /\n+/
+            - build-macos:
                 filters:
                     tags:
                         only: /\n+/
