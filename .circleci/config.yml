@@ -19,7 +19,6 @@ jobs:
     build-macos:
         macos:
             xcode: 11.3.1
-        working_directory: /App-Rakubrew
         steps:
             - run:
                 name: Install Perl
