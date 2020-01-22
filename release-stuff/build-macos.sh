@@ -39,6 +39,11 @@ DIR=$(dirname -- "$EXEC")
 
 cd $DIR/..
 
+# Workaround for the homebrew perl bin dir not being in path.
+# perl itself is linked into /usr/local/bin, but `pp` that we install
+# below is not.
+export PATH=/usr/local/Cellar/perl/5.30.1/bin:$PATH
+
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
 perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
 
