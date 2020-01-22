@@ -45,7 +45,7 @@ cd $DIR/..
 export PATH=/usr/local/Cellar/perl/5.30.1/bin:$PATH
 
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
-perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
+perl -pi -E 's/<\%distro_format\%>/macos/' lib/App/Rakubrew/Config.pm
 
 mkdir download
 mkdir strawberry
