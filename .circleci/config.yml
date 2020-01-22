@@ -13,9 +13,13 @@ jobs:
             - run:
                 name: Run build script
                 command: release-stuff/build-linux.sh
+            - run: mv rakubrew rakubrew-perl
             - store_artifacts:
-                path: rakubrew
+                path: rakubrew-perl
                 destination: rakubrew-perl
+            - persist_to_workspace:
+                root: .
+                paths: rakubrew-perl
     build-macos:
         macos:
             xcode: 11.3.1
@@ -30,9 +34,13 @@ jobs:
             - run:
                 name: Run build script
                 command: release-stuff/build-macos.sh
+            - run: mv rakubrew rakubrew-macos
             - store_artifacts:
-                path: rakubrew
+                path: rakubrew-macos
                 destination: rakubrew-macos
+            - persist_to_workspace:
+                root: .
+                paths: rakubrew-macos
     build-windows:
         executor: win/default
         working_directory: C:\App-Rakubrew
@@ -41,9 +49,26 @@ jobs:
             - run:
                 name: Run build script
                 command: release-stuff/build-windows.ps1
+            - run: mv rakubrew.exe rakubrew-windows.exe
             - store_artifacts:
-                path: rakubrew.exe
+                path: rakubrew-windows.exe
                 destination: rakubrew-windows.exe
+
+            - persist_to_workspace:
+                root: .
+                paths: rakubrew-windows.exe
+    zip-results:
+        docker:
+            - image: alpine
+        steps:
+            - attach_workspace:
+                at: workspace
+            - run:
+                working_directory: workspace
+                command: tar -czf rakubrew.tgz rakubrew*
+            - store_artifacts:
+                path: workspace/rakubrew.tgz
+                destination: rakubrew.tgz
 
 workflows:
     version: 2
@@ -61,4 +86,9 @@ workflows:
                 filters:
                     tags:
                         only: /\n+/
+            - zip-results:
+                requires:
+                    - build-linux
+                    - build-macos
+                    - build-windows
 
