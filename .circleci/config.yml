@@ -78,17 +78,28 @@ workflows:
                 filters:
                     tags:
                         only: /\n+/
+                    branches:
+                        ignore: /.*/
             - build-macos:
                 filters:
                     tags:
                         only: /\n+/
+                    branches:
+                        ignore: /.*/
             - build-windows:
                 filters:
                     tags:
                         only: /\n+/
+                    branches:
+                        ignore: /.*/
             - zip-results:
                 requires:
                     - build-linux
                     - build-macos
                     - build-windows
+                filters:
+                    tags:
+                        only: /\n+/
+                    branches:
+                        ignore: /.*/
 
