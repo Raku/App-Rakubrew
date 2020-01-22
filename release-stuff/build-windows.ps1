@@ -39,6 +39,7 @@ $Env:PATH = (Join-Path -Path $repoPath -ChildPath "\strawberry\perl\bin") + ";" 
 
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
 perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
+CheckLastExitCode
 
 cpanm -n PAR::Packer
 CheckLastExitCode
