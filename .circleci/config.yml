@@ -65,7 +65,15 @@ jobs:
                 at: workspace
             - run:
                 working_directory: workspace
-                command: tar -czf rakubrew.tgz rakubrew*
+                command: |
+                    mkdir $CIRCLE_TAG
+                    mkdir $CIRCLE_TAG/perl
+                    mv rakubrew-perl $CIRCLE_TAG/perl/rakubrew
+                    mkdir $CIRCLE_TAG/win
+                    mv rakubrew-windows.exe $CIRCLE_TAG/win/rakubrew.exe
+                    mkdir $CIRCLE_TAG/macos
+                    mv rakubrew-macos $CIRCLE_TAG/macos/rakubrew
+                    tar -czf rakubrew.tgz $CIRCLE_TAG
             - store_artifacts:
                 path: workspace/rakubrew.tgz
                 destination: rakubrew.tgz
