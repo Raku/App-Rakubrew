@@ -11,6 +11,7 @@ use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 use App::Rakubrew::Build;
+use App::Rakubrew::Config;
 
 # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6
 # https://stackoverflow.com/questions/6766722/how-to-modify-parent-scope-variable-using-powershell
@@ -34,15 +35,19 @@ sub supports_hooking {
 
 sub install_note {
     my $brew_exec = catfile($RealBin, $brew_name);
+    if ($^O =~ /win32/i ) {
+        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
+    }
     return <<EOT;
 Load $brew_name automatically by adding
 
-  perl $brew_exec init PowerShell | Out-String | Invoke-Expression
+  . "$brew_exec" init PowerShell | Out-String | Invoke-Expression
 
-to your PowerShell profile.
+to your PowerShell profile. (Note the "." at the beginning!)
 This can be easily done using:
 
-  Add-Content -Force -Path \$PROFILE -Value 'perl $brew_exec init PowerShell | Out-String | Invoke-Expression'
+  New-Item -Path (Split-Path \$PROFILE) -ItemType "Directory" -Force
+  Add-Content -Force -Path \$PROFILE -Value '. "$brew_exec" init PowerShell | Out-String | Invoke-Expression'
 EOT
 }
 
@@ -60,17 +65,20 @@ sub get_init_code {
     }
     
     my $brew_exec = catfile($RealBin, $brew_name);
+    if ($^O =~ /win32/i ) {
+        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
+    }
     
     return <<EOT;
 \$Env:PATH = "$path"
 Function $brew_name {
     # TODO: In PowerShell functions do not have return codes. Thus we can not forward the underlying return code.
     # For now we just throw if the actual rakubrew has a returncode != 0. Maybe come up with a better way?
-    $brew_exec internal_hooked PowerShell \$args
+    . "$brew_exec" internal_hooked PowerShell \$args
     if (\$LASTEXITCODE -ne 0) {
         Throw "Rakubrew failed with exitcode \$LASTEXITCODE"
     }
-    \$cmd = $brew_exec internal_shell_hook PowerShell post_call_eval \$args | Out-String
+    \$cmd = . "$brew_exec" internal_shell_hook PowerShell post_call_eval \$args | Out-String
     if (\$cmd) {
         Invoke-Expression -Command \$cmd
     }
@@ -79,7 +87,7 @@ Function $brew_name {
 if (\$PSVersionTable.PSVersion -ge "5.0.0.0") {
     Register-ArgumentCompleter -Native -CommandName $brew_name -ScriptBlock {
         param(\$commandName, \$argumentString, \$position)
-        \$completions = $brew_exec internal_shell_hook PowerShell completions "\$position" "\$argumentString" | Out-String
+        \$completions = . "$brew_exec" internal_shell_hook PowerShell completions "\$position" "\$argumentString" | Out-String
         \$completions = \$completions.trim('\n').Split(' ')
         \$completions | ForEach-Object {
             [System.Management.Automation.CompletionResult]::new(\$_, \$_, 'ParameterValue', \$_)
