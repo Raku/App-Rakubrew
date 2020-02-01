@@ -83,9 +83,10 @@ jobs:
                     mkdir $CIRCLE_TAG/macos
                     mv rakubrew-macos $CIRCLE_TAG/macos/rakubrew
                     tar -czf rakubrew.tgz $CIRCLE_TAG
-                    tar -zcv --owner=0 --group=0 --numeric-owner -f ../rakubrew.tgz $CIRCLE_TAG
+                    tar -cv --owner=0 --group=0 --numeric-owner -f rakubrew.tar $CIRCLE_TAG
             - store_artifacts:
-                path: rakubrew.tgz
+                path: workspace/rakubrew.tar
+                destination: rakubrew.tgz
     manual-zip-results:
         docker:
             - image: alpine
@@ -103,9 +104,10 @@ jobs:
                     mv rakubrew-windows.exe << pipeline.parameters.VERSION >>/win/rakubrew.exe
                     mkdir << pipeline.parameters.VERSION >>/macos
                     mv rakubrew-macos << pipeline.parameters.VERSION >>/macos/rakubrew
-                    tar -zcv --owner=0 --group=0 --numeric-owner -f ../rakubrew.tgz << pipeline.parameters.VERSION >>
+                    tar -cv --owner=0 --group=0 --numeric-owner -f rakubrew.tar << pipeline.parameters.VERSION >>
             - store_artifacts:
-                path: rakubrew.tgz
+                path: workspace/rakubrew.tar
+                destination: rakubrew.tgz
 
 workflows:
     version: 2
