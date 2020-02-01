@@ -3,6 +3,11 @@ version: 2.1
 orbs:
     win: circleci/windows@2.2.0
 
+parameters:
+  MANUAL_BUILD:
+    type: boolean
+    default: false
+
 jobs:
     build-linux:
         docker:
@@ -110,4 +115,16 @@ workflows:
                         only: /\n+/
                     branches:
                         ignore: /.*/
+
+    manual-build:
+        when: << pipeline.parameters.MANUAL_BUILD >>
+        jobs:
+            - build-linux:
+            - build-macos:
+            - build-windows:
+            - zip-results:
+                requires:
+                    - build-linux
+                    - build-macos
+                    - build-windows
 
