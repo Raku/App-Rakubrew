@@ -115,13 +115,12 @@ workflows:
                         only: /\n+/
                     branches:
                         ignore: /.*/
-
     manual-build:
         when: << pipeline.parameters.MANUAL_BUILD >>
         jobs:
-            - build-linux:
-            - build-macos:
-            - build-windows:
+            - build-linux
+            - build-macos
+            - build-windows
             - zip-results:
                 requires:
                     - build-linux
