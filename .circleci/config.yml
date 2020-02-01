@@ -86,7 +86,7 @@ jobs:
                     tar -zcv --owner=0 --group=0 --numeric-owner -f rakubrew.tgz $CIRCLE_TAG
             - store_artifacts:
                 path: workspace/rakubrew.tgz
-                destination: .
+                destination: /
     manual-zip-results:
         docker:
             - image: alpine
@@ -107,7 +107,7 @@ jobs:
                     tar -zcv --owner=0 --group=0 --numeric-owner -f rakubrew.tgz << pipeline.parameters.VERSION >>
             - store_artifacts:
                 path: workspace/rakubrew.tgz
-                destination: .
+                destination: /
 
 workflows:
     version: 2
