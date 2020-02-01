@@ -74,6 +74,7 @@ jobs:
             - run:
                 working_directory: workspace
                 command: |
+                    apk add --update tar
                     mkdir $CIRCLE_TAG
                     mkdir $CIRCLE_TAG/perl
                     mv rakubrew-perl $CIRCLE_TAG/perl/rakubrew
