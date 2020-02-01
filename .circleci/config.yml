@@ -96,6 +96,7 @@ jobs:
             - run:
                 working_directory: workspace
                 command: |
+                    apk add --update tar
                     mkdir << pipeline.parameters.VERSION >>
                     mkdir << pipeline.parameters.VERSION >>/perl
                     mv rakubrew-perl << pipeline.parameters.VERSION >>/perl/rakubrew
