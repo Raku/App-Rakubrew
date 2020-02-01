@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; then
     echo 'You need to pass:'
     echo '   - a version'
     echo '   - a CircleCI token'
@@ -14,7 +14,7 @@ curl \
 -d "{
   \"parameters\": {
     \"MANUAL_BUILD\": true,
-    \"VERSION\": \"$2\"
+    \"VERSION\": \"$1\"
   }
 }" \
 https://circleci.com/api/v2/project/gh/Raku/App-Rakubrew/pipeline
