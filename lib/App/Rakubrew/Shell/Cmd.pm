@@ -62,7 +62,7 @@ To load $brew_name in CMD automatically you have to do two things:
     echo ^)
     ) >> "\%USERPROFILE\%\\Documents\\CMD_profile.cmd"
 
-  If you use a different autorun script location replace the path in the command above.
+  If you use a different autorun script location, replace the path in the command above.
 EOT
 }
 
