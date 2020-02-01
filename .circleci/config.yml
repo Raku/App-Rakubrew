@@ -7,6 +7,9 @@ parameters:
   MANUAL_BUILD:
     type: boolean
     default: false
+  VERSION:
+    type: string
+    default: ""
 
 jobs:
     build-linux:
@@ -79,9 +82,30 @@ jobs:
                     mkdir $CIRCLE_TAG/macos
                     mv rakubrew-macos $CIRCLE_TAG/macos/rakubrew
                     tar -czf rakubrew.tgz $CIRCLE_TAG
+                    tar -zcv --owner=0 --group=0 --numeric-owner -f rakubrew.tgz $CIRCLE_TAG
             - store_artifacts:
                 path: workspace/rakubrew.tgz
-                destination: rakubrew.tgz
+                destination: .
+    manual-zip-results:
+        docker:
+            - image: alpine
+        steps:
+            - attach_workspace:
+                at: workspace
+            - run:
+                working_directory: workspace
+                command: |
+                    mkdir << pipeline.parameters.VERSION >>
+                    mkdir << pipeline.parameters.VERSION >>/perl
+                    mv rakubrew-perl << pipeline.parameters.VERSION >>/perl/rakubrew
+                    mkdir << pipeline.parameters.VERSION >>/win
+                    mv rakubrew-windows.exe << pipeline.parameters.VERSION >>/win/rakubrew.exe
+                    mkdir << pipeline.parameters.VERSION >>/macos
+                    mv rakubrew-macos << pipeline.parameters.VERSION >>/macos/rakubrew
+                    tar -zcv --owner=0 --group=0 --numeric-owner -f rakubrew.tgz << pipeline.parameters.VERSION >>
+            - store_artifacts:
+                path: workspace/rakubrew.tgz
+                destination: .
 
 workflows:
     version: 2
@@ -121,7 +145,7 @@ workflows:
             - build-linux
             - build-macos
             - build-windows
-            - zip-results:
+            - manual-zip-results:
                 requires:
                     - build-linux
                     - build-macos
