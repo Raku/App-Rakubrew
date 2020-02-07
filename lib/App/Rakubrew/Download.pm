@@ -31,7 +31,7 @@ sub download_precomp_archive {
         exit 1;
     }
 
-    my $ht = HTTP::Tiny->new();
+    my $ht = HTTP::Tinyish->new();
 
     my @matching_releases = grep {
             $ver ? $_->{ver} eq $ver : $_->{latest}
@@ -63,7 +63,7 @@ sub download_precomp_archive {
 }
 
 sub available_precomp_archives {
-    return _retrieve_releases(HTTP::Tiny->new());
+    return _retrieve_releases(HTTP::Tinyish->new());
 }
 
 sub _retrieve_releases {

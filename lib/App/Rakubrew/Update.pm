@@ -44,7 +44,7 @@ sub update {
         exit 1;
     }
 
-    my $ht = HTTP::Tiny->new();
+    my $ht = HTTP::Tinyish->new();
 	my $release_index = _download_release_index($ht);
 
     # check version
