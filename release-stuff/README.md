@@ -5,68 +5,18 @@ Release Guide
 - Tag that commit with the version number
 - `mbtiny dist` - Generate a release tarball
 - `mbtiny upload` - Upload the release to CPAN
-- Create `rakubrew-win.exe` on Windows via the below instructions
-- Create `rakubrew-macos` on MacOS via the below instructions
-- Create `rakubrew-linux` on Linux via the below instructions
-- Upload the the executables to the webserver in `$webroot/releases/{win,mac,linux}/{version}/rakubrew(.exe)?`
-- Bump the version number on the webserver in `$webroot/latest`
 
+The process of building a release on the different platforms is largely automated. There is a build pipeline setup utilizing the CircleCI infrastructure.
+The process of building is not started automatically, but has to be triggered manually. To do so one needs to call a special script.
 
-Linux
------
+    ./trigger-manual-build.sh 2 afbc1348971234318974523789afc898798d7ecf
 
-You need to have `podman` installed for a containerized build to work.
+The parameters are:
+- The version to build, e.g. 2
+- A CircleCI personal API token. One can be created here: <https://circleci.com/account/api>
+  Do not confuse the personal API token with project specific API tokens! The project specific API tokens will not work and result in a "Permission denied" error.
 
-    podman run --rm -it --name=rakubrew-build perl:5.10.1 /bin/bash
-
-In the container do
-
-    git clone https://github.com/Raku/App-Rakubrew.git
-    cd App-Rakubrew/release-stuff
-    ./build-linux.sh
-    
-In a separate terminal do
-
-    podman cp rakubrew-build:/root/App-Rakubrew/rakubrew .
-
-
-MacOS
------
-
-TBD
-
-
-Windows
--------
-
-- download Docker desktop and install in Windows mode
-- In a PowerShell
-
-    docker pull mcr.microsoft.com/windows/nanoserver:1903
-    docker run -it mcr.microsoft.com/windows/nanoserver:1903 cmd.exe
-    
-- In the container
-
-    mkdir C:/download
-    mkdir C:/git
-    mkdir C:/strawberry
-    
-    Invoke-WebRequest http://strawberryperl.com/download/5.30.0.1/strawberry-perl-5.30.0.1-64bit.zip -OutFile C:/download/strawberry-perl-5.30.0.1-64bit.zip
-    Expand-Archive -Path C:/download/strawberry-perl-5.30.0.1-64bit.zip -DestinationPath C:\strawberry
-    .\strawberry\relocation.pl.bat
-    $Env:PATH = "C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;$Env:PATH"
-    
-    Invoke-WebRequest https://github.com/git-for-windows/git/releases/download/v2.24.0-rc1.windows.1/MinGit-2.24.0.rc1.windows.1-64-bit.zip -OutFile C:/download/mingit.zip
-    Expand-Archive -Path C:/download/mingit.zip -DestinationPath C:/git
-    mv C:/git/etc/gitconfig C:/git/etc/gitconfig.broken
-    $Env:PATH = "C:\git\cmd;$Env:PATH"
-    
-    cpanm -n PAR::Packer
-    
-    git clone https://github.com/Raku/App-Rakubrew.git App-Rakubrew
-    
-    cpanm --installdeps -n App-Rakubrew
-    cpanm --installdeps -n --cpanfile cpanfile.win App-Rakubrew
-    
-    pp -I App-rakubrew/lib -M App::Rakubrew::Shell::* -M IO::Socket::SSL -o rakubrew.exe App-Rakubrew/script/rakubrew
+After calling the above script accordingly a message with some JSON indicating successful start of the build procedure should be printed.
+Navigate to <https://circleci.com/gh/Raku/workflows/App-Rakubrew/tree/master> and select the latest workflow named "manual-build". Four build jobs should be running. One for Windows, one for Linux, one for MacOS and one that zips the results together. After successful completion of the jobs click on the "manual-zip-results" job, select the "Artifacts" tab and download the shown file.
+- Unzip the file, add a "changes" file with the respective entries, and put that folder on the webserver in `$webroot/releases`
 
