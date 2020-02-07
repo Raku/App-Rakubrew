@@ -2,3 +2,6 @@
     - Initial release to an unsuspecting world
     - This is mostly a testing release and not yet recommended for normal use.
 
+2
+    - Fix download and self-update command
+
