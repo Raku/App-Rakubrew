@@ -17,10 +17,8 @@ use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 
-#my $release_index_url   = 'https://rakudo.org/dl/rakudo';
-#my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
-my $release_index_url   = 'http://localhost:4242/dl/rakudo';
-my $download_url_prefix = 'http://localhost:4242/dl/rakudo/';
+my $release_index_url   = 'https://rakudo.org/dl/rakudo';
+my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
 
 sub download_precomp_archive {
     my ($impl, $ver) = @_;
