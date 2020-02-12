@@ -50,7 +50,7 @@ sub build_impl {
         run "$GIT rev-parse -q --verify origin/$ver";
         $ver_to_checkout = "origin/$ver";
     };
-    run "$GIT checkout $ver_to_checkout";
+    run "$GIT checkout -q $ver_to_checkout";
 
     $configure_opts .= ' ' . _get_git_cache_option;
     run $impls{$impl}{configure} . " $configure_opts";
