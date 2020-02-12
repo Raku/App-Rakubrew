@@ -59,19 +59,19 @@ our %impls = (
     jvm => {
         name      => "jvm",
         weight    => 20,
-        configure => "$PERL5 Configure.pl --backends=jvm --gen-nqp --git-reference=\"$git_reference\" --make-install",
+        configure => "$PERL5 Configure.pl --backends=jvm --gen-nqp --make-install",
         need_repo => ['rakudo', 'nqp'],
     },
     moar => {
         name      => "moar",
         weight    => 30,
-        configure => "$PERL5 Configure.pl --backends=moar --gen-moar --git-reference=\"$git_reference\" --make-install",
+        configure => "$PERL5 Configure.pl --backends=moar --gen-moar --make-install",
         need_repo => ['rakudo', 'nqp', 'MoarVM'],
     },
     'moar-blead' => {
         name      => "moar-blead",
         weight    => 35,
-        configure => "$PERL5 Configure.pl --backends=moar --gen-moar=master --gen-nqp=master --git-reference=\"$git_reference\" --make-install",
+        configure => "$PERL5 Configure.pl --backends=moar --gen-moar=master --gen-nqp=master --make-install",
         need_repo => ['rakudo', 'nqp', 'MoarVM'],
     },
 );

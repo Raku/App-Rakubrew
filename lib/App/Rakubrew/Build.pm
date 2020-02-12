@@ -12,6 +12,15 @@ use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 
+sub _get_git_cache_option {
+    if (qx|$PERL5 Configure.pl --git-cache-dir=$git_reference| =~ /Unknown option/) {
+        return "--git-reference=\"$git_reference\"";
+    }
+    else {
+        return "--git-cache-dir=\"$git_reference\"";
+    }
+}
+
 sub available_rakudos {
     my @output = qx|$GIT ls-remote --tags $git_repos{rakudo}|;
     my @tags = grep(m{refs/tags/([^\^]+)\^\{\}}, @output);
@@ -43,6 +52,7 @@ sub build_impl {
     };
     run "$GIT checkout $ver_to_checkout";
 
+    $configure_opts .= ' ' . _get_git_cache_option;
     run $impls{$impl}{configure} . " $configure_opts";
 }
 
@@ -93,13 +103,18 @@ sub build_triple {
     chdir "MoarVM";
     run "$GIT pull";
     run "$GIT checkout $moar_ver";
-    run "$PERL5 Configure.pl --prefix=" . catdir(updir(), updir(), 'install') . ' --make-install';
+
+    _get_git_cache_option;
+    run "$PERL5 Configure.pl --prefix=" . catdir(updir(), updir(), 'install')
+        . ' --make-install ' . _get_git_cache_option;
 
     chdir updir();
-    run "$PERL5 Configure.pl --backend=moar --prefix=" . catdir(updir(), 'install') . ' --make-install';
+    run "$PERL5 Configure.pl --backend=moar --prefix=" . catdir(updir(), 'install')
+        . ' --make-install ' . _get_git_cache_option;
 
     chdir updir();
-    run "$PERL5 Configure.pl --backend=moar --make-install";
+    run "$PERL5 Configure.pl --backend=moar --make-install"
+        . ' ' . _get_git_cache_option;
 
     if (-d 'zef') {
         say "Updating zef as well";
@@ -128,10 +143,10 @@ sub update_git_reference {
     print "Update git reference: $repo\n";
     chdir $git_reference;
     unless (-d $repo) {
-        run "$GIT clone $git_repos{$repo} $repo";
+        run "$GIT clone --bare $git_repos{$repo} $repo";
     }
     chdir $repo;
-    run "$GIT pull";
+    run "$GIT fetch";
     chdir $back;
 }
 
