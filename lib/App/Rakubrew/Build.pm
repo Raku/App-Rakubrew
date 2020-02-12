@@ -13,12 +13,15 @@ use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 
 sub _get_git_cache_option {
-    if (qx|$PERL5 Configure.pl --git-cache-dir=$git_reference| =~ /Unknown option/) {
-        return "--git-reference=\"$git_reference\"";
-    }
-    else {
+    qx|$PERL5 Configure.pl --help --git-cache-dir=$git_reference|;
+    if ( $? >> 8 == 0 ) {
         return "--git-cache-dir=\"$git_reference\"";
     }
+    qx|$PERL5 Configure.pl --help --git-reference=$git_reference|;
+    if ( $? >> 8 == 0 ) {
+        return "--git-reference=\"$git_reference\"";
+    }
+    return "";
 }
 
 sub available_rakudos {
