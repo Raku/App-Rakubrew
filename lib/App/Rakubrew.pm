@@ -190,7 +190,12 @@ sub run_script {
             if @args && $args[0] !~ /^--/;
 
         if (!defined $ver) {
-            if ($impl eq 'moar-blead') {
+            my $regex = '(' . join('|', App::Rakubrew::Build::available_backends()) . ')-(.+)';
+            if ($impl =~ /$regex/) {
+                $impl = $1;
+                $ver = $2;
+            }
+            elsif ($impl eq 'moar-blead') {
                 $ver = 'master';
             }
             else {
@@ -265,17 +270,25 @@ sub run_script {
         my $impl = shift(@args) // 'moar';
         my $ver = shift @args if @args;
 
+        if (!defined $ver) {
+            my $regex = '(' . join('|', App::Rakubrew::Build::available_backends()) . ')-(.+)';
+            if ($impl =~ /$regex/) {
+                $impl = $1;
+                $ver = $2;
+            }
+            else {
+                # TODO: Check if that version is downloadable. If not abort!
+                my @versions = App::Rakubrew::Build::available_rakudos();
+                @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
+                $ver = $versions[-1];
+            }
+        }
+
         if (!exists $impls{$impl}) {
             say STDERR "Cannot download Rakudo on '$impl': this backend does not exist.";
             exit 1;
         }
 
-        if (!defined $ver) {
-            # TODO: Check if that version is downloadable. If not abort!
-            my @versions = App::Rakubrew::Build::available_rakudos();
-            @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
-            $ver = $versions[-1];
-        }
         App::Rakubrew::Download::download_precomp_archive($impl, $ver);
 
         # Might have new executables now -> rehash
