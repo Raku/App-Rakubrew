@@ -18,8 +18,6 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my $brew_exec = catfile($RealBin, $brew_name);
-
     return <<EOT;
 Load $brew_name automatically in `bash` by adding
 
@@ -44,9 +42,6 @@ sub get_init_code {
     else { # get_brew_mode() eq 'shim'
         $path = join(':', $shim_dir, $path);
     }
-
-    my $brew_exec = catfile($RealBin, $brew_name);
-
     return <<EOT;
 export PATH="$path"
 $brew_name() {

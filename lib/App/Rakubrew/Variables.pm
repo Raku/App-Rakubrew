@@ -1,7 +1,7 @@
 package App::Rakubrew::Variables;
 require Exporter;
 our @ISA = qw( Exporter );
-our @EXPORT = qw( $brew_name $env_var $local_filename $prefix $versions_dir $shim_dir $git_reference $GIT $GIT_PROTO $PERL5 %git_repos %impls );
+our @EXPORT = qw( $brew_name $brew_exec $env_var $local_filename $prefix $versions_dir $shim_dir $git_reference $GIT $GIT_PROTO $PERL5 %git_repos %impls );
 
 use strict;
 use warnings;
@@ -11,8 +11,13 @@ use FindBin qw($RealBin);
 use File::Spec::Functions qw(catfile catdir updir);
 use Cwd qw(abs_path);
 use File::HomeDir;
+use App::Rakubrew::Config;
 
 our $brew_name = 'rakubrew';
+our $brew_exec = catfile($RealBin, $brew_name);
+if ($^O =~ /win32/i ) {
+    $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
+}
 our $home_env_var = 'RAKUBREW_HOME';
 our $env_var = 'RAKUBREW_VERSION';
 our $local_filename = '.raku-version';

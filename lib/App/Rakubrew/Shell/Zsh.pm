@@ -18,7 +18,6 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my $brew_exec = catfile($RealBin, $brew_name);
     my $rc_file = qw( .zshrc );
     if ( exists $ENV{ZDOTDIR} ) {
         $rc_file = catfile( $ENV{ZDOTDIR}, $rc_file );
@@ -48,8 +47,6 @@ sub get_init_code {
     else { # get_brew_mode() eq 'shim'
         $path = join(':', $shim_dir, $path);
     }
-
-    my $brew_exec = catfile($RealBin, $brew_name);
 
     return <<EOT;
 export PATH="$path"

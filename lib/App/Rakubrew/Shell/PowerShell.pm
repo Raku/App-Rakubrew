@@ -34,10 +34,6 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my $brew_exec = catfile($RealBin, $brew_name);
-    if ($^O =~ /win32/i ) {
-        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
-    }
     return <<EOT;
 Load $brew_name automatically by adding
 
@@ -63,12 +59,6 @@ sub get_init_code {
     else { # get_brew_mode() eq 'shim'
         $path = join(';', $shim_dir, $path);
     }
-    
-    my $brew_exec = catfile($RealBin, $brew_name);
-    if ($^O =~ /win32/i ) {
-        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
-    }
-    
     return <<EOT;
 \$Env:PATH = "$path"
 Function $brew_name {

@@ -24,11 +24,6 @@ sub install_note {
     # The autorun guard to prevent endless loops is based on this StackOverflow
     # answer: https://stackoverflow.com/a/57451662/1975049
 
-    my $brew_exec = catfile($RealBin, $brew_name);
-    if ($^O =~ /win32/i ) {
-        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
-    }
-
     return <<EOT;
 To load $brew_name in CMD automatically you have to do two things:
 
@@ -77,11 +72,6 @@ sub get_init_code {
     }
     else { # get_brew_mode() eq 'shim'
         $path = join(';', $shim_dir, $path);
-    }
-
-    my $brew_exec = catfile($RealBin, $brew_name);
-    if ($^O =~ /win32/i ) {
-        $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
     }
 
     # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/doskey

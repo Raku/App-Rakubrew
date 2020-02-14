@@ -18,7 +18,6 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my $brew_exec = catfile($RealBin, $brew_name);
     return <<EOT;
 Load $brew_name automatically by adding
 
@@ -50,8 +49,6 @@ sub get_init_code {
     }
 
     $path = join(' ', @path_components);
-
-    my $brew_exec = catfile($RealBin, $brew_name);
 
     return <<EOT;
 set -x PATH $path
