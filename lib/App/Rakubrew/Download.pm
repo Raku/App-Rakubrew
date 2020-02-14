@@ -9,6 +9,7 @@ use 5.010;
 use HTTP::Tinyish;
 use JSON;
 use Config;
+use Cwd qw(cwd);
 use IO::Uncompress::Unzip qw( $UnzipError );
 use File::Path qw( make_path remove_tree );
 use File::Copy::Recursive qw( dirmove );
@@ -30,6 +31,7 @@ sub download_precomp_archive {
         say STDERR "$name is already installed.";
         exit 1;
     }
+    mkdir $name;
 
     my $ht = HTTP::Tinyish->new();
 
@@ -60,6 +62,26 @@ sub download_precomp_archive {
     else {
         _untar($res->{content}, $name);
     }
+
+    # Remove top-level rakudo-2020.01 folder and move all files one level up.
+    my $back = cwd();
+    chdir $name;
+    my $rakudo_dir;
+    opendir(DIR, '.') || die "Can't open directory: $!\n";
+    while (my $file = readdir(DIR)) {
+        if (-d $file && $file =~ /^rakudo-/) {
+            $rakudo_dir = $file;
+            last;
+        }
+    }
+    closedir(DIR);
+    unless ($rakudo_dir) {
+        say STDERR "Archive didn't look as expected, aborting. Extracted to: $name";
+        exit 1;
+    }
+    dirmove($rakudo_dir, '.');
+    rmdir($rakudo_dir);
+    chdir $back;
 }
 
 sub available_precomp_archives {
@@ -118,31 +140,13 @@ sub _download_release_index {
 
 sub _untar {
     my ($data, $target) = @_;
-    mkdir $target if !-d $target;
+    my $back = cwd();
     chdir $target;
     open (TAR, '| tar -xz');
     binmode(TAR);
     print TAR $data;
     close TAR;
-
-    my $rakudo_dir;
-    opendir(DIR, '.') || die "Can't open directory: $!\n";
-    while (my $file = readdir(DIR)) {
-        if (-d $file && $file =~ /^rakudo-/) {
-            $rakudo_dir = $file;
-            last;
-        }
-    }
-    closedir(DIR);
-
-    unless ($rakudo_dir) {
-        say STDERR "Archive didn't look as expected, aborting. Extracted to: $target";
-        exit 1;
-    }
-
-    dirmove($rakudo_dir, '.');
-
-    rmdir($rakudo_dir);
+    chdir $back;
 }
 
 sub _unzip {
@@ -150,7 +154,7 @@ sub _unzip {
 
     my $zip = IO::Uncompress::Unzip->new($data_ref);
     unless ($zip) {
-        say STDERR "Unzipping failed. Error: $UnzipError";
+        say STDERR "Reading zip file failed. Error: $UnzipError";
         exit 1;
 	}
 
