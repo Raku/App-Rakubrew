@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir catfile updir splitpath);
-use Cwd qw(cwd);
+use Try::Tiny;
 use App::Rakubrew::Tools;
 use App::Rakubrew::Variables;
 use App::Rakubrew::VersionHandling;
@@ -111,7 +111,15 @@ sub clean_path {
 
     my @paths;
     for my $version (get_versions()) {
-        push @paths, get_bin_paths($version) if $version ne 'system';
+        if ($version ne 'system') {
+            try {
+                push @paths, get_bin_paths($version);
+            }
+            catch {
+                # Version is broken. So it's likely not in path anyways.
+                # -> ignore it
+            };
+        }
     }
     push @paths, $versions_dir;
     push @paths, $shim_dir;

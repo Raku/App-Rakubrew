@@ -1,3 +1,4 @@
+requires 'Try::Tiny'             => '0.30';
 requires 'File::Which'           => '1.23';
 requires 'HTTP::Tinyish'         => '0.15';
 requires 'File::HomeDir'         => '0.97';
