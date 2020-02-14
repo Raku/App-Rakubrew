@@ -94,6 +94,7 @@ sub _my_platform {
 
 sub _my_arch {
     my $arch =
+        $Config{archname} =~ /x64/i    ? 'x86_64' :
         $Config{archname} =~ /x86_64/i ? 'x86_64' :
         $Config{archname} =~ /amd64/i  ? 'x86_64' :
         $Config{archname} =~ /x86/i    ? 'x86'    :
