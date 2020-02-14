@@ -43,6 +43,7 @@ __END__
  <%brew_name%> test [<version>|all]
 
  <%brew_name%> help [--verbose|<command>]
+ <%brew_name%> rakubrew-version
 
 
 =head1 COMMAND: version
@@ -243,5 +244,20 @@ Usage: <%brew_name%> test [<version>|all]
 
 Run Rakudo tests aka C<make test> in the current, given or all installed
 versions.
+
+=head1 COMMAND: help
+
+Usage: <%brew_name%> help [--verbose|<command>]
+
+Display an overview of rakubrew commands.
+Add a specific command to display instructions for that command.
+Print the entire manual with the C<--verbose> flag.
+
+=head1 COMMAND: rakubrew-version
+
+Usage: <%brew_name%> rakubrew-version
+
+Display the version of this rakubrew installation and some other information
+helpful for debugging. Include this information when you report a bug.
 
 =cut

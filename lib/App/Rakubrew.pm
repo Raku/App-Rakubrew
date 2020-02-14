@@ -15,6 +15,7 @@ use File::Path qw(remove_tree);
 use File::Spec::Functions qw(catfile catdir splitpath updir);
 
 use App::Rakubrew::Build;
+use App::Rakubrew::Config;
 use App::Rakubrew::Download;
 use App::Rakubrew::Shell;
 use App::Rakubrew::Tools;
@@ -420,6 +421,9 @@ sub run_script {
 
     } elsif ($arg eq 'internal_update') {
         App::Rakubrew::Update::internal_update(@args);
+
+    } elsif ($arg eq 'rakubrew-version') {
+        say "rakubrew v$VERSION Build type: $distro_format OS: $^O";
 
     } else {
         require Pod::Usage;
