@@ -120,6 +120,7 @@ sub _untar {
     mkdir $target if !-d $target;
     chdir $target;
     open (TAR, '| tar -xz');
+    binmode(TAR);
     print TAR $data;
     close TAR;
 
@@ -180,6 +181,7 @@ sub _unzip {
             say STDERR "Failed to write $target_file. Error: $!";
             exit 1;
         }
+        binmode(FH);
 
         my $buf;
         while (($status = $zip->read($buf)) > 0) {
