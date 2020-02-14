@@ -100,7 +100,7 @@ sub _my_arch {
         $Config{archname} =~ /x86/i    ? 'x86'    :
         '';
     unless ($arch) {
-        say STDERR 'Couldn\'t detect system architecture.';
+        say STDERR 'Couldn\'t detect system architecture. Current arch is: ' . $Config{archname};
         exit 1;
     }
     return $arch;
