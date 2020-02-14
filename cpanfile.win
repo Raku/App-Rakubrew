@@ -1,4 +1,3 @@
 requires 'Win32::Process'    => '0.16';
 requires 'Win32::ShellQuote' => '0.003001';
-requires 'Net::SSLeay'       => '1.88';
 requires 'IO::Socket::SSL'   => '2.067';
