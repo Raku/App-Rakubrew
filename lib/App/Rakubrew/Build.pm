@@ -6,11 +6,54 @@ our @EXPORT = qw();
 use strict;
 use warnings;
 use 5.010;
+use File::Copy::Recursive;
 use File::Spec::Functions qw(catdir updir);
+use File::Temp qw/ tempdir /;
 use Cwd qw(cwd);
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
+
+sub _get_temp_dir {
+    # Rakudo is currently not able to be built in a directory with spaces in
+    # its path.
+    # Because the default rakubrew directory on MacOS contains a path we build
+    # in a temporary directory that usually does not have spaces in its path
+    # on MacOS.
+
+    my $dir_tmpl = 'rakubrew_build_XXXXXXXXXX';
+
+    my $dir;
+
+    if ($^O eq 'darwin') {
+        my $dir = $ENV{TMPDIR};
+        $dir = tempdir( $dir_tmpl, DIR => $ENV{TMPDIR} );
+    }
+    elsif ($^O eq 'win32') {
+        # Not in use.
+        die "This should never happen.";
+    }
+    else {
+        # Not in use.
+        die "This should never happen.";
+        # First try /tmp. If that's not accessible, try default temp directory.
+        if (-d '/tmp') {
+            $dir = tempdir( $dir_tmpl, DIR => '/tmp' );
+        }
+        else {
+            $dir = tempdir( $dir_tmpl, DIR => 1 );
+        }
+    }
+
+    if (index($dir, ' ') != -1) {
+        say STDERR "Unable to find a temporary directory not containing a space.";
+        say STDERR "Rakudo currently can't be built in a directory wit spaces.";
+        say STDERR "Aborting.";
+        exit 1;
+    }
+
+    return $dir;
+}
 
 sub _get_git_cache_option {
     qx|$PERL5 Configure.pl --help --git-cache-dir=$git_reference|;
@@ -22,6 +65,17 @@ sub _get_git_cache_option {
         return "--git-reference=\"$git_reference\"";
     }
     return "";
+}
+
+sub _get_relocatable_option {
+    qx|$PERL5 Configure.pl --help --relocatable|;
+    if ( $? >> 8 == 0 ) {
+        return "--relocatable";
+    }
+    say STDERR "The current rakubrew setup requires Rakudo to be relocated, but the";
+    say STDERR "Rakudo you selected to be built does not support the `--relocatable`";
+    say STDERR "option yet. Try building a newer Rakudo.";
+    exit 1;
 }
 
 sub available_rakudos {
@@ -38,7 +92,13 @@ sub build_impl {
     my $name = "$impl-$ver";
     $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
-    chdir $versions_dir;
+    if ($^O eq 'darwin') {
+        chdir _get_temp_dir();
+    }
+    else {
+        chdir $versions_dir;
+    }
+
     unless (-d $name) {
         for(@{$impls{$impl}{need_repo}}) {
             update_git_reference($_);
@@ -56,7 +116,17 @@ sub build_impl {
     run "$GIT checkout -q $ver_to_checkout";
 
     $configure_opts .= ' ' . _get_git_cache_option;
+    $configure_opts .= ' ' . _get_relocatable_option() if $^O eq 'darwin';
     run $impls{$impl}{configure} . " $configure_opts";
+
+    if ($^O eq 'darwin') {
+        # This will write into an existing directory if that exists.
+        # This might actually just work.
+        my $destdir = catdir($versions_dir, $name);
+        say "Moving installation to target directory";
+        local $File::Copy::Recursive::RMTrgFil = 1;
+        File::Copy::Recursive::dirmove($name, $destdir) or die "Can't move installation: $!";
+    }
 }
 
 sub determine_make {
@@ -78,8 +148,22 @@ sub build_triple {
     $rakudo_ver //= 'HEAD';
     $nqp_ver //= 'HEAD';
     $moar_ver //= 'HEAD';
-    chdir $versions_dir;
+
     my $name = "$impl-$rakudo_ver-$nqp_ver-$moar_ver";
+
+    my $configure_opts = '--make-install'
+        . ' --prefix=' .catdir($versions_dir, $name, 'install')
+        . ' ' . _get_git_cache_option;
+
+    if ($^O eq 'darwin') {
+        chdir _get_temp_dir();
+    }
+    else {
+        chdir $versions_dir;
+    }
+
+    my $prefix = catdir($versions_dir, $name, 'install');
+
     unless (-d $name) {
         update_git_reference('rakudo');
         run "$GIT clone --reference \"$git_reference/rakudo\" $git_repos{rakudo} $name";
@@ -87,6 +171,9 @@ sub build_triple {
     chdir $name;
     run "$GIT pull";
     run "$GIT checkout $rakudo_ver";
+
+    $configure_opts .= ' ' . _get_relocatable_option() if $^O eq 'darwin';
+
     if (-e 'Makefile') {
         run(determine_make('Makefile'), 'install');
     }
@@ -107,21 +194,26 @@ sub build_triple {
     run "$GIT pull";
     run "$GIT checkout $moar_ver";
 
-    _get_git_cache_option;
-    run "$PERL5 Configure.pl --prefix=" . catdir(updir(), updir(), 'install')
-        . ' --make-install ' . _get_git_cache_option;
+    run "$PERL5 Configure.pl " . $configure_opts;
 
     chdir updir();
-    run "$PERL5 Configure.pl --backend=moar --prefix=" . catdir(updir(), 'install')
-        . ' --make-install ' . _get_git_cache_option;
+    run "$PERL5 Configure.pl --backend=moar " . $configure_opts;
 
     chdir updir();
-    run "$PERL5 Configure.pl --backend=moar --make-install"
-        . ' ' . _get_git_cache_option;
+    run "$PERL5 Configure.pl --backend=moar " . $configure_opts;
 
     if (-d 'zef') {
         say "Updating zef as well";
         build_zef($name);
+    }
+
+    if ($^O eq 'darwin') {
+        # This will write into an existing directory if that exists.
+        # This might actually just work.
+        my $destdir = catdir($versions_dir, $name);
+        say "Moving installation to target directory";
+        local $File::Copy::Recursive::RMTrgFil = 1;
+        File::Copy::Recursive::dirmove($name, $destdir) or die "Can't move installation: $!";
     }
 
     return $name;
