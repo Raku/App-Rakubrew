@@ -1,7 +1,8 @@
 Release Guide
 =============
 
-- Bump version and create a respective commit
+- Bump version in `lib/App/Rakubrew.pm`
+- Create a respective commit
 - Tag that commit with the version number
 - `mbtiny dist` - Generate a release tarball
 - `mbtiny upload` - Upload the release to CPAN
