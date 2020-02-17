@@ -5,3 +5,13 @@
 2
     - Fix download and self-update command
 
+3
+    - Download less during builds by using `--git-cache-dir` rakudo option on
+      newer rakudos
+    - Add `rakubrew-version` command to list version and some debug info
+    - Fix `download` and `self-upgrade` commands
+    - Don't error on startup when a broken version is present (e.g. a failed
+      build)
+    - Fix `shim` mode on Windows
+    - Accept "moar-2020.01" style versions in addition to "moar 2020.01" in
+      `build` and `download` commands
