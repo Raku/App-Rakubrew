@@ -42,6 +42,10 @@ Release Guide
     /2/macos/rakubrew
     /2/win/rakubrew.exe
 
-- Upload that folder to the webserver and put it in the releases folder.
+- Upload that folder to the webserver and put it in the releases folder. Here
+  is a snippet to create an archive that lacks any user and group information:
+
+    tar -czv --owner=0 --group=0 --numeric-owner -f rakubrew-2.tgz 2
+
 - Verify that the new version is displayed on <https://rakubrew.org/>.
 
