@@ -32,12 +32,6 @@ jobs:
         macos:
             xcode: 11.3.1
         steps:
-            - run:
-                name: Install Perl
-                command: brew install perl
-            - run:
-                name: Install cpanm
-                command: brew install cpanminus
             - checkout
             - run:
                 name: Run build script

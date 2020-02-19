@@ -39,20 +39,21 @@ DIR=$(dirname -- "$EXEC")
 
 cd $DIR/..
 
-# Workaround for the homebrew perl bin dir not being in path.
-# perl itself is linked into /usr/local/bin, but `pp` that we install
-# below is not.
-export PATH=/usr/local/Cellar/perl/5.30.1/bin:$PATH
+# Download precompiled perl.
+mkdir download
+curl -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.26.1.1/perl-darwin-2level.tar.gz
+tar -xzf download/perl-precomp.tar.gz
+export PATH=$DIR/perl-darwin-2level/bin:$PATH
 
+# Prepare Config.pm
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
 perl -pi -E 's/<\%distro_format\%>/macos/' lib/App/Rakubrew/Config.pm
 
-mkdir download
-mkdir strawberry
-
+# Install dependencies
 cpanm -n PAR::Packer
 cpanm --installdeps -n .
 cpanm --installdeps -n --cpanfile cpanfile.macos .
 
+# PAR package rakubrew
 pp -I lib -M App::Rakubrew::Shell::* -M IO::Socket::SSL -o rakubrew script/rakubrew
 
