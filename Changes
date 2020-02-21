@@ -15,3 +15,11 @@
     - Fix `shim` mode on Windows
     - Accept "moar-2020.01" style versions in addition to "moar 2020.01" in
       `build` and `download` commands
+
+4
+    - Hopefully make it run on older MacOS as well by switching to a different
+      Perl distribution. (#3)
+    - Enable building Rakudos on MacOS even though Rakudo currently doesn't
+      support building in a folder with spaces. This only works with new enough
+      Rakudos.
+
