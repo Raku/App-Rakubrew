@@ -26,7 +26,7 @@ sub _get_temp_dir {
     my $dir;
 
     if ($^O eq 'darwin') {
-        my $dir = $ENV{TMPDIR};
+        $dir = $ENV{TMPDIR};
         $dir = tempdir( $dir_tmpl, DIR => $ENV{TMPDIR} );
     }
     elsif ($^O eq 'win32') {
