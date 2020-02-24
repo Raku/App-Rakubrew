@@ -43,7 +43,7 @@ cd $DIR/..
 mkdir download
 curl -L -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.26.1.1/perl-darwin-2level.tar.gz
 tar -xzf download/perl-precomp.tar.gz
-export PATH=$DIR/perl-darwin-2level/bin:$PATH
+export PATH=$DIR/../perl-darwin-2level/bin:$PATH
 
 # Prepare Config.pm
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
