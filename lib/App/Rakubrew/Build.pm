@@ -56,11 +56,11 @@ sub _get_temp_dir {
 }
 
 sub _get_git_cache_option {
-    qx|$PERL5 Configure.pl --help --git-cache-dir=$git_reference|;
+    qx|$PERL5 Configure.pl --help --git-cache-dir="$git_reference"|;
     if ( $? >> 8 == 0 ) {
         return "--git-cache-dir=\"$git_reference\"";
     }
-    qx|$PERL5 Configure.pl --help --git-reference=$git_reference|;
+    qx|$PERL5 Configure.pl --help --git-reference="$git_reference"|;
     if ( $? >> 8 == 0 ) {
         return "--git-reference=\"$git_reference\"";
     }
@@ -92,8 +92,10 @@ sub build_impl {
     my $name = "$impl-$ver";
     $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
+    my $tmp_dir;
     if ($^O eq 'darwin') {
-        chdir _get_temp_dir();
+        $tmp_dir = _get_temp_dir();
+        chdir $tmp_dir;
     }
     else {
         chdir $versions_dir;
@@ -122,10 +124,11 @@ sub build_impl {
     if ($^O eq 'darwin') {
         # This will write into an existing directory if that exists.
         # This might actually just work.
-        my $destdir = catdir($versions_dir, $name);
+        my $src_dir = catdir($tmp_dir, $name);
+        my $dest_dir = catdir($versions_dir, $name);
         say "Moving installation to target directory";
         local $File::Copy::Recursive::RMTrgFil = 1;
-        File::Copy::Recursive::dirmove($name, $destdir) or die "Can't move installation: $!";
+        File::Copy::Recursive::dirmove($src_dir, $dest_dir) or die "Can't move installation: $!";
     }
 }
 
@@ -155,8 +158,10 @@ sub build_triple {
         . ' --prefix=' .catdir($versions_dir, $name, 'install')
         . ' ' . _get_git_cache_option;
 
+    my $tmp_dir;
     if ($^O eq 'darwin') {
-        chdir _get_temp_dir();
+        $tmp_dir = _get_temp_dir();
+        chdir $tmp_dir;
     }
     else {
         chdir $versions_dir;
@@ -210,10 +215,11 @@ sub build_triple {
     if ($^O eq 'darwin') {
         # This will write into an existing directory if that exists.
         # This might actually just work.
-        my $destdir = catdir($versions_dir, $name);
+        my $src_dir = catdir($tmp_dir, $name);
+        my $dest_dir = catdir($versions_dir, $name);
         say "Moving installation to target directory";
         local $File::Copy::Recursive::RMTrgFil = 1;
-        File::Copy::Recursive::dirmove($name, $destdir) or die "Can't move installation: $!";
+        File::Copy::Recursive::dirmove($src_dir, $dest_dir) or die "Can't move installation: $!";
     }
 
     return $name;
