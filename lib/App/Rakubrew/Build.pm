@@ -55,21 +55,51 @@ sub _get_temp_dir {
     return $dir;
 }
 
+sub _version_is_at_least {
+    my $min_ver = shift;
+    my $ver = slurp('VERSION');
+    my ($min_year, $min_month, $min_sub);
+    my ($year, $month, $sub);
+    if ($ver =~ /(\d\d\d\d)\.(\d\d)(?:\.(\d+))?/ ) {
+        $year = $1;
+        $month = $2;
+        $sub = $3 // 0;
+    }
+    if ($min_ver =~ /(\d\d\d\d)\.(\d\d)(?:\.(\d+))?/ ) {
+        $min_year = $1;
+        $min_month = $2;
+        $min_sub = $3 // 0;
+    }
+
+    # If it's not a release by date, it's older.
+    return 1 if !$min_year && $year;
+    return 0 if $min_year && !$year;
+
+    # If both are really old not by date releases, we are conservative and say
+    # the release is older hopefully backwards compatibility will save us.
+    return 0 if !$min_year && !$year;
+
+    return 1 if $min_year < $year;
+    return 0 if $min_year > $year;
+    return 1 if $min_month < $month;
+    return 0 if $min_month > $month;
+    return 1 if $min_sub < $sub;
+    return 0 if $min_sub > $sub;
+
+    return 1; # $min_sub == $sub;
+}
+
 sub _get_git_cache_option {
-    qx|$PERL5 Configure.pl --help --git-cache-dir="$git_reference"|;
-    if ( $? >> 8 == 0 ) {
+    if ( _version_is_at_least('2020.02') ) {
         return "--git-cache-dir=\"$git_reference\"";
     }
-    qx|$PERL5 Configure.pl --help --git-reference="$git_reference"|;
-    if ( $? >> 8 == 0 ) {
+    else {
         return "--git-reference=\"$git_reference\"";
     }
-    return "";
 }
 
 sub _get_relocatable_option {
-    qx|$PERL5 Configure.pl --help --relocatable|;
-    if ( $? >> 8 == 0 ) {
+    if ( _version_is_at_least('2019.07') ) {
         return "--relocatable";
     }
     say STDERR "The current rakubrew setup requires Rakudo to be relocated, but the";
