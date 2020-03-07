@@ -16,7 +16,7 @@ use App::Rakubrew::Config;
 our $brew_name = 'rakubrew';
 our $brew_exec = catfile($RealBin, $brew_name);
 if ($^O =~ /win32/i ) {
-    $brew_exec .= ($distro_format eq 'cpan') ? '.bat' : '.exe';
+    $brew_exec .= $distro_format eq 'cpan' ? '.bat' : '.exe';
 }
 our $home_env_var = 'RAKUBREW_HOME';
 our $env_var = 'RAKUBREW_VERSION';
