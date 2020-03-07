@@ -23,15 +23,8 @@ our $env_var = 'RAKUBREW_VERSION';
 our $local_filename = '.raku-version';
 
 our $prefix = $ENV{$home_env_var}
-    // catdir(File::HomeDir->my_data,
-        $^O =~ /win32/i ? 'rakubrew' :
-        # heuristic to determine whether the folder should be hidden:
-        # If it's located in a hidden folder already, don't hide.
-        # The typical case would be an XDG environment where
-        # File::HomeDir->my_data is ~/.local/share
-        File::HomeDir->my_data =~ /\/\./ ? 'rakubrew' :
-        '.rakubrew');
-
+    // ($^O =~ /win32/i ? 'C:\rakubrew'
+    : catdir(File::HomeDir->my_home, '.rakubrew'));
 $prefix = abs_path($prefix) if (-d $prefix);
 
 $prefix .= '/' if $prefix =~ /\/\z/;
