@@ -6,54 +6,11 @@ our @EXPORT = qw();
 use strict;
 use warnings;
 use 5.010;
-use File::Copy::Recursive;
 use File::Spec::Functions qw(catdir updir);
-use File::Temp qw/ tempdir /;
 use Cwd qw(cwd);
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
-
-sub _get_temp_dir {
-    # Rakudo is currently not able to be built in a directory with spaces in
-    # its path.
-    # Because the default rakubrew directory on MacOS contains a path we build
-    # in a temporary directory that usually does not have spaces in its path
-    # on MacOS.
-
-    my $dir_tmpl = 'rakubrew_build_XXXXXXXXXX';
-
-    my $dir;
-
-    if ($^O eq 'darwin') {
-        $dir = $ENV{TMPDIR};
-        $dir = tempdir( $dir_tmpl, DIR => $ENV{TMPDIR} );
-    }
-    elsif ($^O eq 'win32') {
-        # Not in use.
-        die "This should never happen.";
-    }
-    else {
-        # Not in use.
-        die "This should never happen.";
-        # First try /tmp. If that's not accessible, try default temp directory.
-        if (-d '/tmp') {
-            $dir = tempdir( $dir_tmpl, DIR => '/tmp' );
-        }
-        else {
-            $dir = tempdir( $dir_tmpl, DIR => 1 );
-        }
-    }
-
-    if (index($dir, ' ') != -1) {
-        say STDERR "Unable to find a temporary directory not containing a space.";
-        say STDERR "Rakudo currently can't be built in a directory wit spaces.";
-        say STDERR "Aborting.";
-        exit 1;
-    }
-
-    return $dir;
-}
 
 sub _version_is_at_least {
     my $min_ver = shift;
@@ -122,14 +79,7 @@ sub build_impl {
     my $name = "$impl-$ver";
     $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
-    my $tmp_dir;
-    if ($^O eq 'darwin') {
-        $tmp_dir = _get_temp_dir();
-        chdir $tmp_dir;
-    }
-    else {
-        chdir $versions_dir;
-    }
+    chdir $versions_dir;
 
     unless (-d $name) {
         for(@{$impls{$impl}{need_repo}}) {
@@ -148,18 +98,7 @@ sub build_impl {
     run "$GIT checkout -q $ver_to_checkout";
 
     $configure_opts .= ' ' . _get_git_cache_option;
-    $configure_opts .= ' ' . _get_relocatable_option() if $^O eq 'darwin';
     run $impls{$impl}{configure} . " $configure_opts";
-
-    if ($^O eq 'darwin') {
-        # This will write into an existing directory if that exists.
-        # This might actually just work.
-        my $src_dir = catdir($tmp_dir, $name);
-        my $dest_dir = catdir($versions_dir, $name);
-        say "Moving installation to target directory";
-        local $File::Copy::Recursive::RMTrgFil = 1;
-        File::Copy::Recursive::dirmove($src_dir, $dest_dir) or die "Can't move installation: $!";
-    }
 }
 
 sub determine_make {
@@ -185,19 +124,10 @@ sub build_triple {
     my $name = "$impl-$rakudo_ver-$nqp_ver-$moar_ver";
 
     my $configure_opts = '--make-install'
-        . ' --prefix=' .catdir($versions_dir, $name, 'install')
+        . ' --prefix=' . catdir($versions_dir, $name, 'install')
         . ' ' . _get_git_cache_option;
 
-    my $tmp_dir;
-    if ($^O eq 'darwin') {
-        $tmp_dir = _get_temp_dir();
-        chdir $tmp_dir;
-    }
-    else {
-        chdir $versions_dir;
-    }
-
-    my $prefix = catdir($versions_dir, $name, 'install');
+    chdir $versions_dir;
 
     unless (-d $name) {
         update_git_reference('rakudo');
@@ -206,8 +136,6 @@ sub build_triple {
     chdir $name;
     run "$GIT pull";
     run "$GIT checkout $rakudo_ver";
-
-    $configure_opts .= ' ' . _get_relocatable_option() if $^O eq 'darwin';
 
     if (-e 'Makefile') {
         run(determine_make('Makefile'), 'install');
@@ -242,16 +170,6 @@ sub build_triple {
         build_zef($name);
     }
 
-    if ($^O eq 'darwin') {
-        # This will write into an existing directory if that exists.
-        # This might actually just work.
-        my $src_dir = catdir($tmp_dir, $name);
-        my $dest_dir = catdir($versions_dir, $name);
-        say "Moving installation to target directory";
-        local $File::Copy::Recursive::RMTrgFil = 1;
-        File::Copy::Recursive::dirmove($src_dir, $dest_dir) or die "Can't move installation: $!";
-    }
-
     return $name;
 }
 
@@ -272,6 +190,7 @@ sub update_git_reference {
     my $repo = shift;
     my $back = cwd();
     print "Update git reference: $repo\n";
+    say "Ref dir: $git_reference";
     chdir $git_reference;
     unless (-d $repo) {
         run "$GIT clone --bare $git_repos{$repo} $repo";
