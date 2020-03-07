@@ -36,13 +36,24 @@ sub run_script {
     my ($self) = @_;
     my @args = @{$self->{args}};
 
-    mkdir $prefix unless (-d $prefix);
 
-    mkdir catdir($prefix, 'bin') unless (-d catdir($prefix, 'bin'));
-    mkdir catdir($prefix, 'update') unless (-d catdir($prefix, 'update'));
-    mkdir $shim_dir              unless (-d $shim_dir);
-    mkdir $versions_dir          unless (-d $versions_dir);
-    mkdir $git_reference         unless (-d $git_reference);
+    sub _cant_access_home {
+        say STDERR "Can't create rakubrew home directory in $prefix";
+        say STDERR "Probably rakubrew was denied access. You can either change that folder to be writable";
+        say STDERR "or set a different rakubrew home directory by setting the `\$RAKUBREW_HOME` environment";
+        say STDERR "prior to calling the rakubrew shell hook. ";
+        exit 1;
+    }
+
+    unless (-d $prefix) {
+        _cant_access_home() unless mkdir $prefix;
+    }
+
+    mkdir(catdir($prefix, 'bin'))    || _cant_access_home() unless (-d catdir($prefix, 'bin'));
+    mkdir(catdir($prefix, 'update')) || _cant_access_home() unless (-d catdir($prefix, 'update'));
+    mkdir $shim_dir                  || _cant_access_home() unless (-d $shim_dir);
+    mkdir $versions_dir              || _cant_access_home() unless (-d $versions_dir);
+    mkdir $git_reference             || _cant_access_home() unless (-d $git_reference);
 
     { # Check whether we are called as a shim and forward if yes.
         my (undef, undef, $prog_name) = splitpath($0);
