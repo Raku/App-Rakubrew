@@ -5,3 +5,8 @@ requires 'File::HomeDir'         => '0.97';
 requires 'Encode::Locale'        => '1.05';
 requires 'JSON'                  => '4.02';
 requires 'File::Copy::Recursive' => '0.45';
+
+on 'test' => sub {
+  requires 'Test::Compile', '2.3.1';
+};
+
