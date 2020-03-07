@@ -169,7 +169,7 @@ sub get_completions {
         my @installed = get_versions();
         my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakubrew::Build::available_rakudos());
 
-        my $candidate = $words[3] // '';
+        my $candidate = $words[2] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
     }
     elsif($index == 1 && $words[0] eq 'download') {
