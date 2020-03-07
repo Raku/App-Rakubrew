@@ -23,3 +23,11 @@
       support building in a folder with spaces. This only works with new enough
       Rakudos.
 
+5
+    - Change default installation directory to ~/.rakubrew and C:\rakubrew.
+    - Better detect Configure.pl options. This should increase compatibility
+      with older Rakudo releases.
+    - Warn user when installing to a folder with spaces in its path.
+    - Add some minimal testing of rakubrew.
+    - Fix build version shell auto completion.
+
