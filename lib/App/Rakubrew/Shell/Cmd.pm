@@ -24,7 +24,7 @@ sub install_note {
     # The autorun guard to prevent endless loops is based on this StackOverflow
     # answer: https://stackoverflow.com/a/57451662/1975049
 
-    return <<EOT;
+    my $text = <<EOT;
 To load $brew_name in CMD automatically you have to do two things:
 
 1. Check that you don't already have a CMD autorun script set.
@@ -59,6 +59,26 @@ To load $brew_name in CMD automatically you have to do two things:
 
   If you use a different autorun script location, replace the path in the command above.
 EOT
+
+    if ($prefix =~ / /) {
+        $text .= <<EOW;
+
+=================================== WARNING ==================================
+
+rakubrews home directory is currently
+
+  $prefix
+
+That folder contains spaces. This will break building rakudos as the build
+system currently doesn't work in such a path. You can work around this problem
+by changing that folder to a directory without spaces. Do so by putting
+
+  set RAKUBREW_HOME=/some/folder/without/space/rakubrew
+
+in your profile file *before* the other code.
+EOW
+    }
+    return $text;
 }
 
 sub get_init_code {

@@ -23,7 +23,7 @@ sub install_note {
         $rc_file = catfile( $ENV{ZDOTDIR}, $rc_file );
     }
 
-    return <<EOT;
+    my $text = <<EOT;
 Load $brew_name automatically in `zsh` by adding
 
   eval "\$($brew_exec init Zsh)"
@@ -33,6 +33,26 @@ This can be easily done using:
 
   echo 'eval "\$($brew_exec init Zsh)"' >> ~/$rc_file
 EOT
+
+    if ($prefix =~ / /) {
+        $text .= <<EOW;
+
+=================================== WARNING ==================================
+
+rakubrews home directory is currently
+
+  $prefix
+
+That folder contains spaces. This will break building rakudos as the build
+system currently doesn't work in such a path. You can work around this problem
+by changing that folder to a directory without spaces. Do so by putting
+
+  export RAKUBREW_HOME=/some/folder/without/space/rakubrew
+
+in your `~/$rc_file` file *before* the `eval` line.
+EOW
+    }
+    return $text;
 }
 
 sub get_init_code {

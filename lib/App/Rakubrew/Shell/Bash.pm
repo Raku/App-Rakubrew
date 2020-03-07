@@ -18,16 +18,35 @@ sub supports_hooking {
 }
 
 sub install_note {
-    return <<EOT;
+    my $text = <<EOT;
 Load $brew_name automatically in `bash` by adding
 
   eval "\$($brew_exec init Bash)"
 
-to ~/.bashrc.
-This can be easily done using:
+to ~/.bashrc. This can be easily done using:
 
   echo 'eval "\$($brew_exec init Bash)"' >> ~/.bashrc
 EOT
+
+    if ($prefix =~ / /) {
+        $text .= <<EOW;
+
+=================================== WARNING ==================================
+
+rakubrews home directory is currently
+
+  $prefix
+
+That folder contains spaces. This will break building rakudos as the build
+system currently doesn't work in such a path. You can work around this problem
+by changing that folder to a directory without spaces. Do so by putting
+
+  export RAKUBREW_HOME=/some/folder/without/space/rakubrew
+
+in your `~/.bashrc` file *before* the `eval` line.
+EOW
+    }
+    return $text;
 }
 
 sub get_init_code {
