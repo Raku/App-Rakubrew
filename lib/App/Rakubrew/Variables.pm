@@ -27,8 +27,6 @@ our $prefix = $ENV{$home_env_var}
     : catdir(File::HomeDir->my_home, '.rakubrew'));
 $prefix = abs_path($prefix) if (-d $prefix);
 
-$prefix .= '/' if $prefix =~ /\/\z/;
-
 our $versions_dir = catdir($prefix, 'versions');
 our $shim_dir = catdir($prefix, 'shims');
 our $git_reference = catdir($prefix, 'git_reference');
