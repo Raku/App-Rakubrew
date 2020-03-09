@@ -16,6 +16,8 @@
 \B\.gitignore\b
 \B\.circleci\b
 ^issue_template\.md$
+^dist.ini$
+^resources/Config.pm.tmpl$
 
 ^MANIFEST\.SKIP$
 ^README\.md$
