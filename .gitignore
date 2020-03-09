@@ -1,23 +1,17 @@
-Build
-Build.bat
-_build_params
 CURRENT
 MODE
 blib/
 versions/*
 shims/*
 git_reference/
+
 fatpacker.trace
 packlists
 fatlib/
 
-MANIFEST
-META.yml
-META.json
-MYMETA.yml
-MYMETA.json
-metamerge.json
-Makefile
+.build
+App-Rakubrew-*/
+App-Rakubrew-*.tar.gz
 
 *~
 *.swp
