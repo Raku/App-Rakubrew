@@ -14,6 +14,13 @@
 
 \B\.git\b
 \B\.gitignore\b
+\B\.circleci\b
+^issue_template\.md$
+
+^MANIFEST\.SKIP$
+^README\.md$
+^release-stuff/
+
 
 # Avoid Module::Build generated and utility files.
 \bblib/
