@@ -139,10 +139,18 @@ sub clean_path {
 }
 
 =pod
+
 Returns a list of completion candidates.
 This function takes two parameters:
-- Index of the word to complete (starting at 0)
-- a list of words already entered
+
+=over 4
+
+=item * Index of the word to complete (starting at 0)
+
+=item * A list of words already entered
+
+=back
+
 =cut
 sub get_completions {
     my $self = shift;

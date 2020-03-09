@@ -19,6 +19,7 @@ use App::Rakubrew::Config;
 # https://www.computerperformance.co.uk/powershell/profile-ps1/
 
 =pod
+
 WARNING:
 Setting PATH to a string longer than 2048 chars (4096 on newer systems) can cause the
 PATH to be truncated, your PATH being set to the empty string and only become available
@@ -26,6 +27,7 @@ again upon reboot and in the worst case cause your system to not boot anymore.
 See https://web.archive.org/web/20190519191717/https://software.intel.com/en-us/articles/limitation-to-the-length-of-the-system-path-variable
 
 This problem is smaller for us, because we only modify PATH in the current console, never globally.
+
 =cut
 
 sub supports_hooking {
