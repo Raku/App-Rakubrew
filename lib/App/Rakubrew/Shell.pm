@@ -158,7 +158,7 @@ sub get_completions {
     my @words = @_;
 
     if ($index == 0) {
-        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test);
+        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
         my $candidate = $words[0] // '';
         return grep({ substr($_, 0, length($candidate)) eq $candidate } @commands);
     }
