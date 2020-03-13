@@ -43,6 +43,7 @@ __END__
  <%brew_name%> test [<version>|all]
 
  <%brew_name%> help [--verbose|<command>]
+ <%brew_name%> home
  <%brew_name%> rakubrew-version
 
 
@@ -252,6 +253,12 @@ Usage: <%brew_name%> help [--verbose|<command>]
 Display an overview of rakubrew commands.
 Add a specific command to display instructions for that command.
 Print the entire manual with the C<--verbose> flag.
+
+=head1 COMMAND: home
+
+Usage: <%brew_name%> home
+
+Display the currently configured rakubrew home directory.
 
 =head1 COMMAND: rakubrew-version
 
