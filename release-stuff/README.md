@@ -3,11 +3,11 @@ Release Guide
 
 - Write a summary of the changes in `Changes`
 - Bump version in `lib/App/Rakubrew.pm`
-- Create a respective commit
+- `dzil regenerate` - Update regenerated files
+- Create a commit
 - Tag that commit with the version number
 - Push master and the version tag
-- `mbtiny dist` - Generate a release tarball
-- `mbtiny upload` - Upload the release to CPAN
+- `dzil release` - Upload the release to CPAN
 - Trigger compilation of the platform specific packages. The process of
   building a release on the different platforms is largely automated. There is
   a build pipeline setup utilizing the CircleCI infrastructure. The process of
