@@ -2,7 +2,7 @@ package App::Rakubrew;
 use strict;
 use warnings;
 use 5.010;
-our $VERSION = '5';
+our $VERSION = '6';
 
 use Encode::Locale qw(env);
 if (-t) {
@@ -497,8 +497,6 @@ sub run_script {
         close $pod_fh;
 
         my $backends = join '|', App::Rakubrew::Build::available_backends(), 'all';
-        $help_text =~ s/<%backends%>/$backends/g;
-        $help_text =~ s/<%brew_name%>/$brew_name/g;
 
         say $help_text;
     }
