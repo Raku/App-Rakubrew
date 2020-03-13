@@ -615,6 +615,7 @@ App::Rakubrew - Raku environment manager
 =head1 DESCRIPTION
 
 A tool to manage multiple Rakudo installations.
+
 See L<rakubrew.org|https://rakubrew.org/>.
 
 =head1 AUTHOR
