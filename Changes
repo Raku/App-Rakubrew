@@ -31,3 +31,7 @@
     - Add some minimal testing of rakubrew.
     - Fix build version shell auto completion.
 
+6
+    - Move to Dist::Zilla as packaging tool.
+    - Tune documentation a bit.
+
