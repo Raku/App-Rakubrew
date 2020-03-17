@@ -45,8 +45,15 @@ perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
 cpanm App::ModuleBuildTiny App::FatPacker
 mbtiny regenerate
 cpanm -n .
-fatpack trace script/rakubrew
-for X in `ls -1 lib/App/Rakubrew/Shell`; do echo App/Rakubrew/Shell/$X >> fatpacker.trace; done
+# The Shell module requires it's backends dynamically.
+# fatpack isn't that clever, so we explicitly list those backends here.
+# Pretty much the same applies to HTTP::Tinyish and its backends. So we list the backends we are
+# interested in as well.
+for X in `ls -1 lib/App/Rakubrew/Shell`; do
+    MOD=`basename -s.pm $X`
+    MODULES="$MODULES --use=App::Rakubrew::Shell::$MOD"
+done
+fatpack trace $MODULES --use=HTTP::Tinyish::Curl --use=HTTP::Tinyish::Wget script/rakubrew
 fatpack packlists-for `cat fatpacker.trace` > packlists
 fatpack tree `cat packlists`
 fatpack file script/rakubrew > rakubrew

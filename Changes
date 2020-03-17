@@ -35,3 +35,6 @@
     - Move to Dist::Zilla as packaging tool.
     - Tune documentation a bit.
 
+7
+    - Fix `download` and `self-upgrade` command on Linux when not having
+      IPC::Run3 installed.
