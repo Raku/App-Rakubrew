@@ -42,8 +42,7 @@ cd $DIR/..
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
 perl -pi -E 's/<\%distro_format\%>/fatpack/' lib/App/Rakubrew/Config.pm
 
-cpanm App::ModuleBuildTiny App::FatPacker
-mbtiny regenerate
+cpanm App::FatPacker
 cpanm -n .
 # The Shell module requires it's backends dynamically.
 # fatpack isn't that clever, so we explicitly list those backends here.
