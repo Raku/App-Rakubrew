@@ -50,6 +50,6 @@ CheckLastExitCode
 cpanm --installdeps -n --cpanfile cpanfile.win .
 CheckLastExitCode
 
-pp -I lib -M App::Rakubrew::Shell::* -M IO::Socket::SSL -M HTTP::Tinyish::* -o rakubrew.exe script/rakubrew
+pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -o rakubrew.exe script/rakubrew
 CheckLastExitCode
 
