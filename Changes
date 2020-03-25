@@ -39,3 +39,6 @@
     - Fix `download` and `self-upgrade` commands on Linux when not having
       IPC::Run3 installed.
     - Fix `download` and `self-upgrade` commands on MacOS and Windows.
+
+8
+    - Fix another bug in `self-upgrade` command.
