@@ -12,6 +12,11 @@ fatlib/
 .build
 App-Rakubrew-*/
 App-Rakubrew-*.tar.gz
+MYMETA.json
+MYMETA.yml
+Makefile
+pm_to_blib
+rakubrew
 
 *~
 *.swp
