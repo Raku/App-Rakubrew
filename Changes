@@ -41,4 +41,4 @@
     - Fix `download` and `self-upgrade` commands on MacOS and Windows.
 
 8
-    - Fix another bug in `self-upgrade` command.
+    - Fix more bugs in `self-upgrade` command. Tested on Linux and Windows.
