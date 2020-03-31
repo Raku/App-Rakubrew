@@ -107,7 +107,7 @@ sub _retrieve_releases {
 sub _my_platform {
 	my %oses = (
 		MSWin32 => 'win',
-		dawin   => 'macos',
+		darwin  => 'macos',
 		linux   => 'linux',
 		openbsd => 'openbsd',
 	);
@@ -120,7 +120,9 @@ sub _my_arch {
         $Config{archname} =~ /x86_64/i ? 'x86_64' :
         $Config{archname} =~ /amd64/i  ? 'x86_64' :
         $Config{archname} =~ /x86/i    ? 'x86'    :
+        $Config{archname} =~ /darwin/  ? 'x86_64' :
         '';
+
     unless ($arch) {
         say STDERR 'Couldn\'t detect system architecture. Current arch is: ' . $Config{archname};
         exit 1;
