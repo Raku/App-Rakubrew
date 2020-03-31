@@ -287,27 +287,30 @@ sub _which {
                 }
             }
             @results = sort {
-                # Prefer .exe > .bat > .p6 > .pl6 > .pl > nothing > anything else
+                # .exe > .bat > .raku > .p6 > .pl6 > .pl > nothing > rest
                 my (undef, undef, $suffix_a) = my_fileparse($a);
                 my (undef, undef, $suffix_b) = my_fileparse($b);
-                return -1        if $suffix_a eq '.exe' && $suffix_b ne '.exe';
-                return  1        if $suffix_a ne '.exe' && $suffix_b eq '.exe';
-                return $a cmp $b if $suffix_a eq '.exe' && $suffix_b eq '.exe';
-                return -1        if $suffix_a eq '.bat' && $suffix_b ne '.bat';
-                return  1        if $suffix_a ne '.bat' && $suffix_b eq '.bat';
-                return $a cmp $b if $suffix_a eq '.bat' && $suffix_b eq '.bat';
-                return -1        if $suffix_a eq '.p6'  && $suffix_b ne '.p6';
-                return  1        if $suffix_a ne '.p6'  && $suffix_b eq '.p6';
-                return $a cmp $b if $suffix_a eq '.p6'  && $suffix_b eq '.p6';
-                return -1        if $suffix_a eq '.pl6' && $suffix_b ne '.pl6';
-                return  1        if $suffix_a ne '.pl6' && $suffix_b eq '.pl6';
-                return $a cmp $b if $suffix_a eq '.pl6' && $suffix_b eq '.pl6';
-                return -1        if $suffix_a eq '.pl'  && $suffix_b ne '.pl';
-                return  1        if $suffix_a ne '.pl'  && $suffix_b eq '.pl';
-                return $a cmp $b if $suffix_a eq '.pl'  && $suffix_b eq '.pl';
-                return -1        if $suffix_a eq ''     && $suffix_b ne '';
-                return  1        if $suffix_a ne ''     && $suffix_b eq '';
-                return $a cmp $b if $suffix_a eq ''     && $suffix_b eq '';
+                return -1        if $suffix_a eq '.exe'  && $suffix_b ne '.exe';
+                return  1        if $suffix_a ne '.exe'  && $suffix_b eq '.exe';
+                return $a cmp $b if $suffix_a eq '.exe'  && $suffix_b eq '.exe';
+                return -1        if $suffix_a eq '.bat'  && $suffix_b ne '.bat';
+                return  1        if $suffix_a ne '.bat'  && $suffix_b eq '.bat';
+                return $a cmp $b if $suffix_a eq '.bat'  && $suffix_b eq '.bat';
+                return -1        if $suffix_a eq '.raku' && $suffix_b ne '.raku';
+                return  1        if $suffix_a ne '.raku' && $suffix_b eq '.raku';
+                return $a cmp $b if $suffix_a eq '.raku' && $suffix_b eq '.raku';
+                return -1        if $suffix_a eq '.p6'   && $suffix_b ne '.p6';
+                return  1        if $suffix_a ne '.p6'   && $suffix_b eq '.p6';
+                return $a cmp $b if $suffix_a eq '.p6'   && $suffix_b eq '.p6';
+                return -1        if $suffix_a eq '.pl6'  && $suffix_b ne '.pl6';
+                return  1        if $suffix_a ne '.pl6'  && $suffix_b eq '.pl6';
+                return $a cmp $b if $suffix_a eq '.pl6'  && $suffix_b eq '.pl6';
+                return -1        if $suffix_a eq '.pl'   && $suffix_b ne '.pl';
+                return  1        if $suffix_a ne '.pl'   && $suffix_b eq '.pl';
+                return $a cmp $b if $suffix_a eq '.pl'   && $suffix_b eq '.pl';
+                return -1        if $suffix_a eq ''      && $suffix_b ne '';
+                return  1        if $suffix_a ne ''      && $suffix_b eq '';
+                return $a cmp $b if $suffix_a eq ''      && $suffix_b eq '';
                 return $a cmp $b;
             } @results;
             $target = $results[0];
