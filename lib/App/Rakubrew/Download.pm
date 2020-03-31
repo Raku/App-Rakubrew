@@ -31,7 +31,6 @@ sub download_precomp_archive {
         say STDERR "$name is already installed.";
         exit 1;
     }
-    mkdir $name;
 
     my $ht = HTTP::Tinyish->new();
 
@@ -55,6 +54,7 @@ sub download_precomp_archive {
         exit 1;
     }
 
+    mkdir $name;
     say 'Extracting';
     if (_my_platform() eq 'win') {
         _unzip(\($res->{content}), $name);
