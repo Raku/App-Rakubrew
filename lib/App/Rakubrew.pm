@@ -193,28 +193,11 @@ sub run_script {
         $cur_backend |= '';
         $cur_rakudo |= '';
         say "Available backends:";
-        map { say $cur_backend eq $_ ? "* $_" : "  $_" } App::Rakubrew::Build::available_backends();
+        map { say $cur_backend eq $_ ? "* $_" : "  $_" } App::Rakubrew::Variables::available_backends();
 
     } elsif ($arg eq 'build-rakudo' || $arg eq 'build') {
-        my $impl = shift(@args) // 'moar';
-        my $ver = shift @args
-            if @args && $args[0] !~ /^--/;
-
-        if (!defined $ver) {
-            my $regex = '(' . join('|', App::Rakubrew::Build::available_backends()) . ')-(.+)';
-            if ($impl =~ /$regex/) {
-                $impl = $1;
-                $ver = $2;
-            }
-            elsif ($impl eq 'moar-blead') {
-                $ver = 'master';
-            }
-            else {
-                my @versions = App::Rakubrew::Build::available_rakudos();
-                @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
-                $ver = $versions[-1];
-            }
-        }
+        my ($impl, $ver, @args) =
+            App::Rakubrew::VersionHandling::match_version(@args);
 
         if ($impl eq "panda") {
             say "panda is discontinued; please use zef (rakubrew build-zef) instead";
@@ -251,7 +234,7 @@ sub run_script {
             $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
             if ($impl && $impl eq 'all') {
-                for (App::Rakubrew::Build::available_backends()) {
+                for (App::Rakubrew::Variables::available_backends()) {
                     App::Rakubrew::Build::build_impl($_, $ver, $configure_opts);
                 }
             } else {
@@ -278,22 +261,8 @@ sub run_script {
         say "Done, $name built";
 
     } elsif ($arg eq 'download-rakudo' || $arg eq 'download') {
-        my $impl = shift(@args) // 'moar';
-        my $ver = shift @args if @args;
-
-        if (!defined $ver) {
-            my $regex = '(' . join('|', App::Rakubrew::Build::available_backends()) . ')-(.+)';
-            if ($impl =~ /$regex/) {
-                $impl = $1;
-                $ver = $2;
-            }
-            else {
-                # TODO: Check if that version is downloadable. If not abort!
-                my @versions = App::Rakubrew::Build::available_rakudos();
-                @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
-                $ver = $versions[-1];
-            }
-        }
+        my ($impl, $ver, @args) =
+            App::Rakubrew::VersionHandling::match_version(@args);
 
         if (!exists $impls{$impl}) {
             say STDERR "Cannot download Rakudo on '$impl': this backend does not exist.";
@@ -496,7 +465,7 @@ sub run_script {
 
         close $pod_fh;
 
-        my $backends = join '|', App::Rakubrew::Build::available_backends(), 'all';
+        my $backends = join '|', App::Rakubrew::Variables::available_backends(), 'all';
 
         say $help_text;
     }

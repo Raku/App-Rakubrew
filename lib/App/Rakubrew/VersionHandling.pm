@@ -182,12 +182,12 @@ sub is_registered_version {
 sub get_version_path {
     my $version = shift;
     my $version_path = catdir($versions_dir, $version);
-    return catdir($version_path, 'install') if -d catdir($version_path, 'install', 'bin');
-    return $version_path                    if -d catdir($version_path, 'bin');
-    return trim(slurp($version_path))       if -f $version_path;
+    return catdir($version_path, 'install')
+        if -d catdir($version_path, 'install', 'bin');
+    return $version_path              if -d catdir($version_path, 'bin');
+    return trim(slurp($version_path)) if -f $version_path;
     die "Invalid version found: $version";
 }
-
 
 sub get_raku {
     my $version = shift;
@@ -195,6 +195,36 @@ sub get_raku {
     return _which('raku', $version) // which('perl6', $version);
 }
 
+sub match_version {
+    my $impl = shift // 'moar';
+    my $ver = shift if @_ && $_[0] !~ /^--/;
+    my @args = @_;
+
+    if (!defined $ver) {
+        my $version_regex = '^\d\d\d\d\.\d\d(?:\.\d+)?$';
+        my $combined_regex = '('
+            . join('|', App::Rakubrew::Variables::available_backends())
+            . ')-(.+)';
+        if ($impl eq 'moar-blead') {
+            $ver = 'master';
+        }
+        elsif ($impl =~ /$combined_regex/) {
+            $impl = $1;
+            $ver = $2;
+        }
+        elsif ($impl =~ /$version_regex/) {
+            $ver = $impl;
+            $impl = 'moar';
+        }
+        else {
+            my @versions = App::Rakubrew::Build::available_rakudos();
+            @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
+            $ver = $versions[-1];
+        }
+    }
+
+    return ($impl, $ver, @args);
+}
 
 sub which {
     my $prog = shift;

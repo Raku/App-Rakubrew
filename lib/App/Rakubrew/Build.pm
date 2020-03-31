@@ -200,10 +200,5 @@ sub update_git_reference {
     chdir $back;
 }
 
-sub available_backends {
-    map {$_->{name}} sort {$a->{weight} <=> $b->{weight}} values %impls;
-}
-
-
 1;
 
