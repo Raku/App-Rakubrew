@@ -1,4 +1,4 @@
-package App::Rakubrew::Shell::Csh;
+package App::Rakubrew::Shell::Tcsh;
 use App::Rakubrew::Shell;
 our @ISA = "App::Rakubrew::Shell";
 use strict;
@@ -14,19 +14,19 @@ use App::Rakubrew::Build;
 
 sub supports_hooking {
     my $self = shift;
-    0;
+    1;
 }
 
 sub install_note {
     my $text = <<EOT;
-Load $brew_name automatically in `csh` by adding
+Load $brew_name automatically in `tcsh` by adding
 
-  eval "\$($brew_exec init Csh)"
+  eval `$brew_exec init Tcsh`
 
-to ~/.cshrc.
+to ~/.tcshrc.
 This can be easily done using:
 
-  echo 'eval "\$($brew_exec init Csh)"' >> ~/.cshrc
+  echo 'eval `$brew_exec init Tcsh`' >> ~/.tcshrc
 EOT
 
     if ($prefix =~ / /) {
@@ -42,33 +42,46 @@ That folder contains spaces. This will break building rakudos as the build
 system currently doesn't work in such a path. You can work around this problem
 by changing that folder to a directory without spaces. Do so by putting
 
-  export RAKUBREW_HOME=/some/folder/without/space/rakubrew
+  setenv RAKUBREW_HOME /some/folder/without/space/rakubrew
 
-in your `~/.cshrc` file *before* the `eval` line.
+in your `~/.tcshrc` file *before* the `eval` line.
 EOW
     }
     return $text;
 }
 
-sub shell_setenv_msg {
-    my $self = shift;
-    return <<EOT;
-To (un)set a version locally in this running shell session use the following commands:
-setenv $env_var YOUR_VERSION # set
-unsetenv $env_var            # unset
-EOT
-}
-
 sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
-    $path = App::Rakubrew::Shell::clean_path($path, $RealBin);
+    $path = $self->clean_path($path);
     $path = "$RealBin:$path";
     $path = join(':', $shim_dir, $path);
     return <<EOT;
-setenv PATH "$path"
+setenv PATH "$path" && alias $brew_name '$brew_exec internal_hooked Tcsh \\!* && eval "`$brew_exec internal_shell_hook Tcsh post_call_eval \\!*`"'
 EOT
 
+}
+
+sub post_call_eval {
+    my $self = shift;
+    $self->print_shellmod_code(@_);
+}
+
+sub get_path_setter_code {
+    my $self = shift;
+    my $path = shift;
+    return "setenv PATH \"$path\"";
+}
+
+sub get_shell_setter_code {
+    my $self = shift;
+    my $version = shift;
+    return "setenv $env_var \"$version\"";
+}
+
+sub get_shell_unsetter_code {
+    my $self = shift;
+    return "unsetenv $env_var";
 }
 
 1;
