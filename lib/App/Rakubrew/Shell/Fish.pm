@@ -4,8 +4,6 @@ our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
-use File::Spec::Functions qw(catdir splitpath);
-use FindBin qw($RealBin $RealScript);
 
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
