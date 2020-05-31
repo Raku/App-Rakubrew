@@ -102,16 +102,20 @@ sub build_impl {
 }
 
 sub determine_make {
-    my $makefile = shift;
-    $makefile = slurp($makefile);
+    my $version = shift;
 
-    if($makefile =~ /^MAKE\s*=\s*(\w+)\s*$/m) {
-        return $1;
-    }
-    else {
+    my $cmd = get_raku($version) . ' --show-config';
+    my $config = qx{$cmd};
+
+    my $make;
+    $make = $1 if $config =~ m/::make=(.*)$/m;
+
+    if (!$make) {
         say STDERR "Couldn't determine correct make program. Aborting.";
         exit 1;
     }
+
+    return $make;
 }
 
 sub build_triple {

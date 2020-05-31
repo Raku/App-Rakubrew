@@ -364,7 +364,10 @@ sub run_script {
 
     } elsif ($arg eq 'test') {
         my $version = shift @args;
-        if ($version && $version eq 'all') {
+        if (!$version) {
+            $self->test(get_version());
+        }
+        elsif ($version eq 'all') {
             for (get_versions()) {
                 $self->test($_);
             }
@@ -495,30 +498,23 @@ sub match_and_run {
 
 sub test {
     my ($self, $version) = @_;
-    $version ||= get_version();
-    if (!$version) {
-        say STDERR "$brew_name: No version set.";
-        exit 1;
-    }
-    my @match = grep { /\Q$version/ } get_versions();
-    my ($matched, $ambiguous) = @match;
-    if ($ambiguous) {
-        my ($exact) = grep { $_ eq $version } @match;
-        if ($exact) {
-            ($matched, $ambiguous) = $exact;
+    $self->match_and_run($version, sub {
+        my $matched = shift;
+        my $v_dir = catdir($versions_dir, $matched);
+        if (!-d $v_dir) {
+            say STDERR "Version $matched was not built by rakubrew.";
+            say STDERR "Refusing to try running spectest there.";
+            exit 1;
         }
-    }
-    if ($matched and not $ambiguous) {
-        say "Spectesting $matched";
         chdir catdir($versions_dir, $matched);
-        App::Rakubrew::Build::make('spectest');
-    } elsif (@match) {
-        say "Sorry, I'm not sure if you mean:";
-        say $_ for @match;
-    } else {
-        say "Sorry, I have no idea what '$version' is";
-        say "Have you run '$brew_name build $version' yet?";
-    }
+        say "Spectesting $matched";
+        if (!-f 'Makefile') {
+            say STDERR "Can only run spectest in self built Rakudos.";
+            say STDERR "This Rakudo is not self built.";
+            exit 1;
+        }
+        run(App::Rakubrew::Build::determine_make($matched), 'spectest');
+    });
 }
 
 sub nuke {
