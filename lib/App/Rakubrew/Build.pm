@@ -194,7 +194,6 @@ sub update_git_reference {
     my $repo = shift;
     my $back = cwd();
     print "Update git reference: $repo\n";
-    say "Ref dir: $git_reference";
     chdir $git_reference;
     unless (-d $repo) {
         run "$GIT clone --bare $git_repos{$repo} $repo";
