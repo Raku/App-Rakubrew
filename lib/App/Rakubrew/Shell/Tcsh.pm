@@ -52,12 +52,20 @@ sub get_init_code {
     my $self = shift;
     my $path = $ENV{PATH};
     $path = $self->clean_path($path);
-    $path = "$RealBin:$path";
-    $path = join(':', $shim_dir, $path);
+    if (get_brew_mode() eq 'env') {
+        if (get_global_version() && get_global_version() ne 'system') {
+            $path = join(':', get_bin_paths(get_global_version()), $path);
+        }
+    }
+    else { # get_brew_mode() eq 'shim'
+        $path = join(':', $shim_dir, $path);
+    }
     return <<EOT;
-setenv PATH "$path" && alias $brew_name '$brew_exec internal_hooked Tcsh \\!* && eval "`$brew_exec internal_shell_hook Tcsh post_call_eval \\!*`"'
+setenv PATH "$path"
+&& alias $brew_name '$brew_exec internal_hooked Tcsh \\!*
+&& eval "`$brew_exec internal_shell_hook Tcsh post_call_eval \\!*`"'
+&& complete $brew_name 'p,*,`$brew_exec internal_shell_hook Tcsh completions "\$COMMAND_LINE"`,'
 EOT
-
 }
 
 sub post_call_eval {
@@ -80,6 +88,18 @@ sub get_shell_setter_code {
 sub get_shell_unsetter_code {
     my $self = shift;
     return "unsetenv $env_var";
+}
+
+sub completions {
+    my $self = shift;
+    my $command = shift;
+    my @words = split ' ', $command;
+    shift @words; # remove command name
+    my $index = @words - 1;
+    $index++ if $command =~ / $/;
+
+    my @completions = $self->get_completions($index, @words);
+    say join(' ', @completions);
 }
 
 1;
