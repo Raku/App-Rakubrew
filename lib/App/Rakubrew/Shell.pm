@@ -42,6 +42,12 @@ sub detect_shell {
         my $shell = $ENV{'SHELL'} || '/bin/bash';
         $shell = (splitpath( $shell))[2];
         $shell =~ s/[^a-z]+$//; # remove version numbers
+
+        # tcsh claims it's csh on FreeBSD. Try to detect that.
+        if ($shell eq 'csh' && $ENV{'tcsh'}) {
+            $shell = 'tcsh';
+        }
+
         $shell = ucfirst $shell;
 
         if (!shell_exists('Dummy self', $shell)) {
