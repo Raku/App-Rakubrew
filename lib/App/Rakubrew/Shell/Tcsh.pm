@@ -60,12 +60,7 @@ sub get_init_code {
     else { # get_brew_mode() eq 'shim'
         $path = join(':', $shim_dir, $path);
     }
-    return <<EOT;
-setenv PATH "$path"
-&& alias $brew_name '$brew_exec internal_hooked Tcsh \\!*
-&& eval "`$brew_exec internal_shell_hook Tcsh post_call_eval \\!*`"'
-&& complete $brew_name 'p,*,`$brew_exec internal_shell_hook Tcsh completions "\$COMMAND_LINE"`,'
-EOT
+    return "setenv PATH \"$path\" && alias $brew_name '$brew_exec internal_hooked Tcsh \\!* && eval \"`$brew_exec internal_shell_hook Tcsh post_call_eval \\!*`\"' && complete $brew_name 'p,*,`$brew_exec internal_shell_hook Tcsh completions \"\$COMMAND_LINE\"`,'";
 }
 
 sub post_call_eval {
