@@ -50,3 +50,7 @@
 10
     - Implement Tcsh support. The implementation includes auto-complete.
     - Fix `test` and `triple` commands.
+
+11
+    - Improve Tcsh detection when the shell is named 'csh'.
+    - Be a bit more robust in the Tcsh hook.
