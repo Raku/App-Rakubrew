@@ -100,8 +100,22 @@ sub _retrieve_releases {
             && $_->{arch}     eq _my_arch()
             && $_->{format}   eq (_my_platform() eq 'win' ? 'zip' : 'tar.gz')
         } @$release_index;
+
     # Filter out older build revisions
-    @matching_releases = grep { my $r1 = +($_->{build_rev}); not grep { +($_->{build_rev}) > $r1 } @matching_releases } @matching_releases;
+    @matching_releases = grep {
+        my $this = $_;
+        not grep {
+               +($_->{build_rev}) > +($this->{build_rev})
+            && $_->{name}     eq $this->{name}
+            && $_->{type}     eq $this->{type}
+            && $_->{platform} eq $this->{platform}
+            && $_->{arch}     eq $this->{arch}
+            && $_->{format}   eq $this->{format}
+            && $_->{ver}      eq $this->{ver};
+        } @matching_releases;
+    } @matching_releases;
+
+    return @matching_releases;
 }
 
 sub _my_platform {
