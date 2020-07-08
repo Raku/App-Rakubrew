@@ -4,6 +4,7 @@ our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
+use File::Spec::Functions qw(catfile);
 
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
