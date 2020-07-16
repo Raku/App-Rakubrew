@@ -56,6 +56,10 @@ To load $brew_name in CMD automatically you have to do two things:
     ) >> "\%USERPROFILE\%\\Documents\\CMD_profile.cmd"
 
   If you use a different autorun script location, replace the path in the command above.
+
+(Note that the above does *not* enable auto-loading in PowerShell, that needs a
+separate installation procedure. Call `$brew_exec init` in a PowerShell window
+for respective installation instructions.)
 EOT
 
     if ($prefix =~ / /) {

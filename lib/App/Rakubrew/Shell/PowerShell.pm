@@ -35,7 +35,7 @@ sub supports_hooking {
 
 sub install_note {
     my $text = <<EOT;
-Load $brew_name automatically by adding
+Load $brew_name automatically in PowerShell by adding
 
   . "$brew_exec" init PowerShell | Out-String | Invoke-Expression
 
@@ -44,6 +44,10 @@ This can be easily done using:
 
   New-Item -Path (Split-Path \$PROFILE) -ItemType "Directory" -Force
   Add-Content -Force -Path \$PROFILE -Value '. "$brew_exec" init PowerShell | Out-String | Invoke-Expression'
+
+(Note that the above does *not* enable auto-loading in CMD, that needs a
+separate installation procedure. Call `$brew_exec init` in a CMD window for
+respective installation instructions.)
 EOT
 
     if ($prefix =~ / /) {

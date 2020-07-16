@@ -59,3 +59,7 @@
     - Fix "Couldn't find a precomp release" with the download command when
       there actually is a matching release but some other release has a higher
       build revision.
+
+13
+    - Add a note to the PowerShell and CMD installation instructions explaining
+      that one needs to install rakubrew separately for the two shells.
