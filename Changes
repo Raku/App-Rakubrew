@@ -63,3 +63,4 @@
 13
     - Add a note to the PowerShell and CMD installation instructions explaining
       that one needs to install rakubrew separately for the two shells.
+    - Fix Zsh shell integration.
