@@ -35,7 +35,7 @@ sub download_precomp_archive {
     my $ht = HTTP::Tinyish->new();
 
     my @matching_releases = grep {
-            $ver ? $_->{ver} eq $ver : $_->{latest}
+            $_->{backend} eq $impl && ($ver ? $_->{ver} eq $ver : $_->{latest})
         } _retrieve_releases($ht);
 
     if (!@matching_releases) {
