@@ -118,7 +118,15 @@ sub completions {
     my $self = shift;
     my @words = @_;
 
-    my @completions = $self->get_completions(@words - 1, @words);
+    my $index = scalar(@words);
+    # Strip command name.
+    while (@words > 0) {
+        my $word = shift @words;
+        $index--;
+        last if $word =~ /(^|\W)$brew_name$/;
+    }
+
+    my @completions = $self->get_completions($index, @words);
     say join(' ', @completions);
 }
 
