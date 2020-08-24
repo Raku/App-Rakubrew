@@ -19,7 +19,7 @@ sub install_note {
     my $text = <<EOT;
 Load $brew_name automatically in the `sh` shell by adding
 
-  eval "\$($brew_exec init Sh)"
+  eval "\$($brew_exec init auto)"
 
 to ~/.profile.
 This can be easily done using:
@@ -32,13 +32,13 @@ To get rakubrew working in all shells, you need the following:
   echo 'export ENV=~/.shrc' >> ~/.profile
   echo 'eval "\$($brew_exec init Sh)"' >> ~/.shrc
 
-Make sure the `ENV` is not already set to point to some other file.
+Make sure that `ENV` is not already set to point to some other file.
 EOT
 
     if ($prefix =~ / /) {
         $text .= <<EOW;
 
-=================================== WARNING ==================================
+================================ WARNING ======================================
 
 rakubrews home directory is currently
 
