@@ -17,17 +17,18 @@ sub supports_hooking {
 
 sub install_note {
     my $text = <<EOT;
-Load $brew_name automatically in the `sh` shell by adding
+Load $brew_name automatically in POSIX compatible shells (ash, dash, ksh and
+similar) by adding
 
-  eval "\$($brew_exec init auto)"
+  eval "\$($brew_exec init Sh)"
 
 to ~/.profile.
 This can be easily done using:
 
-  echo 'eval "\$($brew_exec init auto)"' >> ~/.profile
+  echo 'eval "\$($brew_exec init Sh)"' >> ~/.profile
 
 Note that this enables rakubrew *only* in login shells.
-To get rakubrew working in all shells, you need the following:
+To get rakubrew also working in non-login shells, you need the following:
 
   echo 'export ENV=~/.shrc' >> ~/.profile
   echo 'eval "\$($brew_exec init Sh)"' >> ~/.shrc
