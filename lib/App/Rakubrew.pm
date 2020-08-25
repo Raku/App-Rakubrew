@@ -36,7 +36,6 @@ sub run_script {
     my ($self) = @_;
     my @args = @{$self->{args}};
 
-
     sub _cant_access_home {
         say STDERR "Can't create rakubrew home directory in $prefix";
         say STDERR "Probably rakubrew was denied access. You can either change that folder to be writable";

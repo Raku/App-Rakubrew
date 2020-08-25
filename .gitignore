@@ -4,6 +4,8 @@ blib/
 versions/*
 shims/*
 git_reference/
+download/*
+perl-darwin-2level/*
 
 fatpacker.trace
 packlists
