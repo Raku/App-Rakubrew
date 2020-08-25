@@ -188,7 +188,7 @@ sub _filter_candidates {
     return 
         # If a shell preserves ordering then put the prefix-mathing candidates first. I.e. for 'ver' 'version' would
         # precede 'rakudo-version'
-        sort { index($a, $seed) cmp index($a, $seed) }
+        sort { index($a, $seed) cmp index($b, $seed) }
         grep { 
             my $pos = index($_, $seed);
             SUBSTRING_COMPLETION ? $pos >= 0 : $pos == 0
