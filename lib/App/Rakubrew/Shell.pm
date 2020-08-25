@@ -144,6 +144,22 @@ sub clean_path {
     return $path;
 }
 
+# Strips out all elements in arguments array up to and including $bre_name
+# command.  The first argument is index where the completion should look for the
+# word to be completed.
+sub strip_executable {
+    my $self = shift;
+    my $index = shift;
+
+    my $cmd_pos = 0;
+    foreach my $word (@_) {
+        ++$cmd_pos;
+        --$index;
+        last if $word =~ /(^|\W)$brew_name$/;
+    }
+    return ($index, @_[$cmd_pos..$#_])
+}
+
 =pod
 
 Returns a list of completion candidates.
