@@ -40,10 +40,14 @@ DIR=$(dirname -- "$EXEC")
 cd $DIR/..
 
 # Download precompiled perl.
-mkdir download
+if ! [ -d download ]; then
+    mkdir download
+fi
 unset PERL5LIB
-curl -L -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.26.1.1/perl-darwin-2level.tar.gz
-tar -xzf download/perl-precomp.tar.gz
+if ! [ -d $DIR/../perl-darwin-2level ]; then
+    curl -L -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.26.1.1/perl-darwin-2level.tar.gz
+    tar -xzf download/perl-precomp.tar.gz
+fi
 export PATH=$DIR/../perl-darwin-2level/bin:$PATH
 
 # Prepare Config.pm
