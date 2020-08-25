@@ -214,7 +214,7 @@ sub get_completions {
     }
     elsif($index == 1 && $words[0] eq 'build') {
         my $candidate = $words[1] // '';
-        return $self->_filter_candidates($candidate, (App::Rakubrew::Build::available_backends(), 'all'));
+        return $self->_filter_candidates($candidate, (App::Rakubrew::Variables::available_backends(), 'all'));
     }
     elsif($index == 2 && $words[0] eq 'build') {
         my @installed = get_versions();
