@@ -111,18 +111,7 @@ sub get_shell_unsetter_code {
 sub completions {
     my $self = shift;
     my $index = shift;
-    $index--; # We want 0 based
-    my @words = @_;
-
-    # Strip command name.
-    while (@words > 0) {
-        my $word = shift @words;
-        $index--;
-        last if $word =~ /(^|\W)$brew_name$/;
-    }
-
-    my @completions = $self->get_completions($index, @words);
-    say join(' ', @completions);
+    say join(' ', $self->get_completions($self->strip_executable($index - 1, @_)));
 }
 
 1;

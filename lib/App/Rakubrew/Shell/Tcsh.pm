@@ -89,11 +89,10 @@ sub completions {
     my $self = shift;
     my $command = shift;
     my @words = split ' ', $command;
-    shift @words; # remove command name
     my $index = @words - 1;
     $index++ if $command =~ / $/;
 
-    my @completions = $self->get_completions($index, @words);
+    my @completions = $self->get_completions($self->strip_executable($index, @words));
     say join(' ', @completions);
 }
 
