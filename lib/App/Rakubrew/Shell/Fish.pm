@@ -85,7 +85,7 @@ function _${brew_name}_is_not_register
     end
 end
 
-complete -c $brew_name -f -n _${brew_name}_is_not_register -a '(command $brew_exec internal_shell_hook Fish completions (commandline -poc) | string split " ")'
+complete -c $brew_name -f -n _${brew_name}_is_not_register -a '(command $brew_exec internal_shell_hook Fish completions (commandline -poc) (commandline -ct) | string split " ")'
 EOT
 
 }
@@ -116,10 +116,7 @@ sub get_shell_unsetter_code {
 
 sub completions {
     my $self = shift;
-    my @words = @_;
-
-    my @completions = $self->get_completions(@words - 1, @words);
-    say join(' ', @completions);
+    say join(" ", $self->get_completions($self->strip_executable($#_, @_)));
 }
 
 1;

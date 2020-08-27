@@ -8,6 +8,13 @@ use App::Rakubrew::Tools;
 use App::Rakubrew::Variables;
 use App::Rakubrew::VersionHandling;
 
+# Turn on substring-based command line completion where possible contrary to the
+# "start of the line completion". I.e., to visualize the difference, 'ver'
+# string would result in the following command candidates:
+#   SUBSTRING_COMPLETION==1 -> version versions rakubrew-version
+#   SUBSTRING_COMPLETION==0 -> version versions
+use constant SUBSTRING_COMPLETION => 1;
+
 my $shell_hook;
 
 sub initialize {
@@ -144,6 +151,22 @@ sub clean_path {
     return $path;
 }
 
+# Strips out all elements in arguments array up to and including $bre_name
+# command.  The first argument is index where the completion should look for the
+# word to be completed.
+sub strip_executable {
+    my $self = shift;
+    my $index = shift;
+
+    my $cmd_pos = 0;
+    foreach my $word (@_) {
+        ++$cmd_pos;
+        --$index;
+        last if $word =~ /(^|\W)$brew_name$/;
+    }
+    return ($index, @_[$cmd_pos..$#_])
+}
+
 =pod
 
 Returns a list of completion candidates.
@@ -151,44 +174,58 @@ This function takes two parameters:
 
 =over 4
 
-=item * Index of the word to complete (starting at 0)
+=item * Index of the word to complete, 0-based. If C<-1> is passed then list of all commands is returned.
 
 =item * A list of words already entered
 
 =back
 
 =cut
+
+sub _filter_candidates {
+    my $self = shift;
+    my $seed = shift;
+    return 
+        # If a shell preserves ordering then put the prefix-mathing candidates first. I.e. for 'ver' 'version' would
+        # precede 'rakudo-version'
+        sort { index($a, $seed) cmp index($b, $seed) }
+        grep { 
+            my $pos = index($_, $seed);
+            SUBSTRING_COMPLETION ? $pos >= 0 : $pos == 0
+        } @_
+}
+
 sub get_completions {
     my $self = shift;
-    my $index = shift;
-    my @words = @_;
+    my ($index, @words) = @_;
 
-    if ($index == 0) {
+    if ($index <= 0) { # if @words is empty then $index == -1
         my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
-        my $candidate = $words[0] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } @commands);
+        my $candidate = $index < 0 || !$words[0] ? '' : $words[0];
+        my @c = $self->_filter_candidates($candidate, @commands);
+        return @c;
     }
     elsif($index == 1 && ($words[0] eq 'global' || $words[0] eq 'switch' || $words[0] eq 'shell' || $words[0] eq 'local' || $words[0] eq 'nuke' || $words[0] eq 'test')) {
         my @versions = get_versions();
         push @versions, 'all'     if $words[0] eq 'test';
         push @versions, '--unset' if $words[0] eq 'shell';
         my $candidate = $words[1] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } @versions);
+        return $self->_filter_candidates($candidate, @versions);
     }
     elsif($index == 1 && $words[0] eq 'build') {
         my $candidate = $words[1] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } (App::Rakubrew::Build::available_backends(), 'all'));
+        return $self->_filter_candidates($candidate, (App::Rakubrew::Variables::available_backends(), 'all'));
     }
     elsif($index == 2 && $words[0] eq 'build') {
         my @installed = get_versions();
         my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakubrew::Build::available_rakudos());
 
         my $candidate = $words[2] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
+        return $self->_filter_candidates($candidate, @installables);
     }
     elsif($index == 1 && $words[0] eq 'download') {
         my $candidate = $words[1] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } ('moar'));
+        return $self->_filter_candidates($candidate, ('moar'));
     }
     elsif($index == 2 && $words[0] eq 'download') {
         my @installed = get_versions();
@@ -196,12 +233,12 @@ sub get_completions {
         @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } @installables);
 
         my $candidate = $words[3] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } @installables);
+        return $self->_filter_candidates($candidate, @installables);
     }
     elsif($index == 1 && $words[0] eq 'mode') {
         my @modes = qw(env shim);
         my $candidate = $words[2] // '';
-        return grep({ substr($_, 0, length($candidate)) eq $candidate } @modes);
+        return $self->_filter_candidates($candidate, @modes);
     }
     elsif($index == 2 && $words[0] eq 'register') {
         my @completions;
