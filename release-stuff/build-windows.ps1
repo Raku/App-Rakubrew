@@ -31,6 +31,7 @@ mkdir strawberry
 #$Env:PATH = "C:\git\cmd;$Env:PATH"
 
 # Install Perl
+Remove-Item Env:PERL5LIB
 Invoke-WebRequest http://strawberryperl.com/download/5.30.0.1/strawberry-perl-5.30.0.1-64bit.zip -OutFile download/strawberry-perl-5.30.0.1-64bit.zip
 Expand-Archive -Path download/strawberry-perl-5.30.0.1-64bit.zip -DestinationPath strawberry
 strawberry\relocation.pl.bat
