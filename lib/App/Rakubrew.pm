@@ -84,9 +84,11 @@ sub run_script {
         && !(@args && $args[0] =~ /^internal_/)
     || @args && $args[0] eq 'shell'
     || @args >= 2 && $args[0] eq 'mode' && $args[1] eq 'env') {
-        say STDERR "The shell hook required to use rakubrew in 'env' mode or use the 'shell' command seems not to be installed.";
-        say STDERR "Run '$brew_name init' for installation instructions if you want to use those features,";
-        say STDERR "or run '$brew_name mode shim' to use 'shim' mode which doesn't require a shell hook.";
+        say STDERR << "EOL";
+The shell hook required to use rakubrew in 'env' mode or use the 'shell' command seems not to be installed.
+Run '$brew_name init' for installation instructions if you want to use those features,
+or run '$brew_name mode shim' to use 'shim' mode which doesn't require a shell hook.
+EOL
         exit 1;
     }
 
