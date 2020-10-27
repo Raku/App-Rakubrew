@@ -200,7 +200,7 @@ sub get_completions {
     my ($index, @words) = @_;
 
     if ($index <= 0) { # if @words is empty then $index == -1
-        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
+        my @commands = qw(version current versions list global switch shell local nuke unregister rehash available list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
         my $candidate = $index < 0 || !$words[0] ? '' : $words[0];
         my @c = $self->_filter_candidates($candidate, @commands);
         return @c;
