@@ -98,7 +98,7 @@ sub get_shell_unsetter_code {
 sub completions {
     my $self = shift;
     my $index = shift;
-    say join(' ', $self->get_completions($self->strip_executable($index - 1, @_)));
+    say join(' ', $self->get_completions($self->strip_executable($index, @_)));
 }
 
 sub completion_options {
