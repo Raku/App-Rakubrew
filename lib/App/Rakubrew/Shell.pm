@@ -199,10 +199,11 @@ sub get_completions {
     my $self = shift;
     my ($index, @words) = @_;
 
+    my @commands = qw(version current versions list global switch shell local nuke unregister rehash available list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
+
     if ($index <= 0) { # if @words is empty then $index == -1
-        my @commands = qw(version current versions list global switch shell local nuke unregister rehash list-available build register build-zef download exec which whence mode self-upgrade triple test home rakubrew-version);
         my $candidate = $index < 0 || !$words[0] ? '' : $words[0];
-        my @c = $self->_filter_candidates($candidate, @commands);
+        my @c = $self->_filter_candidates($candidate, @commands, 'help');
         return @c;
     }
     elsif($index == 1 && ($words[0] eq 'global' || $words[0] eq 'switch' || $words[0] eq 'shell' || $words[0] eq 'local' || $words[0] eq 'nuke' || $words[0] eq 'test')) {
@@ -258,6 +259,12 @@ sub get_completions {
         }
         closedir $dh;
         return @completions;
+    }
+    elsif($index == 1 && $words[0] eq 'help') {
+        my $candidate = $words[1] // '';
+        my @topics = @commands;
+        push @topics, '--verbose';
+        return $self->_filter_candidates($candidate, @topics);
     }
 }
 
