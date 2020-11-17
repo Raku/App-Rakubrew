@@ -98,7 +98,7 @@ Function $brew_name {
     }
 }
 # TODO: \$PSVersionTable.PSVersion is only available from PowerShell 2.0 onward. Either accept that this fails on PS 1 or find a way to guard against that.
-if (\$PSVersionTable.PSVersion -ge "5.0.0.0") {
+if (\$PSVersionTable.PSVersion.Major -ge 5) {
     Register-ArgumentCompleter -Native -CommandName $brew_name -ScriptBlock {
         param(\$commandName, \$argumentString, \$position)
         \$completions = . "$brew_exec" internal_shell_hook PowerShell completions "\$position" "\$argumentString" | Out-String
