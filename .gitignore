@@ -5,6 +5,7 @@ versions/*
 shims/*
 git_reference/
 download/*
+strawberry/*
 perl-darwin-2level/*
 
 fatpacker.trace
@@ -19,6 +20,7 @@ MYMETA.yml
 Makefile
 pm_to_blib
 rakubrew
+rakubrew.exe
 
 *~
 *.swp
