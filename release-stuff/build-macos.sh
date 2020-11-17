@@ -62,3 +62,5 @@ cpanm --installdeps -n --cpanfile cpanfile.macos .
 # PAR package rakubrew
 pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -o rakubrew script/rakubrew
 
+# Reset our modified Config.pm again.
+git checkout -f lib/App/Rakubrew/Config.pm
