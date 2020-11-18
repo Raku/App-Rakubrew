@@ -64,3 +64,15 @@
     - Add a note to the PowerShell and CMD installation instructions explaining
       that one needs to install rakubrew separately for the two shells.
     - Fix Zsh shell integration.
+
+14
+    - Download command will now honour the specified backend. (mendel)
+    - Add some tests for the shell hooks. (JJ)
+    - Fix and improve shell completion some more. Now supports completing
+      partial matches in the middle of a word and help topics. (vrurg, mendel)
+    - Report missing external build tools instead of erroring out.
+    - Detect `armhf` and `arm64` architectures, fixing `list-available` and
+      `download` commands on arm systems (prominently the RasPi). Note that
+      there currently aren't any precompiled rakudo versions for arm available
+      though.
+    - Fix shell hook on PowerShell 7.
