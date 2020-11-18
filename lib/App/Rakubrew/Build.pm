@@ -7,6 +7,7 @@ use strict;
 use warnings;
 use 5.010;
 use File::Spec::Functions qw(catdir catfile updir);
+use IPC::Cmd qw(can_run);
 use Cwd qw(cwd);
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
@@ -69,6 +70,8 @@ sub _get_relocatable_option {
 }
 
 sub available_rakudos {
+    _check_git();
+
     my @output = qx|$GIT ls-remote --tags $git_repos{rakudo}|;
     my @tags = grep(m{refs/tags/([^\^]+)\^\{\}}, @output);
     @tags = map(m{tags/([^\^]+)\^}, @tags);
@@ -79,6 +82,8 @@ sub available_rakudos {
 sub build_impl {
     my ($impl, $ver, $configure_opts) = @_;
 
+    _check_build_dependencies();
+
     my $name = "$impl-$ver";
     $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
@@ -86,7 +91,7 @@ sub build_impl {
 
     unless (-d $name) {
         for(@{$impls{$impl}{need_repo}}) {
-            update_git_reference($_);
+            _update_git_reference($_);
         }
         run "$GIT clone --reference \"$git_reference/rakudo\" $git_repos{rakudo} $name";
     }
@@ -123,6 +128,9 @@ sub determine_make {
 
 sub build_triple {
     my ($rakudo_ver, $nqp_ver, $moar_ver) = @_;
+
+    _check_build_dependencies();
+
     my $impl = "moar";
     $rakudo_ver //= 'HEAD';
     $nqp_ver //= 'HEAD';
@@ -133,7 +141,7 @@ sub build_triple {
     chdir $versions_dir;
 
     unless (-d $name) {
-        update_git_reference('rakudo');
+        _update_git_reference('rakudo');
         run "$GIT clone --reference \"$git_reference/rakudo\" $git_repos{rakudo} $name";
     }
     chdir $name;
@@ -145,7 +153,7 @@ sub build_triple {
         . ' ' . _get_git_cache_option(cwd());
 
     unless (-d "nqp") {
-        update_git_reference('nqp');
+        _update_git_reference('nqp');
         run "$GIT clone --reference \"$git_reference/nqp\" $git_repos{nqp}";
     }
     chdir "nqp";
@@ -153,7 +161,7 @@ sub build_triple {
     run "$GIT checkout $nqp_ver";
 
     unless (-d "MoarVM") {
-        update_git_reference('MoarVM');
+        _update_git_reference('MoarVM');
         run "$GIT clone --reference \"$git_reference/MoarVM\" $git_repos{MoarVM}";
     }
 
@@ -179,6 +187,9 @@ sub build_triple {
 
 sub build_zef {
     my $version = shift;
+
+    _check_git();
+
     chdir catdir($versions_dir, $version);
     unless (-d 'zef') {
         run "$GIT clone $git_repos{zef}";
@@ -190,7 +201,7 @@ sub build_zef {
     run get_raku($version) . " -Ilib bin/zef --/test --force install .";
 }
 
-sub update_git_reference {
+sub _update_git_reference {
     my $repo = shift;
     my $back = cwd();
     print "Update git reference: $repo\n";
@@ -201,6 +212,25 @@ sub update_git_reference {
     chdir $repo;
     run "$GIT fetch";
     chdir $back;
+}
+
+sub _check_build_dependencies() {
+    _check_git();
+    _check_perl();
+}
+
+sub _check_git {
+    if (!can_run($GIT)) {
+        say STDERR "Did not find `$GIT` program. That's a requirement for using some rakubrew commmands. Aborting.";
+        exit 1;
+    }
+}
+
+sub _check_perl {
+    if (!can_run($PERL5)) {
+        say STDERR "Did not find `$PERL5` program. That's a requirement for using some rakubrew commands. Aborting.";
+        exit 1;
+    }
 }
 
 1;
