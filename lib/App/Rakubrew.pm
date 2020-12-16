@@ -244,7 +244,7 @@ EOL
 
             # Might have new executables now -> rehash.
             rehash();
-            unless (get_version()) {
+            if (get_version() eq 'system') {
                 set_global_version($name);
             }
             say "Done, $name built";
@@ -256,7 +256,7 @@ EOL
 
         # Might have new executables now -> rehash
         rehash();
-        unless (get_version()) {
+        if (get_version() eq 'system') {
             set_global_version($name);
         }
         say "Done, $name built";
@@ -274,7 +274,7 @@ EOL
 
         # Might have new executables now -> rehash
         rehash();
-        unless (get_version()) {
+        if (get_version() eq 'system') {
             set_global_version("$impl-$ver");
         }
         say "Done, $impl-$ver installed";
