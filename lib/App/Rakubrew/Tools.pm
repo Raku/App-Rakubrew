@@ -1,7 +1,7 @@
 package App::Rakubrew::Tools;
 require Exporter;
 our @ISA = qw( Exporter );
-our @EXPORT = qw(run slurp spurt trim check_prog_name_match uniq slurp_dir my_fileparse);
+our @EXPORT = qw(run slurp spurt trim uniq slurp_dir my_fileparse);
 
 use strict;
 use warnings;
@@ -34,12 +34,6 @@ sub trim {
     my $text = shift;
     $text =~ s/^\s+|\s+$//g;
     return $text;
-}
-
-sub check_prog_name_match {
-    my ($prog, $filename) = @_;
-    my ($basename, undef, undef) = my_fileparse($filename);
-    return $prog =~ /^\Q$basename\E\z/i;
 }
 
 sub uniq {

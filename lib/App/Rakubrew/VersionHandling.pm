@@ -272,10 +272,19 @@ sub _which {
 
             $target = $targets[0] if @targets;
         }
-        elsif ($^O =~ /win32/i) {
-            # The postfix of an executable on Windows is often unclear.
-            # Thus we look for files with a basename matching the given
-            # name.
+        elsif ($^O =~ /win32/i && (my_fileparse($prog))[2] eq '') {
+            # If we are on Windows and didn't get a full executable name
+            # i.e. the suffix is missing.
+            # In this case we look for files with a basename matching
+            # the given name and select the best candidate via a preference
+            # table.
+
+            sub check_prog_name_match {
+                my ($prog, $filename) = @_;
+                my ($basename, undef, undef) = my_fileparse($filename);
+                return $prog =~ /^\Q$basename\E\z/i;
+            }
+
             my @results = ();
             my @dirs = get_bin_paths($version);
             for my $dir (@dirs) {
