@@ -199,6 +199,11 @@ EOL
     } elsif ($arg eq 'build-rakudo' || $arg eq 'build') {
         my ($impl, $ver, @args) =
             App::Rakubrew::VersionHandling::match_version(@args);
+        if (!$ver) {
+            my @versions = App::Rakubrew::Build::available_rakudos();
+            @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
+            $ver = $versions[-1];
+        }
 
         if ($impl eq "panda") {
             say "panda is discontinued; please use zef (rakubrew build-zef) instead";

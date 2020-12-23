@@ -217,9 +217,7 @@ sub match_version {
             $impl = 'moar';
         }
         else {
-            my @versions = App::Rakubrew::Build::available_rakudos();
-            @versions = grep { /^\d\d\d\d\.\d\d/ } @versions;
-            $ver = $versions[-1];
+            $ver = '';
         }
     }
 

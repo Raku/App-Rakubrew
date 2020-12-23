@@ -35,14 +35,14 @@ sub download_precomp_archive {
     my $ht = HTTP::Tinyish->new();
 
     my @matching_releases = grep {
-            $_->{backend} eq $impl && ($ver ? $_->{ver} eq $ver : $_->{latest})
+            $_->{backend} eq $impl && ($ver ? $_->{ver} eq $ver : 1)
         } _retrieve_releases($ht);
 
     if (!@matching_releases) {
-        say STDERR 'Couldn\'t find a precomp release for OS: "' . _my_platform() . '", architecture: "' . _my_arch() . '"';
+        say STDERR 'Couldn\'t find a precomp release for OS: "' . _my_platform() . '", architecture: "' . _my_arch() . '"' . ($ver ? (', version: "' . $ver . '"') : '');
         exit 1;
     }
-    if (@matching_releases > 1) {
+    if ($ver && @matching_releases > 1) {
         say STDERR 'Multiple releases found for your architecture. Don\'t know what to install. This shouldn\'t happen.';
         exit 1;
     }
