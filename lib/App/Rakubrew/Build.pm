@@ -186,19 +186,23 @@ sub build_triple {
 }
 
 sub build_zef {
-    my $version = shift;
+  my $version = shift;
+  my $zef_version = shift;
 
-    _check_git();
-
-    chdir catdir($versions_dir, $version);
-    unless (-d 'zef') {
-        run "$GIT clone $git_repos{zef}";
+  _check_git();
+  chdir catdir($versions_dir, $version);
+  unless (-d 'zef') {
+    if ( $zef_version ) {
+      run "$GIT clone --depth 1 --branch $zef_version $git_repos{zef}";
+    } else {
+      run "$GIT clone --depth 1 $git_repos{zef}";
     }
-    chdir 'zef';
-    run "$GIT pull -q";
-    run "$GIT checkout";
-    run get_raku($version) . " -Ilib bin/zef test .";
-    run get_raku($version) . " -Ilib bin/zef --/test --force install .";
+  }
+  chdir 'zef';
+  run "$GIT pull -q";
+  run "$GIT checkout";
+  run get_raku($version) . " -Ilib bin/zef test .";
+  run get_raku($version) . " -Ilib bin/zef --/test --force install .";
 }
 
 sub _update_git_reference {
