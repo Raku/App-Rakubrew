@@ -311,14 +311,12 @@ EOL
 
     } elsif ($arg eq 'build-zef') {
         my $version = get_version();
-	my $zef_version = shift(@args);
+        my $zef_version = shift(@args);
         if (!$version) {
-	  say STDERR "$brew_name: No version set.";
-	  exit 1;
-	}
-	if ($zef_version) {
-	  say "Building zef $zef_version";
-	}
+          say STDERR "$brew_name: No version set.";
+          exit 1;
+        }
+	say "Building zef ", $zef_version?$zef_version:"latest";
         App::Rakubrew::Build::build_zef($version, $zef_version);
         # Might have new executables now -> rehash
         rehash();
