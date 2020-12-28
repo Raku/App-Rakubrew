@@ -192,15 +192,20 @@ sub build_zef {
     _check_git();
     chdir catdir($versions_dir, $version);
     unless (-d 'zef') {
-        if ( $zef_version ) {
-            run "$GIT clone --depth 1 --branch $zef_version $git_repos{zef}";
-        } else {
-            run "$GIT clone --depth 1 $git_repos{zef}";
-        }
+        run "$GIT clone $git_repos{zef}";
     }
     chdir 'zef';
-    run "$GIT pull -q";
-    run "$GIT checkout";
+    my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
+    unless ( $zef_version && $tags{$zef_version} ) {
+        say "Building latest version";
+        $zef_version = '';
+    }
+
+    if ( $zef_version ) {
+        run "$GIT checkout tags/$zef_version";
+    } else {
+        run "$GIT checkout master";
+    }
     run get_raku($version) . " -Ilib bin/zef test .";
     run get_raku($version) . " -Ilib bin/zef --/test --force install .";
 }
