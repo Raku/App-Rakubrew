@@ -191,14 +191,15 @@ sub build_zef {
 
     _check_git();
     chdir catdir($versions_dir, $version);
-    unless (-d 'zef') {
+    if (-d 'zef') {
+        run "$GIT checkout master && $GIT pull -q";
+    } else {
         run "$GIT clone $git_repos{zef}";
     }
     chdir 'zef';
     my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
-    unless ( $zef_version && $tags{$zef_version} ) {
-        say "Building latest version";
-        $zef_version = '';
+    if ( ($zef_version ne "" ) && !$tags{$zef_version} ) {
+          die "Couldn't find version $zef_version, aborting";
     }
 
     if ( $zef_version ) {
