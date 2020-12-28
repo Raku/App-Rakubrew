@@ -313,8 +313,8 @@ EOL
         my $version = get_version();
         my $zef_version = shift(@args);
         if (!$version) {
-          say STDERR "$brew_name: No version set.";
-          exit 1;
+            say STDERR "$brew_name: No version set.";
+            exit 1;
         }
         say "Building zef ", $zef_version?$zef_version:"latest";
         App::Rakubrew::Build::build_zef($version, $zef_version);
