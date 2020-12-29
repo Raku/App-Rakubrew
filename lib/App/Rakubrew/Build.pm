@@ -187,16 +187,26 @@ sub build_triple {
 
 sub build_zef {
     my $version = shift;
+    my $zef_version = shift;
 
     _check_git();
-
     chdir catdir($versions_dir, $version);
-    unless (-d 'zef') {
+    if (-d 'zef') {
+        run "$GIT checkout master && $GIT pull -q";
+    } else {
         run "$GIT clone $git_repos{zef}";
     }
     chdir 'zef';
-    run "$GIT pull -q";
-    run "$GIT checkout";
+    my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
+    if ( ($zef_version ne "" ) && !$tags{$zef_version} ) {
+        die "Couldn't find version $zef_version, aborting\n";
+    }
+
+    if ( $zef_version ) {
+        run "$GIT checkout tags/$zef_version";
+    } else {
+        run "$GIT checkout master";
+    }
     run get_raku($version) . " -Ilib bin/zef test .";
     run get_raku($version) . " -Ilib bin/zef --/test --force install .";
 }
