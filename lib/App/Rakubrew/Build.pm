@@ -199,7 +199,7 @@ sub build_zef {
     chdir 'zef';
     my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
     if ( ($zef_version ne "" ) && !$tags{$zef_version} ) {
-          die "Couldn't find version $zef_version, aborting\n";
+        die "Couldn't find version $zef_version, aborting\n";
     }
 
     if ( $zef_version ) {
