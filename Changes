@@ -76,3 +76,10 @@
       there currently aren't any precompiled rakudo versions for arm available
       though.
     - Fix shell hook on PowerShell 7.
+
+15
+    - Fix logic to automatically switch to a version after install.
+    - Fix `shim` mode on Windows.
+    - Fix `download` when the latest compiled release <> latest release.
+    - Allow specifying a version with the `build-zef` command.
+    - Improve version completion of the `build` and `download` commands.
