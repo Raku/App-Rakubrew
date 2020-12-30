@@ -30,7 +30,7 @@ rakubrew - Raku environment manager
  rakubrew build [<backend>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
  rakubrew triple [<rakudo-version> [<nqp-version> [<moar-version>]]]
  rakubrew register <name> <path>
- rakubrew build-zef
+ rakubrew build-zef [<zef-version>]
  rakubrew download [<backend>] [<rakudo-version>]
 
  rakubrew exec <executable> [<executable-args>]
@@ -192,9 +192,9 @@ Register an externaly built / installed Rakudo version with rakubrew.
 
 =head1 COMMAND: build-zef
 
-Usage: rakubrew build-zef
+Usage: rakubrew build-zef [<zef-version>]
 
-Install Zef into the current Rakudo version.
+Install Zef (at the given version) into the current Rakudo version.
 
 =head1 COMMAND: download-rakudo
 
