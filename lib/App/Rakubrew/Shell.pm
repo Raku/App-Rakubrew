@@ -218,9 +218,8 @@ sub get_completions {
         return $self->_filter_candidates($candidate, (App::Rakubrew::Variables::available_backends(), 'all'));
     }
     elsif($index == 2 && $words[0] eq 'build') {
-        my @installed = get_versions();
-        my @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } App::Rakubrew::Build::available_rakudos());
-
+        my @installed = map { if ($_ =~ /^\Q$words[1]\E-(.*)$/) {$1} else { () } } get_versions();
+        my @installables = grep({ my $able = $_; !grep({ $able eq $_ } @installed) } App::Rakubrew::Build::available_rakudos());
         my $candidate = $words[2] // '';
         return $self->_filter_candidates($candidate, @installables);
     }
@@ -229,11 +228,10 @@ sub get_completions {
         return $self->_filter_candidates($candidate, ('moar'));
     }
     elsif($index == 2 && $words[0] eq 'download') {
-        my @installed = get_versions();
+        my @installed = map { if ($_ =~ /^\Q$words[1]\E-(.*)$/) {$1} else { () } } get_versions();
         my @installables = map { $_->{ver} } App::Rakubrew::Download::available_precomp_archives();
-        @installables = grep({ my $x = $_; !grep({ $x eq $_ } @installed) } @installables);
-
-        my $candidate = $words[3] // '';
+        @installables = grep { my $able = $_; !grep({ $able eq $_ } @installed) } @installables;
+        my $candidate = $words[2] // '';
         return $self->_filter_candidates($candidate, @installables);
     }
     elsif($index == 1 && $words[0] eq 'mode') {
