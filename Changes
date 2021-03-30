@@ -83,3 +83,7 @@
     - Fix `download` when the latest compiled release <> latest release.
     - Allow specifying a version with the `build-zef` command.
     - Improve version completion of the `build` and `download` commands.
+
+16
+    - Fix a warning when building zef
+
