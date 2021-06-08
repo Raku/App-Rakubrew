@@ -134,6 +134,7 @@ sub _my_arch {
         $Config{archname} =~ /x86_64/i              ? 'x86_64' :
         $Config{archname} =~ /amd64/i               ? 'x86_64' :
         $Config{archname} =~ /x86/i                 ? 'x86'    :
+        $Config{archname} =~ /i686/i                ? 'x86'    :
         $Config{archname} =~ /darwin/i              ? 'x86_64' :
         $Config{archname} =~ /aarch64/i             ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
         $Config{archname} =~ /arm-linux-gnueabihf/i ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS

@@ -87,3 +87,9 @@
 16
     - Fix a warning when building zef
 
+17
+    - Improve arch detection of x86 32bit on Linux (maybe others). This will
+      improve the error message one receives on such systems when using the
+      `download` command. As there are currently no precompiled releases
+      available for that platform, the `download` command will still not
+      work on such systems though.
