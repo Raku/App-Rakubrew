@@ -192,11 +192,12 @@ sub build_zef {
     _check_git();
     chdir catdir($versions_dir, $version);
     if (-d 'zef') {
-        run "$GIT checkout master && $GIT pull -q";
+        chdir 'zef';
+        run "$GIT checkout -q master && $GIT pull -q";
     } else {
         run "$GIT clone $git_repos{zef}";
+        chdir 'zef';
     }
-    chdir 'zef';
     my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
     if ( $zef_version && !$tags{$zef_version} ) {
         die "Couldn't find version $zef_version, aborting\n";
