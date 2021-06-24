@@ -94,3 +94,9 @@
       available for that platform, the `download` command will still not
       work on such systems though.
     - Fix reinstalling zef.
+
+18
+    - Fix `build-zef` for registered versions. With registered versions
+      `build-zef` previously littered CWD with a zef checkout. Now we don't
+      checkout zef in the respective version dir anymore but have a single
+      checkout in the rakubrew home dir.

@@ -1,7 +1,7 @@
 package App::Rakubrew::Variables;
 require Exporter;
 our @ISA = qw( Exporter );
-our @EXPORT = qw( $brew_name $brew_exec $env_var $local_filename $prefix $versions_dir $shim_dir $git_reference $GIT $GIT_PROTO $PERL5 %git_repos %impls );
+our @EXPORT = qw( $brew_name $brew_exec $env_var $local_filename $prefix $versions_dir $shim_dir $zef_dir $git_reference $GIT $GIT_PROTO $PERL5 %git_repos %impls );
 
 use strict;
 use warnings;
@@ -30,6 +30,7 @@ $prefix = abs_path($prefix) if (-d $prefix);
 our $versions_dir = catdir($prefix, 'versions');
 our $shim_dir = catdir($prefix, 'shims');
 our $git_reference = catdir($prefix, 'git_reference');
+our $zef_dir = catdir($prefix, 'zef');
 
 our $GIT       = $ENV{GIT_BINARY} // 'git';
 our $GIT_PROTO = $ENV{GIT_PROTOCOL} // 'git';

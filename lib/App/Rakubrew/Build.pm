@@ -87,9 +87,13 @@ sub build_impl {
     my $name = "$impl-$ver";
     $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
 
-    chdir $versions_dir;
+    if (version_exists($name) && is_registered_version($name)) {
+        say STDERR "$name is a registered version. I'm not going to touch it.";
+        exit 1;
+    }
 
-    unless (-d $name) {
+    chdir $versions_dir;
+    unless (version_exists($name)) {
         for(@{$impls{$impl}{need_repo}}) {
             _update_git_reference($_);
         }
@@ -190,14 +194,15 @@ sub build_zef {
     my $zef_version = shift;
 
     _check_git();
-    chdir catdir($versions_dir, $version);
-    if (-d 'zef') {
-        chdir 'zef';
-        run "$GIT checkout -q master && $GIT pull -q";
+
+    if (-d $zef_dir) {
+        chdir $zef_dir;
+        run "$GIT checkout -f -q master && git reset --hard HEAD && $GIT pull -q";
     } else {
-        run "$GIT clone $git_repos{zef}";
-        chdir 'zef';
+        run "$GIT clone $git_repos{zef} $zef_dir";
+        chdir $zef_dir;
     }
+
     my %tags = map  { chomp($_); $_ => 1 } `$GIT tag`;
     if ( $zef_version && !$tags{$zef_version} ) {
         die "Couldn't find version $zef_version, aborting\n";
