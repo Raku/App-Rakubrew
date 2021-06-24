@@ -30,7 +30,7 @@ $prefix = abs_path($prefix) if (-d $prefix);
 our $versions_dir = catdir($prefix, 'versions');
 our $shim_dir = catdir($prefix, 'shims');
 our $git_reference = catdir($prefix, 'git_reference');
-our $zef_dir = catdir($prefix, 'zef');
+our $zef_dir = catdir($prefix, 'repos', 'zef');
 
 our $GIT       = $ENV{GIT_BINARY} // 'git';
 our $GIT_PROTO = $ENV{GIT_PROTOCOL} // 'git';

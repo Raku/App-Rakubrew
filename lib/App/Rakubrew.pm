@@ -50,6 +50,7 @@ sub run_script {
 
     mkdir(catdir($prefix, 'bin'))    || _cant_access_home() unless (-d catdir($prefix, 'bin'));
     mkdir(catdir($prefix, 'update')) || _cant_access_home() unless (-d catdir($prefix, 'update'));
+    mkdir(catdir($prefix, 'repos'))    || _cant_access_home() unless (-d catdir($prefix, 'repos'));
     mkdir $shim_dir                  || _cant_access_home() unless (-d $shim_dir);
     mkdir $versions_dir              || _cant_access_home() unless (-d $versions_dir);
     mkdir $git_reference             || _cant_access_home() unless (-d $git_reference);
