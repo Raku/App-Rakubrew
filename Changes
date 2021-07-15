@@ -101,3 +101,7 @@
 
 19
     - No end user facing changes. Improve internal folder structure.
+
+20
+    - Adapt install instructions for zsh to recommend `.zshenv` over
+      `.zshrc`. The latter is even available in scripts.

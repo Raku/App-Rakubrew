@@ -17,7 +17,7 @@ sub supports_hooking {
 }
 
 sub install_note {
-    my $rc_file = qw( .zshrc );
+    my $rc_file = qw( .zshenv );
     if ( exists $ENV{ZDOTDIR} ) {
         $rc_file = catfile( $ENV{ZDOTDIR}, $rc_file );
     }
