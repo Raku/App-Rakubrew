@@ -66,71 +66,71 @@
    "provides" : {
       "App::Rakubrew" : {
          "file" : "lib/App/Rakubrew.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Build" : {
          "file" : "lib/App/Rakubrew/Build.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Config" : {
          "file" : "lib/App/Rakubrew/Config.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Download" : {
          "file" : "lib/App/Rakubrew/Download.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell" : {
          "file" : "lib/App/Rakubrew/Shell.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Bash" : {
          "file" : "lib/App/Rakubrew/Shell/Bash.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Cmd" : {
          "file" : "lib/App/Rakubrew/Shell/Cmd.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Fish" : {
          "file" : "lib/App/Rakubrew/Shell/Fish.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::PowerShell" : {
          "file" : "lib/App/Rakubrew/Shell/PowerShell.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Sh" : {
          "file" : "lib/App/Rakubrew/Shell/Sh.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Tcsh" : {
          "file" : "lib/App/Rakubrew/Shell/Tcsh.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Shell::Zsh" : {
          "file" : "lib/App/Rakubrew/Shell/Zsh.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Tools" : {
          "file" : "lib/App/Rakubrew/Tools.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Update" : {
          "file" : "lib/App/Rakubrew/Update.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::Variables" : {
          "file" : "lib/App/Rakubrew/Variables.pm",
-         "version" : "19"
+         "version" : "20"
       },
       "App::Rakubrew::VersionHandling" : {
          "file" : "lib/App/Rakubrew/VersionHandling.pm",
-         "version" : "19"
+         "version" : "20"
       }
    },
    "release_status" : "stable",
-   "version" : "19",
+   "version" : "20",
    "x_generated_by_perl" : "v5.30.0",
    "x_serialization_backend" : "Cpanel::JSON::XS version 4.19",
    "x_spdx_expression" : "MIT"
