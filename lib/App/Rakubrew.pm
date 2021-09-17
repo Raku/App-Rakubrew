@@ -491,7 +491,6 @@ sub match_and_run {
         map {say} get_versions();
         return;
     }
-    opendir(my $dh, $versions_dir);
     if (grep { $_ eq $version } get_versions()) {
         $action->($version);
     }
