@@ -220,11 +220,15 @@ sub is_registered_version {
 sub get_version_path {
     my $version = shift;
     my $version_path = catdir($versions_dir, $version);
-    return catdir($version_path, 'install')
-        if -d catdir($version_path, 'install', 'bin');
-    return $version_path              if -d catdir($version_path, 'bin');
-    return trim(slurp($version_path)) if -f $version_path;
-    die "Invalid version found: $version";
+    $version_path = trim(slurp($version_path)) if -f $version_path;
+
+    my @cands = ($version_path, catdir($version_path, 'install'));
+
+    for my $cand (@cands) {
+        return $cand if -d catdir($cand, 'bin')
+    }
+
+    die "Installation is broken: $version";
 }
 
 sub get_raku {
