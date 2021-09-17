@@ -20,7 +20,7 @@ sub slurp {
     local $/ = '';
     my $ret = <$fh>;
     close($fh);
-    return $ret;
+    return $ret // '';
 }
 
 sub spurt {
