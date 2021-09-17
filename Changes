@@ -105,3 +105,7 @@
 20
     - Adapt install instructions for zsh to recommend `.zshenv` over
       `.zshrc`. The latter is even available in scripts.
+    - Fix setting the local version
+    - Detect broken installations. They are now flagged in `list` and switch to
+      such a version is prevented.
+    - Fix the `shell` command in env mode.
