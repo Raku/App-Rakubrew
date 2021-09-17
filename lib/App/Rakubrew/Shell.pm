@@ -83,30 +83,41 @@ sub print_shellmod_code {
     my @params = @_;
     my $command = shift(@params) // '';
     my $mode = get_brew_mode(1);
+    my $version;
 
     my $sep = $^O =~ /win32/i ? ';' : ':';
 
-    if ($mode eq 'shim') {
-        if ($command eq 'shell' && @params) {
-            if ($params[0] eq '--unset') {
-                say $self->get_shell_unsetter_code();
-            }
-            else {
-                say $self->get_shell_setter_code($params[0]);
-            }
+    if ($command eq 'shell' && @params) {
+        $version = $params[0];
+        if ($params[0] eq '--unset') {
+            say $self->get_shell_unsetter_code();
         }
-        elsif ($command eq 'mode') { # just switched to shim mode
-            my $path = $ENV{PATH};
-            $path = $self->clean_path($path);
-            $path = $shim_dir . $sep . $path;
-            say $self->get_path_setter_code($path);
+        elsif (! is_version_broken($params[0])) {
+            say $self->get_shell_setter_code($params[0]);
         }
     }
-    else { # get_brew_mode() eq 'env'
-        my $version = get_version();
+    elsif ($command eq 'mode' && $mode eq 'shim') { # just switched to shim mode
         my $path = $ENV{PATH};
         $path = $self->clean_path($path);
+        $path = $shim_dir . $sep . $path;
+        say $self->get_path_setter_code($path);
+    }
+    elsif ($command eq 'mode' && $mode eq 'env') { # just switched to env mode
+        $version = get_version();
+    }
+
+    if ($version && $mode eq 'env') {
+        my $path = $ENV{PATH};
+        $path = $self->clean_path($path);
+
         if ($version ne 'system') {
+            if ($version eq '--unset') {
+                # Get version ignoring the still set shell version.
+                $version = get_version('shell');
+            }
+            else {
+                return if is_version_broken($version);
+            }
             $path = join($sep, get_bin_paths($version), $path);
         }
         if ($path ne $ENV{PATH}) {

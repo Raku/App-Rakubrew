@@ -146,13 +146,14 @@ sub set_global_version {
 }
 
 sub get_version {
-    my $version = get_shell_version();
+    my $ignore = shift // '';
+    my $version = $ignore eq 'shell' ? undef : get_shell_version();
     return $version if defined $version;
     
     if (get_brew_mode() eq 'shim') {
         # Local version is only supported in shim mode.
         # Check for local version by looking for a `.raku-version` file in the current and parent folders.
-        $version = get_local_version();
+        $version = $ignore eq 'local' ? undef : get_local_version();
         return $version if defined $version;
     }
 
