@@ -125,7 +125,7 @@ EOL
         }
         else {
             $self->match_and_run($args[0], sub {
-                set_global_version(shift @args);
+                set_global_version(shift);
             });
         }
 
@@ -165,7 +165,7 @@ EOL
             }
             else {
                 $self->match_and_run($version, sub {
-                    set_local_version(shift @args);
+                    set_local_version(shift);
                 });
             }
         }
