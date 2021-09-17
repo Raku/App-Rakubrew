@@ -124,15 +124,15 @@ sub clean_path {
 
     my @paths;
     for my $version (get_versions()) {
-        if ($version ne 'system') {
-            try {
-                push @paths, get_bin_paths($version);
-            }
-            catch {
-                # Version is broken. So it's likely not in path anyways.
-                # -> ignore it
-            };
+        next if $version eq 'system';
+        next if is_version_broken($version);
+        try {
+            push @paths, get_bin_paths($version);
         }
+        catch {
+            # Version is broken. So it's likely not in path anyways.
+            # -> ignore it
+        };
     }
     push @paths, $versions_dir;
     push @paths, $shim_dir;

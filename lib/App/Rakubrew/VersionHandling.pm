@@ -5,6 +5,8 @@ our @EXPORT = qw(
     get_versions
     get_version
     version_exists
+    verify_version
+    is_version_broken
     is_registered_version
     get_version_path
     get_shell_version
@@ -23,6 +25,7 @@ use 5.010;
 use File::Spec::Functions qw(catfile catdir splitdir splitpath catpath canonpath);
 use Cwd qw(realpath);
 use File::Which qw();
+use Try::Tiny;
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 
@@ -80,10 +83,44 @@ sub get_local_version {
     return undef;
 }
 
+sub is_version_broken {
+    my $version = shift;
+    return 0 if $version eq 'system';
+    my $retval = 1;
+    try {
+        my $path = get_version_path($version);
+        for my $exec ('raku', 'raku.bat', 'raku.exe', 'perl6', 'perl6.bat', 'perl6.exe') {
+            if (-f catfile($path, 'bin', $exec)) {
+                $retval = 0;
+                last;
+            }
+        }
+    }
+    catch {
+        # Fall through
+    };
+    return $retval;
+}
+
+sub verify_version {
+    my $version = shift;
+
+    if (! version_exists($version) ) {
+        say STDERR "$brew_name: version '$version' is not installed.";
+        exit 1;
+    }
+
+    if ( is_version_broken($version) ) {
+        say STDERR "Version $version is broken. Refusing to switch to it.";
+        exit 1;
+    }
+}
+
 sub set_local_version {
     my $version = shift;
     if ($version) {
-        spurt($local_filename, shift);
+        verify_version($version);
+        spurt($local_filename, $version);
     }
     else {
         unlink $local_filename;
@@ -103,6 +140,7 @@ sub get_global_version {
 sub set_global_version {
     my $version = shift;
     my $silent = shift;
+    verify_version($version);
     say "Switching to $version" unless $silent;
     spurt(catfile($prefix, 'CURRENT'), $version);
 }
@@ -343,6 +381,7 @@ sub whence {
     my @matches = ();
     for my $version (get_versions()) {
         next if $version eq 'system';
+        next if is_version_broken($version);
         for my $path (get_bin_paths($version, $prog)) {
             if (-f $path) {
                 if ($pathmode) {
@@ -374,9 +413,9 @@ sub rehash {
 
     my @paths = ();
     for my $version (get_versions()) {
-        if ($version ne 'system') {
-            push @paths, get_bin_paths($version);
-        }
+        next if $version eq 'system';
+        next if is_version_broken($version);
+        push @paths, get_bin_paths($version);
     }
 
     say "Updating shims";

@@ -107,6 +107,7 @@ EOL
         my $cur = get_version() // '';
         map {
             my $version_line = '';
+            $version_line .= 'BROKEN ' if is_version_broken($_);
             $version_line .= $_ eq $cur ? '* ' : '  ';
             $version_line .= $_;
             $version_line .= ' -> ' . get_version_path($_) if is_registered_version($_);
@@ -141,9 +142,8 @@ EOL
         }
         else {
             my $version = shift @args;
-            if ($version ne '--unset' && !version_exists($version)) {
-                say STDERR "$brew_name: version '$version' not installed.";
-                exit 1;
+            if ($version ne '--unset') {
+                verify_version($version);
             }
         }
 
@@ -508,6 +508,7 @@ sub test {
     my ($self, $version) = @_;
     $self->match_and_run($version, sub {
         my $matched = shift;
+        verify_version($matched);
         my $v_dir = catdir($versions_dir, $matched);
         if (!-d $v_dir) {
             say STDERR "Version $matched was not built by rakubrew.";
