@@ -102,11 +102,11 @@ sub print_shellmod_code {
         $path = $shim_dir . $sep . $path;
         say $self->get_path_setter_code($path);
     }
-    elsif ($command eq 'mode' && $mode eq 'env') { # just switched to env mode
+    elsif ($mode eq 'env') {
         $version = get_version();
     }
 
-    if ($version && $mode eq 'env') {
+    if ($mode eq 'env') {
         my $path = $ENV{PATH};
         $path = $self->clean_path($path);
 
@@ -120,6 +120,9 @@ sub print_shellmod_code {
             }
             $path = join($sep, get_bin_paths($version), $path);
         }
+
+        # In env mode several commands require changing PATH, so we just always
+        # construct a new PATH and see if it's different.
         if ($path ne $ENV{PATH}) {
             say $self->get_path_setter_code($path);
         }

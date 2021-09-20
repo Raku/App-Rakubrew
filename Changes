@@ -109,3 +109,6 @@
     - Detect broken installations. They are now flagged in `list` and switch to
       such a version is prevented.
     - Fix the `shell` command in env mode.
+
+21
+    - Fix switching versions in env mode which broke in the previous release.
