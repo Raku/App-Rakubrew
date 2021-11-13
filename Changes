@@ -112,3 +112,6 @@
 
 21
     - Fix switching versions in env mode which broke in the previous release.
+
+22
+    - Fix `register` command with relative paths.

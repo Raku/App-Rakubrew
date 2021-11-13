@@ -12,7 +12,7 @@ if (-t) {
 }
 use FindBin qw($RealBin);
 use File::Path qw(remove_tree);
-use File::Spec::Functions qw(catfile catdir splitpath updir);
+use File::Spec::Functions qw(catfile catdir splitpath updir rel2abs);
 
 use App::Rakubrew::Build;
 use App::Rakubrew::Config;
@@ -300,6 +300,7 @@ EOL
             say STDERR "$brew_name: No valid rakudo installation found at '$path'";
             exit 1;
         }
+        $path = rel2abs($path);
         invalid($path) if !-d $path;
         if (!-f catfile($path, 'bin', 'perl6') && !-f catfile($path, 'bin', 'raku')) {
             $path = catdir($path, 'install');
