@@ -122,3 +122,7 @@
 
 24
     - Fix arch detection on Apple M1 when using the fat-packed x86_64 rakubrew.
+
+25
+    - CPAN only release with no functional changes. Remove some large files that
+      accidentally slipped into the release archive.
