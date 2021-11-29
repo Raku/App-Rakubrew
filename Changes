@@ -115,3 +115,7 @@
 
 22
     - Fix `register` command with relative paths.
+
+23
+    - Fix arch detection on Apple M1. This solves the problem of M1 users only
+      receiving the x86_64 builds when using the `download` command.

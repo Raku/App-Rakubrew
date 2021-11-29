@@ -130,18 +130,20 @@ sub _my_platform {
 
 sub _my_arch {
     my $arch =
-        $Config{archname} =~ /x64/i                 ? 'x86_64' :
-        $Config{archname} =~ /x86_64/i              ? 'x86_64' :
-        $Config{archname} =~ /amd64/i               ? 'x86_64' :
-        $Config{archname} =~ /x86/i                 ? 'x86'    :
-        $Config{archname} =~ /i686/i                ? 'x86'    :
-        $Config{archname} =~ /darwin/i              ? 'x86_64' :
-        $Config{archname} =~ /aarch64/i             ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
-        $Config{archname} =~ /arm-linux-gnueabihf/i ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS
+        $Config{archname} =~ /x64/i                               ? 'x86_64' :
+        $Config{archname} =~ /x86_64/i                            ? 'x86_64' :
+        $Config{archname} =~ /amd64/i                             ? 'x86_64' :
+        $Config{archname} =~ /x86/i                               ? 'x86'    :
+        $Config{archname} =~ /i686/i                              ? 'x86'    :
+        $Config{archname} =~ /darwin/i && `uname -m` =~ /arm64/i  ? 'arm64'  : # MacOS M1 / Apple Silicon
+        $Config{archname} =~ /darwin/i && `uname -m` =~ /x86_64/i ? 'x86_64' : # MacOS Intel
+        $Config{archname} =~ /aarch64/i                           ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
+        $Config{archname} =~ /arm-linux-gnueabihf/i               ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS
         '';
 
     unless ($arch) {
         say STDERR 'Couldn\'t detect system architecture. Current arch is: ' . $Config{archname};
+        say STDERR 'Current uname -m is: ' . `uname -m`;
         exit 1;
     }
     return $arch;
