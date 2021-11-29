@@ -119,3 +119,6 @@
 23
     - Fix arch detection on Apple M1. This solves the problem of M1 users only
       receiving the x86_64 builds when using the `download` command.
+
+24
+    - Fix arch detection on Apple M1 when using the fat-packed x86_64 rakubrew.
