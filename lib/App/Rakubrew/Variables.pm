@@ -33,7 +33,7 @@ our $git_reference = catdir($prefix, 'git_reference');
 our $zef_dir = catdir($prefix, 'repos', 'zef');
 
 our $GIT       = $ENV{GIT_BINARY} // 'git';
-our $GIT_PROTO = $ENV{GIT_PROTOCOL} // 'git';
+our $GIT_PROTO = $ENV{GIT_PROTOCOL} // 'https';
 our $PERL5     = $^X;
 
 sub get_git_url {

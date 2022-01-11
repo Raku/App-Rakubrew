@@ -126,3 +126,7 @@
 25
     - CPAN only release with no functional changes. Remove some large files that
       accidentally slipped into the release archive.
+
+26
+    - Switched default of Git protocol from `git` to `https`, following GitHub
+      disabling the `git` protocol.
