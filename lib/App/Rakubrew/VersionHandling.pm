@@ -89,7 +89,7 @@ sub is_version_broken {
     my $retval = 1;
     try {
         my $path = get_version_path($version);
-        for my $exec ('raku', 'raku.bat', 'raku.exe', 'perl6', 'perl6.bat', 'perl6.exe') {
+        for my $exec ('raku', 'raku.bat', 'raku.exe', 'perl6', 'perl6.bat', 'perl6.exe', 'rakudo', 'rakudo.bat', 'rakudo.exe') {
             if (-f catfile($path, 'bin', $exec)) {
                 $retval = 0;
                 last;
@@ -223,7 +223,7 @@ sub get_version_path {
     my $version_path = catdir($versions_dir, $version);
     $version_path = trim(slurp($version_path)) if -f $version_path;
 
-    my @cands = ($version_path, catdir($version_path, 'install'));
+    my @cands = (catdir($version_path, 'install'), $version_path);
 
     for my $cand (@cands) {
         return $cand if -d catdir($cand, 'bin')
