@@ -115,9 +115,7 @@ sub print_shellmod_code {
                 # Get version ignoring the still set shell version.
                 $version = get_version('shell');
             }
-            else {
-                return if is_version_broken($version);
-            }
+            return if is_version_broken($version);
             $path = join($sep, get_bin_paths($version), $path);
         }
 

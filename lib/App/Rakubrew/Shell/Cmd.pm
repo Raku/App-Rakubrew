@@ -88,8 +88,9 @@ sub get_init_code {
     my $path = $ENV{PATH};
     $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
-        if (get_global_version() && get_global_version() ne 'system') {
-            $path = join(';', get_bin_paths(get_global_version()), $path);
+        my $version = get_global_version();
+        if ($version && $version ne 'system' && !is_version_broken($version)) {
+            $path = join(';', get_bin_paths($version), $path);
         }
     }
     else { # get_brew_mode() eq 'shim'

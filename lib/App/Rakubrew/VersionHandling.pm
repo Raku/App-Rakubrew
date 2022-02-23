@@ -6,7 +6,7 @@ our @EXPORT = qw(
     get_version
     version_exists
     verify_version
-    is_version_broken
+    is_version_broken is_version_path_broken
     is_registered_version
     get_version_path
     get_shell_version
@@ -86,20 +86,22 @@ sub get_local_version {
 sub is_version_broken {
     my $version = shift;
     return 0 if $version eq 'system';
-    my $retval = 1;
-    try {
-        my $path = get_version_path($version);
-        for my $exec ('raku', 'raku.bat', 'raku.exe', 'perl6', 'perl6.bat', 'perl6.exe', 'rakudo', 'rakudo.bat', 'rakudo.exe') {
-            if (-f catfile($path, 'bin', $exec)) {
-                $retval = 0;
-                last;
-            }
+    my $path = get_version_path($version, 1);
+    return 1 if !$path;
+    return 0 if !is_version_path_broken($path);
+    return 1;
+}
+
+sub is_version_path_broken {
+    my $path = shift;
+    $path = clean_version_path($path);
+    return 1 if !$path;
+    for my $exec ('raku', 'raku.bat', 'raku.exe', 'perl6', 'perl6.bat', 'perl6.exe', 'rakudo', 'rakudo.bat', 'rakudo.exe') {
+        if (-f catfile($path, 'bin', $exec)) {
+            return 0;
         }
     }
-    catch {
-        # Fall through
-    };
-    return $retval;
+    return 1;
 }
 
 sub verify_version {
@@ -218,17 +220,24 @@ sub is_registered_version {
     }
 }
 
-sub get_version_path {
-    my $version = shift;
-    my $version_path = catdir($versions_dir, $version);
-    $version_path = trim(slurp($version_path)) if -f $version_path;
+sub clean_version_path {
+    my $path = shift;
 
-    my @cands = (catdir($version_path, 'install'), $version_path);
-
+    my @cands = (catdir($path, 'install'), $path);
     for my $cand (@cands) {
         return $cand if -d catdir($cand, 'bin')
     }
+    return undef;
+}
 
+sub get_version_path {
+    my $version = shift;
+    my $no_error = shift || 0;
+    my $version_path = catdir($versions_dir, $version);
+    $version_path = trim(slurp($version_path)) if -f $version_path;
+
+    $version_path = clean_version_path($version_path);
+    return $version_path if $version_path || $no_error;
     die "Installation is broken: $version";
 }
 
@@ -405,7 +414,9 @@ sub whence {
 sub get_bin_paths {
     my $version = shift;
     my $program = scalar(shift) || undef;
-    my $version_path = get_version_path($version);
+    my $no_error = shift || undef;
+    my $version_path = get_version_path($version, 1);
+    return () if $no_error && !$version_path;
 
     return (
         catfile($version_path, 'bin', $program // ()),

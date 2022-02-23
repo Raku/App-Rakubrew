@@ -58,8 +58,9 @@ sub get_init_code {
 
     $path =~ s/:/ /g;
     if (get_brew_mode() eq 'env') {
-        if (get_global_version() && get_global_version() ne 'system') {
-            unshift @path_components, map({ "'$_'" } get_bin_paths(get_global_version()));
+        my $version = get_global_version();
+        if ($version && $version ne 'system' && !is_version_broken($version)) {
+            unshift @path_components, map({ "'$_'" } get_bin_paths($version));
         }
     }
     else { # get_brew_mode() eq 'shim'
