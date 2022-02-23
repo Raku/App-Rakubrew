@@ -301,13 +301,8 @@ EOL
             exit 1;
         }
         $path = rel2abs($path);
-        invalid($path) if !-d $path;
-        if (!-f catfile($path, 'bin', 'perl6') && !-f catfile($path, 'bin', 'raku')) {
-            $path = catdir($path, 'install');
-            if (!-f catfile($path, 'bin', 'perl6') && !-f catfile($path, 'bin', 'raku')) {
-                invalid($path);
-            }
-        }
+        invalid($path) if is_version_path_broken($path);
+        $path = clean_version_path($path);
 
         spurt(catfile($versions_dir, $name), $path);
 
