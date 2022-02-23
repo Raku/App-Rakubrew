@@ -110,7 +110,7 @@ EOL
             $version_line .= 'BROKEN ' if is_version_broken($_);
             $version_line .= $_ eq $cur ? '* ' : '  ';
             $version_line .= $_;
-            $version_line .= ' -> ' . get_version_path($_) if is_registered_version($_);
+            $version_line .= ' -> ' . (get_version_path($_, 1) || '') if is_registered_version($_);
             say $version_line;
         } get_versions();
 
