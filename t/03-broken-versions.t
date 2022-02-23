@@ -32,12 +32,17 @@ sub spurt {
     close($fh);
 }
 
+sub fake_install {
+    my $path = shift;
+    my $broken = shift;
+    mkdir "$path/bin";
+    spurt("$path/bin/raku", "foo") if !$broken;
+}
 sub fake_version {
     my $name = shift;
     my $broken = shift;
     mkdir "$homedir/versions/$name";
-    mkdir "$homedir/versions/$name/bin";
-    spurt("$homedir/versions/$name/bin/raku", "foo") if !$broken;
+    fake_install("$homedir/versions/$name", $broken);
 }
 
 my $out;
@@ -58,7 +63,17 @@ fake_version('moar-2020.02', 1);
 ok run([@rakubrew, "init", "Bash"], \"", \$out), "init works with broken version present";
 
 ok run([@rakubrew, "list"], \"", \$out), "list command with broken version succeeds";
-like $out, qr"moar-2020.02", "list command lists broken version";
-like $out, qr"BROKEN", "broken version is marked as such";
+like $out, qr"BROKEN.*moar-2020.02", "list command lists broken version";
+
+
+my $ext_raku = tempdir( CLEANUP => 1 );
+fake_install($ext_raku);
+ok run([@rakubrew, "register", "ext-raku", $ext_raku], \"", \$out), "register command succeeds";
+ok run([@rakubrew, "list"], \"", \$out), "list command with registered version succeeds";
+like $out, qr"ext-raku", "list command lists registered version";
+
+unlink "$ext_raku/bin/raku";
+ok run([@rakubrew, "list"], \"", \$out), "list command with broken registered version succeeds";
+like $out, qr"BROKEN.*ext-raku", "list command lists broken registered version";
 
 done_testing;

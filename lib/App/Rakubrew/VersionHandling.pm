@@ -8,7 +8,7 @@ our @EXPORT = qw(
     verify_version
     is_version_broken is_version_path_broken
     is_registered_version
-    get_version_path
+    get_version_path clean_version_path
     get_shell_version
     get_local_version set_local_version
     get_global_version set_global_version
