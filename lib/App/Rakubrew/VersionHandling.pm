@@ -452,6 +452,7 @@ sub rehash {
         # - We want rakubrew to work even when the .pl ending is not associated with the perl program and we do not want to put `perl` before every call to a shim.
         # - exec() in perl on Windows behaves differently from running the target program directly (output ends up on the console differently).
         # It retrieves the target executable (only consuming STDOUT of rakubrew) and calls it with the given arguments. STDERR still ends up on the console. The return value is checked and if an error occurs that error values is returned.
+        # See https://stackoverflow.com/a/8254331 for an explanation of the `SETLOCAL` / `ENDLOCAL` mechanics.
         @bins = map { my ($basename, undef, undef) = my_fileparse($_); $basename } @bins;
         @bins = uniq(@bins);
         for (@bins) {
@@ -462,7 +463,7 @@ SET brew_cmd="$brew_exec" internal_win_run \%~n0
 FOR /F "delims=" \%\%i IN ('\%brew_cmd\%') DO SET command=\%\%i
 IF NOT ERRORLEVEL 0 EXIT /B \%errorlevel\%
 IF     ERRORLEVEL 1 EXIT /B \%errorlevel\%
-"\%command\%" \%*
+ENDLOCAL & "\%command\%" \%*
 EOT
         }
     }
