@@ -560,10 +560,35 @@ sub init {
     }
 }
 
+sub de_par_environment {
+    # The PAR packager modifies the environment.
+    # We undo those modifications here.
+
+    # The following code was kindly provided by Roderich Schupp
+    # via email.
+    my $ldlibpthname = $Config::Config{ldlibpthname};
+    my $path_sep = $Config::Config{path_sep};
+    $ENV{$ldlibpthname} =~ s/^ \Q$ENV{PAR_TEMP}\E $path_sep? //x;
+
+    delete $ENV{PAR_0};
+    delete $ENV{PAR_INITIALIZED};
+    delete $ENV{PAR_PROGNAME};
+    delete $ENV{PAR_TEMP};
+}
+
 sub do_exec {
     my ($self, $program, $args) = @_;
 
     my $target = which($program, get_version());
+
+    # Undo PAR env modifications.
+    # Only need to do this on MacOS, as only there
+    # PAR is used and rakubrew itself does the `exec`.
+    # (Windows also uses PAR, but has a .bat shim that
+    # does the `exec`.)
+    if ($distro_format eq 'macos') {
+        de_par_environment;
+    }
     
     # Run.
     exec { $target } ($target, @$args);
