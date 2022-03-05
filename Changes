@@ -130,3 +130,20 @@
 26
     - Switched default of Git protocol from `git` to `https`, following GitHub
       disabling the `git` protocol.
+
+27
+    - Fix building JVM. Previously builds of the JVM succeeded, but Rakubrew
+      considered the resulting version as broken.
+    - Make Rakubrew more resilient to errors resulting from broken versions.
+      Previously Rakubrew would error on certain commands if a broken version
+      was present.
+    - Make the `register` command platform independent.
+    - Add some more testing.
+    - Make sure the Windows shim wrappers modifying the environment. Previously
+      they added a `command` and `brew_cmd` env var.
+    - Try to reverse the effects of the PAR wrapper on the environment on
+      MacOS. Previously on MacOS several env vars were added and
+      `DYLD_LIBRARY_PATH` was modified in shim mode on MacOS.
+    - Switch shims to use `symlink` instead of `link` on *nix. That should
+      allow for having the shims on a different partition from the rakubrew
+      executable.
