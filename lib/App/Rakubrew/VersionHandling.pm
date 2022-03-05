@@ -469,7 +469,7 @@ EOT
     }
     else {
         for (@bins) {
-            link $0, catfile($shim_dir, $_);
+            symlink $0, catfile($shim_dir, $_);
         }
     }
 }
