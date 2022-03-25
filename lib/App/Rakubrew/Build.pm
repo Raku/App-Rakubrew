@@ -213,8 +213,8 @@ sub build_zef {
     } else {
         run "$GIT checkout master";
     }
-    run get_raku($version) . " -Ilib bin/zef test .";
-    run get_raku($version) . " -Ilib bin/zef --/test --force install .";
+    run get_raku($version) . " -I. bin/zef test .";
+    run get_raku($version) . " -I. bin/zef --/test --force install .";
 }
 
 sub _update_git_reference {
