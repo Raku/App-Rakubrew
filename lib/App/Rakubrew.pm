@@ -276,14 +276,14 @@ EOL
             exit 1;
         }
 
-        App::Rakubrew::Download::download_precomp_archive($impl, $ver);
+        my $name = App::Rakubrew::Download::download_precomp_archive($impl, $ver);
 
         # Might have new executables now -> rehash
         rehash();
         if (get_version() eq 'system') {
-            set_global_version("$impl-$ver");
+            set_global_version("$name");
         }
-        say "Done, $impl-$ver installed";
+        say "Done, $name installed";
     } elsif ($arg eq 'register') {
         my ($name, $path) = @args[0 .. 1];
         if (!$name || !$path) {

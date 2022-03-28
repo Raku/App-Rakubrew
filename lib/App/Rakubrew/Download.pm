@@ -24,14 +24,6 @@ my $download_url_prefix = 'https://rakudo.org/dl/rakudo/';
 sub download_precomp_archive {
     my ($impl, $ver) = @_;
 
-    my $name = "$impl-$ver";
-
-    chdir $versions_dir;
-    if (-d $name) {
-        say STDERR "$name is already installed.";
-        exit 1;
-    }
-
     my $ht = HTTP::Tinyish->new();
 
     my @matching_releases = grep {
@@ -44,6 +36,18 @@ sub download_precomp_archive {
     }
     if ($ver && @matching_releases > 1) {
         say STDERR 'Multiple releases found for your architecture. Don\'t know what to install. This shouldn\'t happen.';
+        exit 1;
+    }
+
+    if (!$ver) {
+        $ver = $matching_releases[0]->{ver};
+    }
+
+    my $name = "$impl-$ver";
+
+    chdir $versions_dir;
+    if (-d $name) {
+        say STDERR "$name is already installed.";
         exit 1;
     }
 
@@ -82,6 +86,8 @@ sub download_precomp_archive {
     dirmove($rakudo_dir, '.');
     rmdir($rakudo_dir);
     chdir $back;
+
+    return $name;
 }
 
 sub available_precomp_archives {
