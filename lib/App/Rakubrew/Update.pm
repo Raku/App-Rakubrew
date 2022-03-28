@@ -19,6 +19,7 @@ use if scalar ($^O =~ /win32/i), 'Win32::ShellQuote';
 use App::Rakubrew;
 use App::Rakubrew::Variables;
 use App::Rakubrew::Config;
+use App::Rakubrew::Tools;
 
 my $release_index_url   = 'https://rakubrew.org/releases';
 my $download_url_prefix = 'https://rakubrew.org';
@@ -137,8 +138,35 @@ sub internal_update {
         exit 1;
     }
 
+    if ($old_version < 28) {
+        # Change Github URLs to use the https instead of the git protocol.
+        my @repos;
+
+        for my $dir ($git_reference, $versions_dir) {
+            opendir(my $dh, $dir);
+            push @repos, map({ catdir($dir, $_) } grep({ /^[^.]/ } readdir($dh)));
+            closedir($dh);
+        }
+
+        for my $repo (@repos) {
+            $repo = catdir($repo, '.git') if -d catdir($repo, '.git');
+            my $config_file = catfile($repo, 'config');
+            if (-f $config_file) {
+                print "Updating Github repository URLs in $config_file...";
+                my $content = slurp($config_file);
+                my $replaced = ($content =~ s|^(\s* url \s* = \s*) git (://github\.com/)|$1https$2|gmx);
+                if ($replaced) {
+                    spurt($config_file, $content);
+                    say "done";
+                }
+                else {
+                    say "nothing to be done";
+                }
+            }
+        }
+    }
     # custom update procedures
-    #if ($old_version < 2) {
+    #elsif ($old_version < 2) {
     #    Do update stuff for version 2.
     #}
 
