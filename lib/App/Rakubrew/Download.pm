@@ -32,6 +32,7 @@ sub download_precomp_archive {
 
     if (!@matching_releases) {
         say STDERR 'Couldn\'t find a precomp release for OS: "' . _my_platform() . '", architecture: "' . _my_arch() . '"' . ($ver ? (', version: "' . $ver . '"') : '');
+        say STDERR 'You can try building yourself. Use the `rakubrew build` command to do so.';
         exit 1;
     }
     if ($ver && @matching_releases > 1) {
