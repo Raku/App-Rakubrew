@@ -49,7 +49,7 @@ Release Guide
 
     tar -czv --owner=0 --group=0 --numeric-owner -f rakubrew-2.tgz 2
     scp rakubrew-2.tgz $USER@raku-infra-fsn1-03.rakulang.site:~
-    ssh $USER@raku-infra-fsn1-03.rakulang.site 'sudo echo tar -C /data/dockervolume/rakubrew.org/releases -xzf ~/rakubrew-2.tgz'
+    ssh $USER@raku-infra-fsn1-03.rakulang.site 'sudo tar -C /data/dockervolume/rakubrew.org/releases -xzf ~/rakubrew-2.tgz'
 
 - Verify that the new version is displayed on <https://rakubrew.org/>.
 
