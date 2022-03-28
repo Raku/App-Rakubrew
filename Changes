@@ -147,3 +147,13 @@
     - Switch shims to use `symlink` instead of `link` on *nix. That should
       allow for having the shims on a different partition from the rakubrew
       executable.
+
+28
+    - Be correcter and more robust when building zef on older Rakudo versions
+      by using `-I.` instead of `-Ilib`.
+    - Correctly set the versions name when using `download` without an explicit
+      version number.
+    - Fix `download` command to pick the correct version, even when some older
+      version has a higher build revision number.
+    - Upgrade Github URLs in existing repositories to not use the disabled
+      `git` protocol.
