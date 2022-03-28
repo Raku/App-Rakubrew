@@ -145,6 +145,7 @@ sub _my_arch {
         $Config{archname} =~ /darwin/i && `sysctl -n machdep.cpu.brand_string` =~ /Intel/i ? 'x86_64' : # MacOS Intel
         $Config{archname} =~ /aarch64/i                           ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
         $Config{archname} =~ /arm-linux-gnueabihf/i               ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS
+        $Config{archname} =~ /s390x-linux/i                       ? 's390x'  :
         '';
 
     unless ($arch) {
