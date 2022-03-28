@@ -98,7 +98,7 @@ sub _retrieve_releases {
     my $ht = shift;
     my $release_index = _download_release_index($ht);
     my @matching_releases =
-        sort { $b->{build_rev} cmp $a->{build_rev} }
+        sort { $b->{ver} cmp $a->{ver} }
         grep {
                $_->{name}     eq 'rakudo'
             && $_->{type}     eq 'archive'
