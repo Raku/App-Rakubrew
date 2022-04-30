@@ -138,7 +138,8 @@ sub internal_update {
         exit 1;
     }
 
-    if ($old_version < 28) {
+    # custom update procedures
+    if ($old_version < 29) {
         # Change Github URLs to use the https instead of the git protocol.
         my @repos;
 
@@ -147,6 +148,7 @@ sub internal_update {
             push @repos, map({ catdir($dir, $_) } grep({ /^[^.]/ } readdir($dh)));
             closedir($dh);
         }
+        push @repos, $zef_dir;
 
         for my $repo (@repos) {
             $repo = catdir($repo, '.git') if -d catdir($repo, '.git');
@@ -165,8 +167,7 @@ sub internal_update {
             }
         }
     }
-    # custom update procedures
-    #elsif ($old_version < 2) {
+    #if ($old_version < 2) {
     #    Do update stuff for version 2.
     #}
 
