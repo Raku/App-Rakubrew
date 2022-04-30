@@ -157,3 +157,10 @@
       version has a higher build revision number.
     - Upgrade Github URLs in existing repositories to not use the disabled
       `git` protocol.
+
+29
+    - Upgrade Github URL in the zef repository as well. Missed it in the last
+      update.
+    - Detect S390 architecture.
+    - Hint at the `build` command, when no precompiled release is available.
+
