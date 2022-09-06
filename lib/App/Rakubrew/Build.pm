@@ -197,7 +197,7 @@ sub build_zef {
 
     if (-d $zef_dir) {
         chdir $zef_dir;
-        run "$GIT checkout -f -q master && git reset --hard HEAD && $GIT pull -q";
+        run "$GIT checkout -f -q main && git reset --hard HEAD && $GIT pull -q";
     } else {
         run "$GIT clone $git_repos{zef} $zef_dir";
         chdir $zef_dir;
@@ -211,7 +211,7 @@ sub build_zef {
     if ( $zef_version ) {
         run "$GIT checkout tags/$zef_version";
     } else {
-        run "$GIT checkout master";
+        run "$GIT checkout main";
     }
     run get_raku($version) . " -I. bin/zef test .";
     run get_raku($version) . " -I. bin/zef --/test --force install .";
