@@ -164,3 +164,6 @@
     - Detect S390 architecture.
     - Hint at the `build` command, when no precompiled release is available.
 
+30
+    - Update zef default branch name from master to main.
+
