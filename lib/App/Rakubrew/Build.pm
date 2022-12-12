@@ -76,7 +76,7 @@ sub available_rakudos {
     my @tags = grep(m{refs/tags/([^\^]+)\^\{\}}, @output);
     @tags = map(m{tags/([^\^]+)\^}, @tags);
     @tags = grep(/^\d/, @tags);
-    return sort(@tags), 'master';
+    return sort(@tags), 'main';
 }
 
 sub build_impl {
@@ -85,7 +85,7 @@ sub build_impl {
     _check_build_dependencies();
 
     my $name = "$impl-$ver";
-    $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
+    $name = $impl if $impl eq 'moar-blead' && $ver eq 'main';
 
     if (version_exists($name) && is_registered_version($name)) {
         say STDERR "$name is a registered version. I'm not going to touch it.";

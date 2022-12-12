@@ -167,3 +167,5 @@
 30
     - Update zef default branch name from master to main.
 
+31
+    - Track the master -> main branch rename in rakudo.

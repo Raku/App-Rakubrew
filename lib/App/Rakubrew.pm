@@ -238,7 +238,7 @@ EOL
             }
 
             my $name = "$impl-$ver";
-            $name = $impl if $impl eq 'moar-blead' && $ver eq 'master';
+            $name = $impl if $impl eq 'moar-blead' && $ver eq 'main';
 
             if ($impl && $impl eq 'all') {
                 for (App::Rakubrew::Variables::available_backends()) {

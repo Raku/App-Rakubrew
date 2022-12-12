@@ -258,7 +258,7 @@ sub match_version {
             . join('|', App::Rakubrew::Variables::available_backends())
             . ')-(.+)';
         if ($impl eq 'moar-blead') {
-            $ver = 'master';
+            $ver = 'main';
         }
         elsif ($impl =~ /$combined_regex/) {
             $impl = $1;
