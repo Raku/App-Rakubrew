@@ -169,3 +169,6 @@
 
 31
     - Track the master -> main branch rename in rakudo.
+
+32
+    - Change master -> main also in moar-blead.
