@@ -157,7 +157,7 @@ The backend
 
 =item *
 
-C<moar-blead> is the moar and nqp backends at the master branch.
+C<moar-blead> is the moar and nqp backends at the main branch.
 
 =item *
 
