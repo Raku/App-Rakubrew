@@ -172,3 +172,6 @@
 
 32
     - Change master -> main also in moar-blead.
+
+33
+    - Fix `moar-blead` command. Moar didn't change branch names.
