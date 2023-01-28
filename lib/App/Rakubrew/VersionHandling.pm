@@ -143,6 +143,9 @@ sub set_global_version {
     my $version = shift;
     my $silent = shift;
     verify_version($version);
+    my $last = -e catfile($prefix, 'CURRENT') ? slurp(catfile($prefix, 'CURRENT')) : 'system';
+    chomp $last;
+    spurt(catfile($prefix, 'LAST'), $last);
     say "Switching to $version" unless $silent;
     spurt(catfile($prefix, 'CURRENT'), $version);
 }
