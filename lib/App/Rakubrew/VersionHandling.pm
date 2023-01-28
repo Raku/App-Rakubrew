@@ -11,7 +11,7 @@ our @EXPORT = qw(
     get_version_path clean_version_path
     get_shell_version
     get_local_version set_local_version
-    get_global_version set_global_version
+    get_global_version set_global_version toggle_global_version
     set_brew_mode get_brew_mode get_brew_mode_shell validate_brew_mode
     get_raku
     which whence
@@ -148,6 +148,12 @@ sub set_global_version {
     spurt(catfile($prefix, 'LAST'), $last);
     say "Switching to $version" unless $silent;
     spurt(catfile($prefix, 'CURRENT'), $version);
+}
+
+sub toggle_global_version {
+    my $last =  slurp(catfile($prefix, 'LAST'));
+    chomp $last;
+    set_global_version($last);
 }
 
 sub get_version {
