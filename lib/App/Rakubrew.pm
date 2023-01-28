@@ -116,12 +116,17 @@ EOL
 
     } elsif ($arg eq 'global' || $arg eq 'switch') {
         if (!@args) {
-            my $version = get_global_version();
-            if ($version) {
-                say $version;
+            if ($arg eq 'switch') {
+                toggle_global_version();
             }
             else {
-                say "$brew_name: no global version configured";
+                my $version = get_global_version();
+                if ($version) {
+                    say $version;
+                }
+                else {
+                    say "$brew_name: no global version configured";
+                }
             }
         }
         else {
