@@ -6,7 +6,7 @@ shims/*
 git_reference/
 download/*
 strawberry/*
-perl-darwin-2level/*
+perl-darwin-*/*
 
 fatpacker.trace
 packlists

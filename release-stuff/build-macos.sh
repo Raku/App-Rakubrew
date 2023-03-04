@@ -33,6 +33,12 @@ rreadlink() (
 EXEC=$(rreadlink "$0")
 DIR=$(dirname -- "$EXEC")
 
+ARCH=$(uname -m)
+if [[ $ARCH != "arm64" ]]; then
+  # ARCH is probably x86_64 here, but the download links for that arch
+  # contain the string 'amd64'.
+  ARCH="amd64"
+fi
 
 # ============================================
 # Actual script starts here
@@ -44,11 +50,11 @@ if ! [ -d download ]; then
     mkdir download
 fi
 unset PERL5LIB
-if ! [ -d $DIR/../perl-darwin-2level ]; then
-    curl -L -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.26.1.1/perl-darwin-2level.tar.gz
+if ! [ -d $DIR/../perl-darwin-$ARCH ]; then
+    curl -L -o download/perl-precomp.tar.gz https://github.com/skaji/relocatable-perl/releases/download/5.36.0.1/perl-darwin-$ARCH.tar.gz
     tar -xzf download/perl-precomp.tar.gz
 fi
-export PATH=$DIR/../perl-darwin-2level/bin:$PATH
+export PATH=$DIR/../perl-darwin-$ARCH/bin:$PATH
 
 # Prepare Config.pm
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
