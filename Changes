@@ -175,3 +175,8 @@
 
 33
     - Fix `moar-blead` command. Moar didn't change branch names.
+
+34
+    - More detailed error reporting in `download` s unzip on Windows.
+    - Provide a MacOS on ARM build of Rakubrew.
+
