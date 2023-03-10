@@ -180,3 +180,5 @@
     - More detailed error reporting in `download` s unzip on Windows.
     - Provide a MacOS on ARM build of Rakubrew.
 
+35
+    - Remove trash files from CPAN release.
