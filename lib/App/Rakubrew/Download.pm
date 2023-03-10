@@ -225,7 +225,7 @@ sub _unzip {
     }
 
     if ($status < 0) {
-        say STDERR "Failed to extract archive.";
+        say STDERR "Failed to extract archive. Error: $UnzipError";
         exit 1;
     }
 }
