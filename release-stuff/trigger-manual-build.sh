@@ -60,6 +60,7 @@ https://circleci.com/api/v2/project/gh/Raku/App-Rakubrew/pipeline
 REMOTE_PATH=/Users/administrator/repos/App-Rakubrew
 ssh administrator@207.254.31.127 "\
     rm $REMOTE_PATH/rakubrew;\
+    git -C $REMOTE_PATH pull &&\
     $REMOTE_PATH/release-stuff/build-macos.sh"
 
 scp administrator@207.254.31.127:$REMOTE_PATH/rakubrew $DIR/../rakubrew_macos_arm
