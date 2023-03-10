@@ -33,14 +33,18 @@ Release Guide
 - Click on the "manual-zip-results" job, select the "Artifacts" tab and
   download the shown file.
 - Unzip the file.
+- The MacOS ARM build should have created a `rakubrew_macos_arm` file. Copy
+  that file to `macos_arm/rakubrew`.
 - Add a "changes" file, do so by copying the `Changes` file to `changes` and
   deleting everything except for the entries for the last release. Don't
   include the version number and remove leading spaces.
+- Add the 
 - The final directory structure should look as follows:
 
     /2/changes
     /2/perl/rakubrew
     /2/macos/rakubrew
+    /2/macos_arm/rakubrew
     /2/win/rakubrew.exe
 
 - Upload that folder to the webserver and put it in the releases folder. Here
