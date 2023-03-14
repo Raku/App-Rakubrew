@@ -25,9 +25,10 @@ my $release_index_url   = 'https://rakubrew.org/releases';
 my $download_url_prefix = 'https://rakubrew.org';
 
 my %dl_urls = (
-    fatpack => "$download_url_prefix/perl/rakubrew",
-    win     => "$download_url_prefix/win/rakubrew.exe",
-    macos   => "$download_url_prefix/macos/rakubrew",
+    fatpack   => "$download_url_prefix/perl/rakubrew",
+    win       => "$download_url_prefix/win/rakubrew.exe",
+    macos     => "$download_url_prefix/macos/rakubrew",
+    macos_arm => "$download_url_prefix/macos_arm/rakubrew",
 );
 
 sub update {

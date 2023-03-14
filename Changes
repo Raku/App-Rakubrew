@@ -182,3 +182,12 @@
 
 35
     - Remove trash files from CPAN release.
+
+36
+    - Fix `self-upgrade` on ARM MacOS.
+                                **IMPORTANT**
+      When you are on an ARM MacOS and use the new ARM build of Rakubrew, this
+      update *WILL* break your installation (Rakubrew will install an x86_64
+      build). To work around this misery you need to manually do the update by
+      downloading https://rakubrew.org/macos_arm/rakubrew and replacing your
+      instance with it (usually located in `~/.rakubrew/bin/rakubrew`).

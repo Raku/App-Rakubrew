@@ -34,10 +34,12 @@ EXEC=$(rreadlink "$0")
 DIR=$(dirname -- "$EXEC")
 
 ARCH=$(uname -m)
+DISTRO_FORMAT="macos_arm"
 if [[ $ARCH != "arm64" ]]; then
   # ARCH is probably x86_64 here, but the download links for that arch
   # contain the string 'amd64'.
   ARCH="amd64"
+  DISTRO_FORMAT="macos"
 fi
 
 # ============================================
@@ -58,7 +60,7 @@ export PATH=$DIR/../perl-darwin-$ARCH/bin:$PATH
 
 # Prepare Config.pm
 cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
-perl -pi -E 's/<\%distro_format\%>/macos/' lib/App/Rakubrew/Config.pm
+perl -pi -E "s/<\%distro_format\%>/$DISTRO_FORMAT/" lib/App/Rakubrew/Config.pm
 
 # Install dependencies
 cpanm -n PAR::Packer
