@@ -57,7 +57,7 @@ curl \
 https://circleci.com/api/v2/project/gh/Raku/App-Rakubrew/pipeline
 
 # Do the MacOS Arm build
-rm -r $DIR/macos_arm
+rm -r $DIR/macos_arm || true
 mkdir $DIR/macos_arm
 REMOTE_PATH=/Users/administrator/repos/App-Rakubrew
 ssh administrator@207.254.31.127 "\
@@ -65,4 +65,4 @@ ssh administrator@207.254.31.127 "\
     git -C $REMOTE_PATH pull &&\
     $REMOTE_PATH/release-stuff/build-macos.sh"
 
-scp administrator@207.254.31.127:$REMOTE_PATH/rakubrew $DIR/../macos_arm/rakubrew
+scp administrator@207.254.31.127:$REMOTE_PATH/rakubrew $DIR/macos_arm/rakubrew
