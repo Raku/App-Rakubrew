@@ -38,7 +38,6 @@ Release Guide
 - Add a "changes" file, do so by copying the `Changes` file to `changes` and
   deleting everything except for the entries for the last release. Don't
   include the version number and remove leading spaces.
-- Add the 
 - The final directory structure should look as follows:
 
     /2/changes
