@@ -1,6 +1,9 @@
 Release Guide
 =============
 
+This guide has been turned into a shell script: `do-release.sh`. The guide is
+thus obsolete.
+
 - Write a summary of the changes in `Changes`
 - Bump version in `lib/App/Rakubrew.pm`
 - `dzil regenerate` - Update regenerated files
