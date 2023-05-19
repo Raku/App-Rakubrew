@@ -35,6 +35,7 @@ rreadlink() (
 EXEC=$(rreadlink "$0")
 DIR=$(dirname -- "$EXEC")
 
+cd $DIR
 
 ###############################################################################
 # Retrieve command line arguments
