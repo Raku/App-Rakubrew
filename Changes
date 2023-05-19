@@ -191,3 +191,6 @@
       build). To work around this misery you need to manually do the update by
       downloading https://rakubrew.org/macos_arm/rakubrew and replacing your
       instance with it (usually located in `~/.rakubrew/bin/rakubrew`).
+
+37
+    - Change master -> main in MoarVM as well.

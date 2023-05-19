@@ -68,7 +68,7 @@ our %impls = (
     'moar-blead' => {
         name      => "moar-blead",
         weight    => 35,
-        configure => "$PERL5 Configure.pl --backends=moar --gen-moar=master --gen-nqp=main --make-install",
+        configure => "$PERL5 Configure.pl --backends=moar --gen-moar=main --gen-nqp=main --make-install",
         need_repo => ['rakudo', 'nqp', 'MoarVM'],
     },
 );
