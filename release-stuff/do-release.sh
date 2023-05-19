@@ -74,7 +74,7 @@ git tag v$VERSION
 ###############################################################################
 # Upload to Git server
 
-git push origin master v$VERSION
+git push origin main v$VERSION
 
 ###############################################################################
 # CPAN release
@@ -110,7 +110,7 @@ scp $ARM_MAC_SSH_CON:$ARM_MAC_REMOTE_PATH/rakubrew $DIR/macos_arm/rakubrew
 ###############################################################################
 # Prompt user for CircleCI build files
 rm rakubrew.tgz || true
-echo "Build started. Now look at https://circleci.com/gh/Raku/workflows/App-Rakubrew/tree/master"
+echo "Build started. Now look at https://circleci.com/gh/Raku/workflows/App-Rakubrew/tree/main"
 echo "wait for completion and download the $CIRCLECI_BUILD_FILE release artifact and place it in the release-stuff/$CIRCLECI_BUILD_FILE folder."
 read -p "Then continue the build here. Press y to continue."
 while true
