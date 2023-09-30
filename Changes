@@ -194,3 +194,7 @@
 
 37
     - Change master -> main in MoarVM as well.
+
+38
+    - On some MacOSes the `sysctl` executable is not in path. Try more places
+      to find it. This should fix `download` on such OSes.

@@ -14,6 +14,7 @@ use IO::Uncompress::Unzip qw( $UnzipError );
 use File::Path qw( make_path remove_tree );
 use File::Copy::Recursive qw( dirmove );
 use File::Spec::Functions qw( updir splitpath catfile catdir );
+use File::Which qw();
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
@@ -136,22 +137,37 @@ sub _my_platform {
 }
 
 sub _my_arch {
-    my $arch =
-        $Config{archname} =~ /x64/i                               ? 'x86_64' :
-        $Config{archname} =~ /x86_64/i                            ? 'x86_64' :
-        $Config{archname} =~ /amd64/i                             ? 'x86_64' :
-        $Config{archname} =~ /x86/i                               ? 'x86'    :
-        $Config{archname} =~ /i686/i                              ? 'x86'    :
-        $Config{archname} =~ /darwin/i && `sysctl -n machdep.cpu.brand_string` =~ /Apple/i ? 'arm64'  : # MacOS M1 / Apple Silicon
-        $Config{archname} =~ /darwin/i && `sysctl -n machdep.cpu.brand_string` =~ /Intel/i ? 'x86_64' : # MacOS Intel
-        $Config{archname} =~ /aarch64/i                           ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
-        $Config{archname} =~ /arm-linux-gnueabihf/i               ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS
-        $Config{archname} =~ /s390x-linux/i                       ? 's390x'  :
-        '';
+    my $arch;
+    my $mac_brand_string;
+    if ($Config{archname} =~ /darwin/i) {
+        # Some MacOS' have sysctl in /usr/sbin/ and that dir not in path.
+        # Seems to be the case at least on Ventura 13.5.1
+        # See https://github.com/Raku/App-Rakubrew/issues/77
+        my @mac_sysctls = File::Which::which('sysctl');
+        my $mac_sysctl = $mac_sysctls[0] // '/usr/sbin/sysctl';
+        $mac_brand_string = `$mac_sysctl -n machdep.cpu.brand_string`;
+        $arch =
+            $mac_brand_string =~ /Apple/i ? 'arm64'  : # MacOS M1 / Apple Silicon
+            $mac_brand_string =~ /Intel/i ? 'x86_64' : # MacOS Intel
+            '';
+    }
+    else {
+        $arch =
+            $Config{archname} =~ /x64/i                               ? 'x86_64' :
+            $Config{archname} =~ /x86_64/i                            ? 'x86_64' :
+            $Config{archname} =~ /amd64/i                             ? 'x86_64' :
+            $Config{archname} =~ /x86/i                               ? 'x86'    :
+            $Config{archname} =~ /i686/i                              ? 'x86'    :
+            $Config{archname} =~ /aarch64/i                           ? 'arm64'  : # e.g. Raspi >= 2.1 with 64bit OS
+            $Config{archname} =~ /arm-linux-gnueabihf/i               ? 'armhf'  : # e.g. Raspi >= 2, with 32bit OS
+            $Config{archname} =~ /s390x-linux/i                       ? 's390x'  :
+            '';
+    }
 
     unless ($arch) {
         say STDERR 'Couldn\'t detect system architecture. Current arch is: ' . $Config{archname};
         say STDERR 'Current uname -a is: ' . `uname -a`;
+        say STDERR 'Current machdep.cpu.brand_string is: ' . $mac_brand_string if $mac_brand_string;
         exit 1;
     }
     return $arch;
