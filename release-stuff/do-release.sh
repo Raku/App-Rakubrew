@@ -55,7 +55,7 @@ CIRCLECI_BUILD_FILE=rakubrew.tgz
 SERVER_RELEASE_DIR=/data/dockervolume/rakubrew.org/releases
 ARM_MAC_REMOTE_PATH=/Users/administrator/repos/App-Rakubrew
 
-echo 
+echo
 read -p "Did you write the changes in Changes? [YyNn]" -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -136,6 +136,16 @@ perl -ni -e "BEGIN {my \$p=0;}  if (/^$VERSION\$/){\$p=1} elsif (/^\\d+\$/){\$p=
 
 ###############################################################################
 # Deploy to the server
+
+echo
+read -p "Deploy to server? [YyNn]" -n 1 -r
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Exitting"
+    exit 1
+fi
+
+
 REL_FILE=rakubrew-$VERSION.tgz
 tar -czv --owner=0 --group=0 --numeric-owner -f $REL_FILE $VERSION
 scp $REL_FILE $RAKUBREW_SERVER_SSH_CON:~
