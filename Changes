@@ -198,3 +198,5 @@
 38
     - On some MacOSes the `sysctl` executable is not in path. Try more places
       to find it. This should fix `download` on such OSes.
+    - Fix `download` on Windows (when the user doesn't happen to have
+      Strawberry Perl installed.)

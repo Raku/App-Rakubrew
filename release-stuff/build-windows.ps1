@@ -50,7 +50,7 @@ cp resources/Config.pm.tmpl lib/App/Rakubrew/Config.pm
 perl -pi -E 's/<\%distro_format\%>/win/' lib/App/Rakubrew/Config.pm
 CheckLastExitCode
 
-cpanm -n PAR::Packer
+cpanm -n PAR::Packer@1.057
 CheckLastExitCode
 
 cpanm --installdeps -n .
@@ -59,7 +59,7 @@ CheckLastExitCode
 cpanm --installdeps -n --cpanfile cpanfile.win .
 CheckLastExitCode
 
-pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -o rakubrew.exe script/rakubrew
+pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -l C:\Strawberry\c\bin\libcrypto-1_1-x64__.dll -l C:\Strawberry\c\bin\libssl-1_1-x64__.dll -l C:\Strawberry\c\bin\zlib1__.dll -o rakubrew.exe script/rakubrew
 CheckLastExitCode
 
 # Reset our modified Config.pm again.
