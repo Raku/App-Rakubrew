@@ -1,3 +1,4 @@
-requires 'Win32::Process'    => '0.16';
-requires 'Win32::ShellQuote' => '0.003001';
+requires 'Win32::Process'    => '== 0.17';
+requires 'Win32::ShellQuote' => '== 0.003001';
+# Intentionally not fixed. Will use the one Strawberry provides.
 requires 'IO::Socket::SSL'   => '2.067';
