@@ -49,10 +49,11 @@ fi
 
 VERSION=$1
 TOKEN=$2
-RAKUBREW_SERVER_SSH_CON=$USER@raku-infra-fsn1-03.rakulang.site
+RAKUBREW_SERVER_SSH_CON=rakubrew.org@trinity.raku.org
+RAKUBREW_SERVER_SSH_PORT=222
 ARM_MAC_SSH_CON=administrator@207.254.31.127
 CIRCLECI_BUILD_FILE=rakubrew.tgz
-SERVER_RELEASE_DIR=/data/dockervolume/rakubrew.org/releases
+SERVER_RELEASE_DIR=/home/rakubrew.org/rakubrew.org/releases
 ARM_MAC_REMOTE_PATH=/Users/administrator/repos/App-Rakubrew
 
 echo
@@ -148,8 +149,8 @@ fi
 
 REL_FILE=rakubrew-$VERSION.tgz
 tar -czv --owner=0 --group=0 --numeric-owner -f $REL_FILE $VERSION
-scp $REL_FILE $RAKUBREW_SERVER_SSH_CON:~
-ssh $RAKUBREW_SERVER_SSH_CON "sudo tar -C $SERVER_RELEASE_DIR -xzf ~/$REL_FILE && rm ~/$REL_FILE"
+scp -P$RAKUBREW_SERVER_SSH_PORT $REL_FILE $RAKUBREW_SERVER_SSH_CON:~
+ssh -p$RAKUBREW_SERVER_SSH_PORT $RAKUBREW_SERVER_SSH_CON "tar -C $SERVER_RELEASE_DIR -xzf ~/$REL_FILE && rm ~/$REL_FILE"
 
 ###############################################################################
 # Clean up
