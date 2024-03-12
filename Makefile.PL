@@ -4,13 +4,13 @@ use warnings;
 
 use 5.010001;
 
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker 7.1101;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Raku environment manager",
   "AUTHOR" => "Patrick B\x{f6}ker <patrickb\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => 0
+    "ExtUtils::MakeMaker" => "7.1101"
   },
   "DISTNAME" => "App-Rakubrew",
   "EXE_FILES" => [
@@ -20,23 +20,22 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.010001",
   "NAME" => "App::Rakubrew",
   "PREREQ_PM" => {
-    "Encode::Locale" => "1.05",
-    "File::Copy::Recursive" => "0.45",
-    "File::HomeDir" => "0.97",
-    "File::Which" => "1.23",
-    "HTTP::Tinyish" => "0.15",
-    "JSON" => "4.02",
-    "Path::Tiny" => 0,
-    "Try::Tiny" => "0.30"
+    "Encode::Locale" => "== 1.05",
+    "File::Copy::Recursive" => "== 0.45",
+    "File::HomeDir" => "== 1.006",
+    "File::Which" => "== 1.27",
+    "HTTP::Tinyish" => "== 0.19",
+    "JSON" => "== 4.10",
+    "Try::Tiny" => "== 0.31"
   },
   "TEST_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
-    "IPC::Run" => "20200505.0",
-    "Test::Compile" => "2.3.1",
+    "IPC::Run" => "== 20231003.0",
+    "Test::Compile" => "== v3.3.1",
     "Test::More" => 0
   },
-  "VERSION" => 37,
+  "VERSION" => 38,
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -44,19 +43,18 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Encode::Locale" => "1.05",
+  "Encode::Locale" => "== 1.05",
   "ExtUtils::MakeMaker" => 0,
-  "File::Copy::Recursive" => "0.45",
-  "File::HomeDir" => "0.97",
+  "File::Copy::Recursive" => "== 0.45",
+  "File::HomeDir" => "== 1.006",
   "File::Spec" => 0,
-  "File::Which" => "1.23",
-  "HTTP::Tinyish" => "0.15",
-  "IPC::Run" => "20200505.0",
-  "JSON" => "4.02",
-  "Path::Tiny" => 0,
-  "Test::Compile" => "2.3.1",
+  "File::Which" => "== 1.27",
+  "HTTP::Tinyish" => "== 0.19",
+  "IPC::Run" => "== 20231003.0",
+  "JSON" => "== 4.10",
+  "Test::Compile" => "== v3.3.1",
   "Test::More" => 0,
-  "Try::Tiny" => "0.30"
+  "Try::Tiny" => "== 0.31"
 );
 
 
@@ -71,8 +69,8 @@ delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
 
 if ( $^O eq 'MSWin32' ) {
 	$WriteMakefileArgs{PREREQ_PM}{'IO::Socket::SSL'} = $FallbackPrereqs{'IO::Socket::SSL'} = '2.067';
-	$WriteMakefileArgs{PREREQ_PM}{'Win32::Process'} = $FallbackPrereqs{'Win32::Process'} = '0.16';
-	$WriteMakefileArgs{PREREQ_PM}{'Win32::ShellQuote'} = $FallbackPrereqs{'Win32::ShellQuote'} = '0.003001';
+	$WriteMakefileArgs{PREREQ_PM}{'Win32::Process'} = $FallbackPrereqs{'Win32::Process'} = '== 0.17';
+	$WriteMakefileArgs{PREREQ_PM}{'Win32::ShellQuote'} = $FallbackPrereqs{'Win32::ShellQuote'} = '== 0.003001';
 }
 
 if ( $^O eq 'darwin' ) {

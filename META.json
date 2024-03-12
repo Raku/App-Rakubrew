@@ -26,7 +26,7 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "ExtUtils::MakeMaker" : "7.1101"
          }
       },
       "develop" : {
@@ -40,14 +40,13 @@
       },
       "runtime" : {
          "requires" : {
-            "Encode::Locale" : "1.05",
-            "File::Copy::Recursive" : "0.45",
-            "File::HomeDir" : "0.97",
-            "File::Which" : "1.23",
-            "HTTP::Tinyish" : "0.15",
-            "JSON" : "4.02",
-            "Path::Tiny" : "0",
-            "Try::Tiny" : "0.30",
+            "Encode::Locale" : "== 1.05",
+            "File::Copy::Recursive" : "== 0.45",
+            "File::HomeDir" : "== 1.006",
+            "File::Which" : "== 1.27",
+            "HTTP::Tinyish" : "== 0.19",
+            "JSON" : "== 4.10",
+            "Try::Tiny" : "== 0.31",
             "perl" : "5.010001"
          }
       },
@@ -58,8 +57,8 @@
          "requires" : {
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "IPC::Run" : "20200505.0",
-            "Test::Compile" : "v2.3.1",
+            "IPC::Run" : "== 20231003.0",
+            "Test::Compile" : "== v3.3.1",
             "Test::More" : "0"
          }
       }
@@ -67,67 +66,67 @@
    "provides" : {
       "App::Rakubrew" : {
          "file" : "lib/App/Rakubrew.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Build" : {
          "file" : "lib/App/Rakubrew/Build.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Config" : {
          "file" : "lib/App/Rakubrew/Config.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Download" : {
          "file" : "lib/App/Rakubrew/Download.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell" : {
          "file" : "lib/App/Rakubrew/Shell.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Bash" : {
          "file" : "lib/App/Rakubrew/Shell/Bash.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Cmd" : {
          "file" : "lib/App/Rakubrew/Shell/Cmd.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Fish" : {
          "file" : "lib/App/Rakubrew/Shell/Fish.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::PowerShell" : {
          "file" : "lib/App/Rakubrew/Shell/PowerShell.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Sh" : {
          "file" : "lib/App/Rakubrew/Shell/Sh.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Tcsh" : {
          "file" : "lib/App/Rakubrew/Shell/Tcsh.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Shell::Zsh" : {
          "file" : "lib/App/Rakubrew/Shell/Zsh.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Tools" : {
          "file" : "lib/App/Rakubrew/Tools.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Update" : {
          "file" : "lib/App/Rakubrew/Update.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::Variables" : {
          "file" : "lib/App/Rakubrew/Variables.pm",
-         "version" : "37"
+         "version" : "38"
       },
       "App::Rakubrew::VersionHandling" : {
          "file" : "lib/App/Rakubrew/VersionHandling.pm",
-         "version" : "37"
+         "version" : "38"
       }
    },
    "release_status" : "stable",
@@ -142,7 +141,7 @@
          "web" : "https://github.com/Raku/App-Rakubrew"
       }
    },
-   "version" : "37",
+   "version" : "38",
    "x_generated_by_perl" : "v5.34.0",
    "x_serialization_backend" : "Cpanel::JSON::XS version 4.27",
    "x_spdx_expression" : "MIT"
