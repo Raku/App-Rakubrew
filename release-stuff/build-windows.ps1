@@ -33,9 +33,9 @@ mkdir -Force strawberry
 # Install Perl
 Remove-Item Env:PERL5LIB -ErrorAction Ignore
 
-$strawberry = "download/strawberry-perl-5.30.0.1-64bit.zip"
+$strawberry = "download/strawberry-perl-5.32.1.1-64bit.zip"
 If(!(test-path $strawberry)) {
-    Invoke-WebRequest http://strawberryperl.com/download/5.30.0.1/strawberry-perl-5.30.0.1-64bit.zip -OutFile $strawberry
+    Invoke-WebRequest http://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.zip -OutFile $strawberry
 }
 
 If(!(test-path "strawberry/README.txt")) {
@@ -59,7 +59,7 @@ CheckLastExitCode
 cpanm --installdeps -n --cpanfile cpanfile.win .
 CheckLastExitCode
 
-pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -l C:\Strawberry\c\bin\libcrypto-1_1-x64__.dll -l C:\Strawberry\c\bin\libssl-1_1-x64__.dll -l C:\Strawberry\c\bin\zlib1__.dll -o rakubrew.exe script/rakubrew
+pp -I lib -M App::Rakubrew:: -M HTTP::Tinyish:: -M IO::Socket::SSL -l C:\App-Rakubrew\strawberry\c\bin\libcrypto-1_1-x64__.dll -l C:\App-Rakubrew\strawberry\c\bin\libssl-1_1-x64__.dll -l C:\App-Rakubrew\strawberry\c\bin\zlib1__.dll -o rakubrew.exe script/rakubrew
 CheckLastExitCode
 
 # Reset our modified Config.pm again.
