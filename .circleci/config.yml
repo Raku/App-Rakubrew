@@ -30,7 +30,7 @@ jobs:
                 paths: rakubrew-perl
     build-macos:
         macos:
-            xcode: 13.2.1
+            xcode: 15.3.0
         steps:
             - checkout
             - run:
