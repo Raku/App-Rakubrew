@@ -200,3 +200,8 @@
       to find it. This should fix `download` on such OSes.
     - Fix `download` on Windows (when the user doesn't happen to have
       Strawberry Perl installed.)
+
+39
+    - Fix detection of x86 PowerShells. Before this change when calling
+      ´rakubrew init` on an x86 PowerShell, one would be presented with the
+      CMD installation instructions.

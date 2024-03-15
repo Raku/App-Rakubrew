@@ -38,7 +38,7 @@ sub detect_shell {
         # https://stackoverflow.com/a/8547234
         my $psmodpath = $ENV{PSMODULEPATH};
         my $userprofile = $ENV{USERPROFILE};
-        if (index($psmodpath, $userprofile) == 0) {
+        if (index($psmodpath, $userprofile) >= 0) {
             return 'PowerShell';
         }
         else {
