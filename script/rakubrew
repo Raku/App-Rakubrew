@@ -33,7 +33,7 @@ rakubrew - Raku environment manager
  rakubrew build-zef [<zef-version>]
  rakubrew download [<backend>] [<rakudo-version>]
 
- rakubrew exec <executable> [<executable-args>]
+ rakubrew exec [--with <version>] <executable> [<executable-args>]
  rakubrew which <executable>
  rakubrew whence [--path] <executable>
  rakubrew mode [env|shim]
@@ -204,9 +204,10 @@ Download and install a precompiled release archive.
 
 =head1 COMMAND: exec
 
-Usage: rakubrew exec <executable> [<executable-args>]
+Usage: rakubrew exec [--with <version>] <executable> [<executable-args>]
 
-Explicitly call an executable. You normally shouldn't need to do this.
+Explicitly call an executable. You normally shouldn't need to do this. You can
+optionally pass a version string to execute a command in a specific version.
 
 =head1 COMMAND: which
 
