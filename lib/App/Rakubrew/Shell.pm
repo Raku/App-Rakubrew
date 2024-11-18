@@ -225,6 +225,15 @@ sub get_completions {
         my $candidate = $words[1] // '';
         return $self->_filter_candidates($candidate, @versions);
     }
+    elsif($index == 1 && $words[0] eq 'exec') {
+        my $candidate = $words[1] // '';
+        return $self->_filter_candidates($candidate, '--with');
+    }
+    elsif($index == 2 && $words[0] eq 'exec' && $words[1] eq '--with') {
+        my @versions = get_versions();
+        my $candidate = $words[2] // '';
+        return $self->_filter_candidates($candidate, @versions);
+    }
     elsif($index == 1 && $words[0] eq 'build') {
         my $candidate = $words[1] // '';
         return $self->_filter_candidates($candidate, (App::Rakubrew::Variables::available_backends(), 'all'));
