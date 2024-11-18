@@ -323,8 +323,14 @@ EOL
         say "panda is discontinued; please use zef (rakubrew build-zef) instead";
 
     } elsif ($arg eq 'exec') {
-        my $prog_name = shift @args;
-        $self->do_exec($prog_name, \@args);
+        my $param = shift @args;
+        if $param eq '--with' {
+            my $version = shift @args;
+            $self->do_exec_with_version($version, $prog_name, \@args);
+        }
+        else {
+            $self->do_exec($param, \@args);
+        }
 
     } elsif ($arg eq 'which') {
         if (!@args) {
@@ -577,9 +583,13 @@ sub de_par_environment {
 }
 
 sub do_exec {
-    my ($self, $program, $args) = @_;
+    self->do_exec_with_version(get_version())
+}
 
-    my $target = which($program, get_version());
+sub do_exec_with_version {
+    my ($self, $version, $program, $args) = @_;
+
+    my $target = which($program, $version);
 
     # Undo PAR env modifications.
     # Only need to do this on MacOS, as only there

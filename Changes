@@ -205,3 +205,6 @@
     - Fix detection of x86 PowerShells. Before this change when calling
       ´rakubrew init` on an x86 PowerShell, one would be presented with the
       CMD installation instructions.
+
+40
+    - Implement `exec --with some-version`.
