@@ -324,8 +324,9 @@ EOL
 
     } elsif ($arg eq 'exec') {
         my $param = shift @args;
-        if $param eq '--with' {
+        if ($param eq '--with') {
             my $version = shift @args;
+            my $prog_name = shift @args;
             $self->do_exec_with_version($version, $prog_name, \@args);
         }
         else {
@@ -582,10 +583,6 @@ sub de_par_environment {
     delete $ENV{PAR_TEMP};
 }
 
-sub do_exec {
-    self->do_exec_with_version(get_version())
-}
-
 sub do_exec_with_version {
     my ($self, $version, $program, $args) = @_;
 
@@ -603,6 +600,11 @@ sub do_exec_with_version {
     # Run.
     exec { $target } ($target, @$args);
     die "Executing $target failed with: $!";
+}
+
+sub do_exec {
+    my ($self, $program, $args) = @_;
+    $self->do_exec_with_version(get_version(), $program, $args);
 }
 
 1;
