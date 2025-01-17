@@ -208,3 +208,6 @@
 
 40
     - Implement `exec --with some-version`.
+
+41
+    - Fix `build-zef` on Windows.

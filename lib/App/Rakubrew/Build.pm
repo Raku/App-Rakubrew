@@ -205,7 +205,9 @@ sub build_zef {
         if (!_verify_git_branch_exists('main')) {
             run "$GIT fetch -q origin main";
         }
-        run "$GIT checkout -f -q main && git reset --hard HEAD && $GIT pull -q";
+        run "$GIT checkout -f -q main";
+        run "$GIT reset --hard HEAD";
+        run "$GIT pull -q";
     } else {
         run "$GIT clone $git_repos{zef} $zef_dir";
         chdir $zef_dir;
