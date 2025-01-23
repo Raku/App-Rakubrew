@@ -214,3 +214,5 @@
 
 42
     - Hopefully improve PowerShell detection.
+    - In `init` tell users which shell was detected and how to correct it if it
+      was detected wrongly.

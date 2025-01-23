@@ -70,7 +70,7 @@ sub run_script {
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_shell_hook';
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_hooked';
         $shell = $args[1] if @args == 2 && $args[0] eq 'init';
-        $shell = $args[2] if @args == 2 && $args[0] eq 'init' && $args[1] eq '--shell';
+        $shell = $args[2] if @args == 3 && $args[0] eq 'init' && $args[1] eq '--shell';
         $self->{hook} = App::Rakubrew::Shell->initialize($shell);
     }
 
@@ -558,12 +558,21 @@ sub nuke {
 sub init {
     my $self = shift;
     my $brew_exec = catfile($RealBin, $brew_name);
-    if (@_) {
+    if (+@_ == 1) {
         # We have an argument. That has to be the shell.
         # We already retrieved the shell above, so no need to look at the passed argument here again.
         say $self->{hook}->get_init_code;
     }
     else {
+        my $shell = ref($self->{hook});
+        $shell =~ s/.+:://;
+        my $shell_text = join('|', App::Rakubrew::Shell->available_shells);
+    my $text = <<EOT;
+Your shell has been identified as $shell. If that's wrong, run
+
+  $brew_exec init --shell $shell_text
+EOT
+        say $text;
         say $self->{hook}->install_note;
     }
 }

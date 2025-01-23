@@ -69,6 +69,10 @@ sub get {
     return $shell_hook;
 }
 
+sub available_shells {
+    <Bash Zsh Fish Tcsh Sh PowerShell Cmd>
+}
+
 sub shell_exists {
     my $self = shift;
     my $shell = shift;
