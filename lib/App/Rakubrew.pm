@@ -69,7 +69,8 @@ sub run_script {
         my $shell = '';
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_shell_hook';
         $shell = $args[1] if @args >= 2 && $args[0] eq 'internal_hooked';
-        $shell = $args[1] if @args >= 2 && $args[0] eq 'init';
+        $shell = $args[1] if @args == 2 && $args[0] eq 'init';
+        $shell = $args[2] if @args == 2 && $args[0] eq 'init' && $args[1] eq '--shell';
         $self->{hook} = App::Rakubrew::Shell->initialize($shell);
     }
 

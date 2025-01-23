@@ -46,7 +46,7 @@ This can be easily done using:
   Add-Content -Force -Path \$PROFILE -Value '. "$brew_exec" init PowerShell | Out-String | Invoke-Expression'
 
 (Note that the above does *not* enable auto-loading in CMD, that needs a
-separate installation procedure. Call `$brew_exec init` in a CMD window for
+separate installation procedure. Call `$brew_exec init --shell Cmd` for
 respective installation instructions.)
 EOT
 

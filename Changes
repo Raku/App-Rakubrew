@@ -211,3 +211,6 @@
 
 41
     - Fix `build-zef` on Windows.
+
+42
+    - Hopefully improve PowerShell detection.
