@@ -48,7 +48,7 @@ sub get_git_url {
 our %git_repos = (
     rakudo => get_git_url($GIT_PROTO, 'github.com', 'rakudo', 'rakudo'),
     MoarVM => get_git_url($GIT_PROTO, 'github.com', 'MoarVM', 'MoarVM'),
-    nqp    => get_git_url($GIT_PROTO, 'github.com', 'perl6',  'nqp'),
+    nqp    => get_git_url($GIT_PROTO, 'github.com', 'Raku',  'nqp'),
     zef    => get_git_url($GIT_PROTO, 'github.com', 'ugexe',  'zef'),
 );
 
