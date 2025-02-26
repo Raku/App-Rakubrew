@@ -140,9 +140,9 @@ downloaded and installed without compilation with the C<download> subcommand.
 
 =head1 COMMAND: build-rakudo
 
-Usage: rakubrew build[-rakudo] [<backend>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
+Usage: rakubrew build[-rakudo] [jvm|moar|moar-blead|all] [tag|branch|sha-1] [--configure-opts=]
 
-Download, compile and install a rakudo version.
+Download, compile and install a Rakudo version.
 Please note that this can take a while, be patient.
 
 The arguments are:
@@ -151,7 +151,7 @@ The arguments are:
 
 =item *
 
-The backend
+The backend.
 
 =over
 
@@ -167,13 +167,17 @@ C<all> will build all backends.
 
 =item *
 
-The version to build. Call C<available> to see a list of available
+The version to build. Call C<list-available> to see a list of available
 versions. When left empty the latest release is built.
-It is also possible to specify a tag, branch name or commit sha to build.
+It is also possible to specify a tag, branch name or commit sha in the C<rakudo>
+repo.
 
 =item *
 
-Configure options.
+Configure options. Do note that it's not possible to specify a different
+installation folder with C<--prefix>. If you want a rakudo to be installed into
+a different folder, build it manually and then use C<rakubrew register> to have
+it available in Rakubrew.
 
 =back
 
