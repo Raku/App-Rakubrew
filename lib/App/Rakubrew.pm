@@ -238,6 +238,13 @@ EOL
                 $configure_opts =~ s/'$//;
             }
 
+            if ($configure_opts =~ /--prefix/) {
+                say STDERR "Building Rakudo in a custom folder is not supported. If you need";
+                say STDERR "this it's recommended to build it manually and then use the";
+                say STDERR "`register` command to make that installation available in $brew_name.";
+                exit 1;
+            }
+
             my $name = "$impl-$ver";
             $name = $impl if $impl eq 'moar-blead' && $ver eq 'main';
 

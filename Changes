@@ -219,3 +219,4 @@
 
 43
     - Improve documentation of the `build` command.
+    - Guard against unsupported use of the `--prefix` build option.
