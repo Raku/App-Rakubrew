@@ -58,17 +58,6 @@ sub _get_git_cache_option {
     }
 }
 
-sub _get_relocatable_option {
-    my $rakudo_dir = shift;
-    if ( _version_is_at_least('2019.07', $rakudo_dir) ) {
-        return "--relocatable";
-    }
-    say STDERR "The current rakubrew setup requires Rakudo to be relocated, but the";
-    say STDERR "Rakudo you selected to be built does not support the `--relocatable`";
-    say STDERR "option yet. Try building a newer Rakudo.";
-    exit 1;
-}
-
 sub available_rakudos {
     _check_git();
 
