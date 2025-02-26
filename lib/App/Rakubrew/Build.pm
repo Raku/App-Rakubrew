@@ -100,6 +100,13 @@ sub build_impl {
 
     $configure_opts .= ' ' . _get_git_cache_option(cwd());
     run $impls{$impl}{configure} . " $configure_opts";
+
+    if (is_version_broken($name)) {
+        say STDERR "ERROR: The build does not look usable. There is no raku executable to be";
+        say STDERR "found in $versions_dir/$name/bin";
+        say STDERR "or in $versions_dir/$name/install/bin";
+        exit 1;
+    }
 }
 
 sub determine_make {
