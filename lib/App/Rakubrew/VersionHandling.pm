@@ -22,6 +22,7 @@ our @EXPORT = qw(
 use strict;
 use warnings;
 use 5.010;
+use Encode::Locale qw(env);
 use File::Spec::Functions qw(catfile catdir splitdir splitpath catpath canonpath);
 use Cwd qw(realpath);
 use File::Which qw();
@@ -43,7 +44,7 @@ sub get_versions {
 sub get_shell_version {
     # Check for shell version by looking for $RAKU_VERSION or $PL6ENV_VERSION the environment.
     if (defined $ENV{$env_var} || defined $ENV{PL6ENV_VERSION}) {
-        my $version = $ENV{$env_var} // $ENV{PL6ENV_VERSION};
+        my $version = env($env_var) // env('PL6ENV_VERSION');
         if (version_exists($version)) {
             return $version;
         }

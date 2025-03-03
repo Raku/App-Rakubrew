@@ -4,7 +4,7 @@ use warnings;
 use 5.010;
 our $VERSION = '42';
 
-use Encode::Locale qw(env);
+use Encode::Locale;
 if (-t) {
     binmode(STDIN, ":encoding(console_in)");
     binmode(STDOUT, ":encoding(console_out)");

@@ -4,7 +4,9 @@ our @ISA = "App::Rakubrew::Shell";
 use strict;
 use warnings;
 use 5.010;
+
 use File::Spec::Functions qw(catfile);
+use Encode::Locale qw(env);
 
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
@@ -19,7 +21,7 @@ sub supports_hooking {
 sub install_note {
     my $rc_file = qw( .zshenv );
     if ( exists $ENV{ZDOTDIR} ) {
-        $rc_file = catfile( $ENV{ZDOTDIR}, $rc_file );
+        $rc_file = catfile( env('ZDOTDIR'), $rc_file );
     }
 
     my $text = <<EOT;
@@ -56,7 +58,7 @@ EOW
 
 sub get_init_code {
     my $self = shift;
-    my $path = $ENV{PATH};
+    my $path = env('PATH');
     $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         my $version = get_global_version();

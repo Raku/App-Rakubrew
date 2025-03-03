@@ -5,6 +5,8 @@ use strict;
 use warnings;
 use 5.010;
 
+use Encode::Locale qw(env);
+
 use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
@@ -49,7 +51,7 @@ EOW
 
 sub get_init_code {
     my $self = shift;
-    my $path = $ENV{PATH};
+    my $path = env('PATH');
     $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         my $version = get_global_version();

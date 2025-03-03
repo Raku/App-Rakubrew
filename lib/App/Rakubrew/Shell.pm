@@ -2,6 +2,7 @@ package App::Rakubrew::Shell;
 use strict;
 use warnings;
 use 5.010;
+use Encode::Locale qw(env);
 use File::Spec::Functions qw(catdir catfile updir splitpath);
 use Try::Tiny;
 use App::Rakubrew::Tools;
@@ -36,7 +37,7 @@ sub initialize {
 sub detect_shell {
     if ($^O =~ /win32/i) {
         # https://stackoverflow.com/a/8547234
-        my $psmodpath = $ENV{PSMODULEPATH};
+        my $psmodpath = env('PSMODULEPATH');
         if ($psmodpath =~ /\\Documents\\WindowsPowerShell\\Modules(?:;|$)/) {
             return 'PowerShell';
         }
@@ -45,12 +46,12 @@ sub detect_shell {
         }
     }
     else {
-        my $shell = $ENV{'SHELL'} || '/bin/bash';
+        my $shell = env('SHELL') || '/bin/bash';
         $shell = (splitpath( $shell))[2];
         $shell =~ s/[^a-z]+$//; # remove version numbers
 
         # tcsh claims it's csh on FreeBSD. Try to detect that.
-        if ($shell eq 'csh' && $ENV{'tcsh'}) {
+        if ($shell eq 'csh' && env('tcsh')) {
             $shell = 'tcsh';
         }
 
@@ -100,7 +101,7 @@ sub print_shellmod_code {
         }
     }
     elsif ($command eq 'mode' && $mode eq 'shim') { # just switched to shim mode
-        my $path = $ENV{PATH};
+        my $path = env('PATH');
         $path = $self->clean_path($path);
         $path = $shim_dir . $sep . $path;
         say $self->get_path_setter_code($path);
@@ -110,7 +111,7 @@ sub print_shellmod_code {
     }
 
     if ($mode eq 'env') {
-        my $path = $ENV{PATH};
+        my $path = env('PATH');
         $path = $self->clean_path($path);
 
         if ($version ne 'system') {
@@ -124,7 +125,7 @@ sub print_shellmod_code {
 
         # In env mode several commands require changing PATH, so we just always
         # construct a new PATH and see if it's different.
-        if ($path ne $ENV{PATH}) {
+        if ($path ne env('PATH')) {
             say $self->get_path_setter_code($path);
         }
     }
