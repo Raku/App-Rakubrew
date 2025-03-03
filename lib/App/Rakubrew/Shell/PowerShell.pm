@@ -11,7 +11,6 @@ use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 use App::Rakubrew::Build;
-use App::Rakubrew::Config;
 
 # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-6
 # https://stackoverflow.com/questions/6766722/how-to-modify-parent-scope-variable-using-powershell

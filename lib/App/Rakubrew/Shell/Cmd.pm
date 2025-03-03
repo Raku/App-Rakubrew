@@ -11,7 +11,6 @@ use App::Rakubrew::Variables;
 use App::Rakubrew::Tools;
 use App::Rakubrew::VersionHandling;
 use App::Rakubrew::Build;
-use App::Rakubrew::Config;
 
 # https://superuser.com/a/302553
 
