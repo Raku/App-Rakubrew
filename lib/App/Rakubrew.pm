@@ -241,7 +241,7 @@ EOL
             if ($configure_opts =~ /--prefix/) {
                 say STDERR "Building Rakudo in a custom folder is not supported. If you need";
                 say STDERR "this it's recommended to build it manually and then use the";
-                say STDERR "`register` command to make that installation available in $brew_name.";
+                say STDERR "`register` command to make that installation available in Rakubrew.";
                 exit 1;
             }
 
