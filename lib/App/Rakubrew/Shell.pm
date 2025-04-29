@@ -38,7 +38,7 @@ sub detect_shell {
     if ($^O =~ /win32/i) {
         # https://stackoverflow.com/a/8547234
         my $psmodpath = env('PSMODULEPATH');
-        if ($psmodpath =~ /\\Documents\\WindowsPowerShell\\Modules(?:;|$)/) {
+        if ($psmodpath =~ /\\Documents\\(?:Windows)?PowerShell\\Modules(?:;|$)/) {
             return 'PowerShell';
         }
         else {

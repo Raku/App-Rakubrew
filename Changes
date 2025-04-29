@@ -224,3 +224,5 @@
       Rakudo installation.
     - Be encoding aware when reading environment variables. This should
       hopefully fix Rakubrew to mess up PATHs with non-ASCII chars in it.
+44
+    - Make shell detection work in Windows with newer PowerShells.
