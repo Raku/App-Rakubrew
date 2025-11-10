@@ -30,7 +30,7 @@ jobs:
                 paths: rakubrew-perl
     build-macos:
         macos:
-            xcode: 15.3.0
+            xcode: 16.4.0
         steps:
             - checkout
             - run:
@@ -95,8 +95,8 @@ jobs:
                     mv rakubrew-perl << pipeline.parameters.VERSION >>/perl/rakubrew
                     mkdir << pipeline.parameters.VERSION >>/win
                     mv rakubrew-windows.exe << pipeline.parameters.VERSION >>/win/rakubrew.exe
-                    mkdir << pipeline.parameters.VERSION >>/macos
-                    mv rakubrew-macos << pipeline.parameters.VERSION >>/macos/rakubrew
+                    mkdir << pipeline.parameters.VERSION >>/macos_arm
+                    mv rakubrew-macos << pipeline.parameters.VERSION >>/macos_arm/rakubrew
                     tar -czv --owner=0 --group=0 --numeric-owner -f rakubrew.tgz << pipeline.parameters.VERSION >>
             - store_artifacts:
                 path: workspace/rakubrew.tgz

@@ -100,16 +100,6 @@ curl \
 https://circleci.com/api/v2/project/gh/Raku/App-Rakubrew/pipeline
 
 ###############################################################################
-# Do the MacOS Arm build
-rm -r macos_arm || true
-mkdir macos_arm
-ssh $ARM_MAC_SSH_CON "\
-    rm $ARM_MAC_REMOTE_PATH/rakubrew;\
-    git -C $ARM_MAC_REMOTE_PATH pull &&\
-    $ARM_MAC_REMOTE_PATH/release-stuff/build-macos.sh"
-scp $ARM_MAC_SSH_CON:$ARM_MAC_REMOTE_PATH/rakubrew $DIR/macos_arm/rakubrew
-
-###############################################################################
 # Prompt user for CircleCI build files
 rm rakubrew.tgz || true
 echo "Build started. Now look at https://circleci.com/gh/Raku/workflows/App-Rakubrew/tree/main"
@@ -131,7 +121,6 @@ done
 rm -rf $VERSION || true
 tar -xzf $CIRCLECI_BUILD_FILE
 rm $CIRCLECI_BUILD_FILE
-mv macos_arm $VERSION/macos_arm
 cp ../Changes $VERSION/changes
 perl -ni -e "BEGIN {my \$p=0;}  if (/^$VERSION\$/){\$p=1} elsif (/^\\d+\$/){\$p=0} elsif (\$p){print substr(\$_, 4)}" $VERSION/changes
 
