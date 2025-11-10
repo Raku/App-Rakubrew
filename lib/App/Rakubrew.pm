@@ -2,7 +2,7 @@ package App::Rakubrew;
 use strict;
 use warnings;
 use 5.010;
-our $VERSION = '43';
+our $VERSION = '44';
 
 use Encode::Locale;
 if (-t) {
