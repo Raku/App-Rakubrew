@@ -226,3 +226,5 @@
       hopefully fix Rakubrew to mess up PATHs with non-ASCII chars in it.
 44
     - Make shell detection work in Windows with newer PowerShells.
+    - Fix PowerShell on Linux. It insisted on using semicolons as PATH
+      separator even on non-Windows.

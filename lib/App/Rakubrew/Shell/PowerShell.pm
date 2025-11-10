@@ -75,15 +75,16 @@ EOW
 sub get_init_code {
     my $self = shift;
     my $path = env('PATH');
+    my $sep = $^O =~ /win32/i ? ';' : ':';
     $path = $self->clean_path($path);
     if (get_brew_mode() eq 'env') {
         my $version = get_global_version();
         if ($version && $version ne 'system' && !is_version_broken($version)) {
-            $path = join(';', get_bin_paths($version), $path);
+            $path = join($sep, get_bin_paths($version), $path);
         }
     }
     else { # get_brew_mode() eq 'shim'
-        $path = join(';', $shim_dir, $path);
+        $path = join($sep, $shim_dir, $path);
     }
     return <<EOT;
 \$Env:PATH = "$path"
