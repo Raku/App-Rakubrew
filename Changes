@@ -228,3 +228,7 @@
     - Make shell detection work in Windows with newer PowerShells.
     - Fix PowerShell on Linux. It insisted on using semicolons as PATH
       separator even on non-Windows.
+
+45
+    - Introduce a `--short` flag for the `version` command which will only
+      print the version itself. This should help automation a bit.

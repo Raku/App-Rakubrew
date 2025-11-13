@@ -18,15 +18,15 @@ rakubrew - Raku environment manager
 
 =head1 SYNOPSIS
 
- rakubrew version          # or rakubrew current
- rakubrew versions         # or rakubrew list
- rakubrew global [version] # or rakubrew switch [<version>]
+ rakubrew version [--short] # or rakubrew current
+ rakubrew versions          # or rakubrew list
+ rakubrew global [version]  # or rakubrew switch [<version>]
  rakubrew shell [--unset|<version>]
  rakubrew local [<version>]
- rakubrew nuke [<version>] # or rakubrew unregister [<version>]
+ rakubrew nuke [<version>]  # or rakubrew unregister [<version>]
  rakubrew rehash
 
- rakubrew available        # or rakubrew list-available
+ rakubrew available         # or rakubrew list-available
  rakubrew build [<backend>] [<tag>|<branch>|<sha-1>] [--configure-opts=<options>]
  rakubrew triple [<rakudo-version> [<nqp-version> [<moar-version>]]]
  rakubrew register <name> <path>
@@ -49,15 +49,17 @@ rakubrew - Raku environment manager
 
 =head1 COMMAND: version
 
-Usage: rakubrew version|current <version>
+Usage: rakubrew version|current [--short]
 
 Show the currently active Rakudo version.
+If the `--short` flag is provided only the version itself will be printed.
 
 =head1 COMMAND: current
 
-Usage: rakubrew version|current <version>
+Usage: rakubrew version|current [--short]
 
 Show the currently active Rakudo version.
+If the `--short` flag is provided only the version itself will be printed.
 
 =head1 COMMAND: versions
 

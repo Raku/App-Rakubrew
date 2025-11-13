@@ -222,6 +222,10 @@ sub get_completions {
         my @c = $self->_filter_candidates($candidate, @commands, 'help');
         return @c;
     }
+    elsif($index == 1 && ($words[0] eq 'version' || $words[0] eq 'current')) {
+        my $candidate = $words[1] // '';
+        return $self->_filter_candidates($candidate, '--short');
+    }
     elsif($index == 1 && ($words[0] eq 'global' || $words[0] eq 'switch' || $words[0] eq 'shell' || $words[0] eq 'local' || $words[0] eq 'nuke' || $words[0] eq 'test')) {
         my @versions = get_versions();
         push @versions, 'all'     if $words[0] eq 'test';

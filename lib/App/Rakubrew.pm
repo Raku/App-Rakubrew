@@ -98,7 +98,12 @@ EOL
 
     if ($arg eq 'version' || $arg eq 'current') {
         if (my $c = get_version()) {
-            say "Currently running $c"
+            if (@args && $args[0] eq '--short') {
+                say "$c"
+            }
+            else {
+                say "Currently running $c"
+            }
         } else {
             say STDERR "Not running anything at the moment. Use '$brew_name switch' to set a version";
             exit 1;
